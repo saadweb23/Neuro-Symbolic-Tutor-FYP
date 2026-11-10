@@ -28,6 +28,7 @@ import type {
   ViewedResult,
   ContentKind,
 } from '../types'
+import { clearStoredStep } from '@/features/workspace/storage'
 import { keys } from './keys'
 
 export const browserTimeZone = (): string => {
@@ -153,7 +154,10 @@ export const useStartSession = (id: string) => {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (blockIndex: number) => post<SessionState>(studentPath(id, '/session/start'), { block_index: blockIndex }),
-    onSuccess: () => invalidateStudent(qc, id),
+    onSuccess: () => {
+      clearStoredStep(id) // a saved step belongs to the previous session
+      return invalidateStudent(qc, id)
+    },
   })
 }
 

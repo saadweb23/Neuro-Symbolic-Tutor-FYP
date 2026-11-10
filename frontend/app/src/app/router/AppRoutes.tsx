@@ -29,7 +29,7 @@ export const routes: RouteObject[] = [
       { element: <FocusLayout />, children: [
         { path: ROUTES.placement, lazy: lazyPage(() => import('@/pages/placement/PlacementPage'), 'PlacementPage') },
         { path: ROUTES.placementResults, lazy: lazyPage(() => import('@/pages/placement/PlacementResultsPage'), 'PlacementResultsPage') },
-        { element: <RequirePlacement />, children: [{ path: ROUTES.session, ...soon('Learning workspace') }] },
+        { element: <RequirePlacement />, children: [{ path: ROUTES.session, lazy: lazyPage(() => import('@/pages/workspace/WorkspacePage'), 'WorkspacePage') }] },
       ] },
       {
         element: <AppShell />,
