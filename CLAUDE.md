@@ -28,7 +28,7 @@ Frontend and backend are developed separately; the HTTP API is the contract, so 
 - Read-only endpoints must never call `ensure_student`, write interactions, generate a question or increment a round. `/next`'s response shape (`content_engine.recommend_content`) is typed by hand in `frontend/app/src/api/types/next.ts`: keep them in sync.
 
 ## Deployment (free tier; see `DEPLOYMENT.md`)
-- Vercel (frontend, `frontend/app/vercel.json`) + Hugging Face Space (API, `deploy/huggingface/`) + Neon PostgreSQL. Render's free 512 MB cannot hold the stack (~750 MB measured), so it is not used.
+- Vercel (frontend, `frontend/app/vercel.json`) + Render free web service (API, `render.yaml`) + Neon PostgreSQL. The full stack needs ~780 MB, so production runs with `NEURO_LITE=1` (serving-only replacements for torch_geometric / stable-baselines3, ~580 MB with a CUDA torch build, less with the CPU wheel); the equivalence tests in `tests/test_lite_equivalence.py` must keep passing. Hugging Face Docker Spaces now need a paid PRO plan, so they are not used.
 - `DATABASE_URL` set => PostgreSQL (`serving/persistence.py`; same schema and behaviour as SQLite, tested on both: `DATABASE_URL=postgresql://... python -m pytest tests`). Unset => the local SQLite file. Never commit either a database or a connection string.
 - Production env: `NEURO_ENV=production`, `CORS_ORIGINS` (the Vercel origin; empty = no cross-origin access), `DATABASE_URL` (secret), `VITE_API_BASE` (frontend build). `GET /health` never touches the DB; `GET /health/db` does.
 - Move existing data: `python backend/scripts/migrate_sqlite_to_postgres.py --sqlite tutor_state.db --database-url ...` (read-only on SQLite, idempotent, verified).

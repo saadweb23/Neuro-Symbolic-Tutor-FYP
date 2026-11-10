@@ -1,6 +1,7 @@
-# Production (Render) dependencies for the API only: the research / plotting / slide tooling in the
-# repo-root requirements.txt (scikit-learn, matplotlib, python-pptx, the Gemini SDK, ...) is not
-# needed to serve the app. Versions match the repo-root pins that the project was developed with.
+# Production (Render free, 512 MB) dependencies for the API only. The research / plotting / slide
+# tooling in the repo-root requirements.txt is not needed to serve the app, and with NEURO_LITE=1
+# the serving path does not need torch_geometric, stable-baselines3, gymnasium or pandas either
+# (see tracker/gat_lite.py and serving/lite_ppo.py; equivalence is proved in the test suite).
 #
 # CPU-only PyTorch: the default Linux wheel bundles ~2.5 GB of CUDA libraries that a free web
 # service can neither use nor afford. "torch==2.9.1" resolves to the "2.9.1+cpu" build on this index.
@@ -12,9 +13,6 @@ pydantic==2.13.3
 python-dotenv==1.2.2
 
 torch==2.9.1
-torch-geometric==2.8.0.post1
-stable-baselines3==2.9.0
-gymnasium==1.3.0
 numpy==1.26.4
 networkx==3.4.2
 

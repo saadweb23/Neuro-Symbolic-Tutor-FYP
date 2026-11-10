@@ -1,0 +1,38 @@
+# Render Blueprint for the NeuroTutor API (FastAPI + the Dual-GCN tracker and PPO agent).
+# Free web service (512 MB). Student data lives in an EXTERNAL PostgreSQL (Neon free tier): Render's
+# free instances have an ephemeral filesystem, so a SQLite file there would be wiped on restart.
+# NEURO_LITE=1 runs the serving path without torch_geometric / stable-baselines3 / pandas (same
+# numerical results, ~200 MB less memory): see DEPLOYMENT.md.
+services:
+  - type: web
+    name: neurotutor-api
+    runtime: python
+    plan: free
+    region: virginia            # next to the Neon database (aws-us-east-1)
+    branch: claude/nice-franklin-mzmurl   # change to `main` once the pull request is merged
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements-prod.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.5
+      - key: NEURO_LITE
+        value: "1"
+      - key: NEURO_ENV
+        value: production
+      - key: USE_QUESTION_BANK      # serve the pre-generated question bank: no LLM key, no per-call cost
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: OMP_NUM_THREADS        # a fraction of one CPU: avoid thread oversubscription and extra memory
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+      - key: DB_POOL_MAX
+        value: "5"
+      - key: DATABASE_URL           # Neon pooled connection string. SECRET.
+        sync: false
+      - key: CORS_ORIGINS           # the Vercel site, e.g. https://neurotutor.vercel.app (comma-separate several)
+        sync: false

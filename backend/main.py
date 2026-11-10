@@ -115,6 +115,18 @@ def health():
     return {"status": "ok"}
 
 
+def _resident_memory_mb():
+    """Resident memory of this process (Linux), to check the footprint against a host's limit."""
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    return round(int(line.split()[1]) / 1024)
+    except OSError:
+        pass
+    return None
+
+
 @app.get("/health/db", tags=["meta"])
 def health_db():
     """Verifies the database connection (use it to confirm a deployment; not for frequent probing)."""
@@ -125,7 +137,7 @@ def health_db():
     except Exception:
         log.exception("database health check failed")
         return JSONResponse(status_code=503, content={"status": "unavailable", "database": persistence.describe_backend().split(":")[0]})
-    return {"status": "ok", "database": persistence.describe_backend().split(":")[0]}
+    return {"status": "ok", "database": persistence.describe_backend().split(":")[0], "memory_mb": _resident_memory_mb()}
 
 
 class PlacementAnswerIn(BaseModel):

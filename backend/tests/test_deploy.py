@@ -11,6 +11,7 @@ def test_health_is_lightweight_and_db_health_reports_the_backend(client):
     assert client.get("/health").json() == {"status": "ok"}
     r = client.get("/health/db").json()
     assert r["status"] == "ok" and r["database"] in ("sqlite", "postgresql")
+    assert r["memory_mb"] is None or r["memory_mb"] > 50
     assert r["database"] == ("postgresql" if persistence.IS_PG else "sqlite")
     assert client.get("/").json()["docs"] == "/docs"
 
