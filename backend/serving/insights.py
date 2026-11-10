@@ -50,6 +50,12 @@ def resolve_tz(name):
     try:
         return ZoneInfo(name)
     except (ZoneInfoNotFoundError, ValueError, OSError):
+        try:
+            ZoneInfo("UTC")
+        except (ZoneInfoNotFoundError, OSError):
+            # No time-zone database at all (stock Windows Python without the `tzdata` package):
+            # bucket days in UTC instead of failing every dashboard / analytics request.
+            return timezone.utc
         raise ValueError(f"Unknown timezone: {name}")
 
 

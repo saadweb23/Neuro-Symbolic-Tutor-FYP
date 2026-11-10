@@ -26,6 +26,9 @@ psycopg-pool>=3.2,<4
 
 # --- Knowledge graph, data generation, evaluation notebook, plots ---
 networkx==3.4.2
+
+# IANA time zones: Windows has no system copy, and the dashboard / analytics bucket days in the browser's zone
+tzdata
 pandas==2.2.2
 matplotlib==3.11.0
 
