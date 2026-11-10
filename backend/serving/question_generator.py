@@ -22,7 +22,11 @@ MOCK_MODE = os.environ.get("MOCK_LLM", "false").lower() == "true"
 # dependency, per-call latency, and the risk of a malformed question landing
 # live are all unacceptable, but placeholder [MOCK] text is just as bad in
 # front of an audience. Takes priority over MOCK_MODE when both are set.
-USE_QUESTION_BANK = os.environ.get("USE_QUESTION_BANK", "false").lower() == "true"
+# Default: the offline question bank unless a Gemini key is configured. A fresh checkout (no .env) must
+# work out of the box; calling a live LLM requires the `google-generativeai` package AND a key.
+_bank_setting = os.environ.get("USE_QUESTION_BANK")
+USE_QUESTION_BANK = (_bank_setting.strip().lower() == "true") if _bank_setting is not None \
+    else not os.environ.get("GEMINI_API_KEY")
 QUESTION_BANK_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data_generation", "question_bank.json"
 )
@@ -97,6 +101,13 @@ def generate_mcq(concept, difficulty, avoid_questions=None):
             "Do NOT repeat or closely rephrase any of these questions already "
             f"asked on this concept:\n{bulleted}\n"
         )
+
+    try:
+        _get_model()
+    except Exception as exc:   # package missing / no key: serve the bank instead of failing the request
+        import logging
+        logging.getLogger("neurotutor.questions").warning("Live question generation unavailable (%s); using the question bank", type(exc).__name__)
+        return _bank_mcq(concept, difficulty, avoid_questions)
 
     prompt = f"""
     You are writing one multiple-choice question for a Python programming
