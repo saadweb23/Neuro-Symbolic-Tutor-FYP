@@ -23,12 +23,10 @@ test('the loading mark does not animate when the OS asks for reduced motion', as
 })
 
 test('the mark pulses by default while the app is booting', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'commit' })
-  const name = await page.evaluate(() => {
-    const el = document.querySelector('.nt-mark[data-motion="pulse"] .nt-node')
-    return el ? getComputedStyle(el).animationName : null
-  })
-  expect(name).toBe('nt-node-pulse')
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  const node = page.locator('.nt-mark[data-motion="pulse"] .nt-node').first()
+  await node.waitFor({ state: 'attached' })
+  await expect.poll(() => node.evaluate((el) => getComputedStyle(el).animationName)).toBe('nt-node-pulse')
 })
 
 test('the full boot screen shows once per tab session, and the skip link works', async ({ page }) => {
