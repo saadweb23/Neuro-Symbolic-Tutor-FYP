@@ -19,16 +19,16 @@ export const routes: RouteObject[] = [
   {
     element: <PublicLayout />,
     children: [
-      { path: ROUTES.landing, ...soon('Landing') },
-      { path: ROUTES.start, ...soon('Get started') },
+      { path: ROUTES.landing, handle: { title: 'NeuroTutor' }, lazy: lazyPage(() => import('@/pages/landing/LandingPage'), 'LandingPage') },
+      { path: ROUTES.start, lazy: lazyPage(() => import('@/pages/onboarding/OnboardingPage'), 'OnboardingPage') },
     ],
   },
   {
     element: <RequireStudent />,
     children: [
       { element: <FocusLayout />, children: [
-        { path: ROUTES.placement, ...soon('Placement') },
-        { path: ROUTES.placementResults, ...soon('Placement results') },
+        { path: ROUTES.placement, lazy: lazyPage(() => import('@/pages/placement/PlacementPage'), 'PlacementPage') },
+        { path: ROUTES.placementResults, lazy: lazyPage(() => import('@/pages/placement/PlacementResultsPage'), 'PlacementResultsPage') },
         { element: <RequirePlacement />, children: [{ path: ROUTES.session, ...soon('Learning workspace') }] },
       ] },
       {

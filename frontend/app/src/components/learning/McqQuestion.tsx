@@ -1,0 +1,74 @@
+import { Check, X } from 'lucide-react'
+import { useId } from 'react'
+import { useKeyShortcuts } from '@/hooks/useKeyShortcuts'
+import { cn } from '@/lib/cn'
+import { RichText } from './RichText'
+
+interface Props {
+  question: string
+  choices: string[]
+  selected: number | null
+  onSelect: (index: number) => void
+  disabled?: boolean
+  /** after grading: highlight the right answer and the student's wrong pick */
+  reveal?: { correctIndex: number }
+  /** enable the 1-4 keys (off when another handler owns the keyboard) */
+  shortcuts?: boolean
+}
+
+/** A single multiple-choice question with radio-group semantics. Shared by the placement quiz and
+ *  the Learning Workspace. Correct / wrong are conveyed with an icon and text, not colour alone. */
+export function McqQuestion({ question, choices, selected, onSelect, disabled, reveal, shortcuts = true }: Props) {
+  const labelId = useId()
+  useKeyShortcuts(
+    Object.fromEntries(choices.map((_, i) => [String(i + 1), () => !disabled && onSelect(i)])),
+    shortcuts && !reveal,
+  )
+  return (
+    <div>
+      <div id={labelId} className="rounded-lg border border-border bg-raised/60 p-4 text-[15px] font-medium leading-relaxed">
+        <RichText text={question} />
+      </div>
+      <div role="radiogroup" aria-labelledby={labelId} className="mt-4 space-y-2.5">
+        {choices.map((choice, i) => {
+          const isSelected = selected === i
+          const isCorrect = reveal?.correctIndex === i
+          const isWrongPick = !!reveal && isSelected && !isCorrect
+          return (
+            <button
+              key={i}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              disabled={disabled || !!reveal}
+              onClick={() => onSelect(i)}
+              className={cn(
+                'flex w-full items-start gap-3 rounded-lg border p-3.5 text-left text-[15px] transition-colors',
+                !reveal && (isSelected ? 'border-primary bg-primary-soft ring-1 ring-primary' : 'border-border bg-surface hover:border-border-strong hover:bg-raised'),
+                isCorrect && 'border-good bg-good-soft',
+                isWrongPick && 'border-bad bg-bad-soft',
+                reveal && !isCorrect && !isWrongPick && 'border-border bg-surface opacity-70',
+              )}
+            >
+              <span
+                className={cn(
+                  'mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border text-xs font-semibold',
+                  isSelected && !reveal ? 'border-primary bg-primary text-on-primary' : 'border-border-strong text-muted',
+                  isCorrect && 'border-good bg-good text-white',
+                  isWrongPick && 'border-bad bg-bad text-white',
+                )}
+              >
+                {isCorrect ? <Check className="size-3.5" aria-hidden /> : isWrongPick ? <X className="size-3.5" aria-hidden /> : i + 1}
+              </span>
+              <span className="min-w-0 flex-1">
+                <RichText text={choice} className="space-y-1.5" />
+                {isCorrect && <span className="mt-1 block text-xs font-semibold text-good">Correct answer</span>}
+                {isWrongPick && <span className="mt-1 block text-xs font-semibold text-bad">Your answer</span>}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
