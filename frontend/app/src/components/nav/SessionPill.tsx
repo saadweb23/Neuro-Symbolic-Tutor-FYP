@@ -15,10 +15,10 @@ export function SessionPill() {
   return (
     <Link
       to={ROUTES.session}
-      aria-label={`Resume ${name}, round ${session.data.round_count} of ${session.data.round_cap}`}
       className="inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/30 bg-primary-soft px-3 text-xs font-semibold text-primary transition-colors hover:border-primary/60 sm:text-sm"
     >
       <PlayCircle className="size-4" aria-hidden />
+      <span className="sr-only">Resume session: </span>
       <span className="hidden max-w-32 truncate sm:inline">{name}</span>
       <span className="text-primary/70 sm:before:content-['·_']">
         round {session.data.round_count}/{session.data.round_cap}

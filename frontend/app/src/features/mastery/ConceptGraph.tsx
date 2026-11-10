@@ -85,13 +85,13 @@ export function ConceptGraph({ graph, concepts, selected, visible, onSelect }: P
             const dim = (related !== null && !related.has(n.id)) || !visible.has(n.concept)
             return (
               <g key={n.id} transform={`translate(${n.x},${n.y})`} role="button" tabIndex={0} opacity={dim ? 0.3 : 1} className="cursor-pointer outline-none [&:focus-visible>rect:first-child]:stroke-primary [&:focus-visible>rect:first-child]:stroke-[3]"
-                aria-label={`${n.concept}: ${pct(belief)}, ${S.label}${selected === n.concept ? ', selected' : ''}`} aria-pressed={selected === n.concept}
+                aria-pressed={selected === n.concept}
                 onClick={() => onSelect(n.concept)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(n.concept) } }}
                 onMouseEnter={() => setHover(n.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}>
                 <rect width={NODE_W} height={NODE_H} rx={10} className="fill-surface" stroke={selected === n.concept ? 'var(--primary)' : STROKE[tier]} strokeWidth={selected === n.concept ? 3 : 1.6} strokeDasharray={tier === 'developing' ? '5 3' : undefined} />
                 <circle cx={NODE_W - 12} cy={12} r={4} fill={BLOCK_COLORS[n.blockIndex]} />
-                <text aria-hidden x={12} y={21} className="fill-text text-[12px] font-semibold">{n.concept}</text>
-                <text aria-hidden x={12} y={38} className="fill-muted text-[11px]">{pct(belief)} · {S.label}</text>
+                <text x={12} y={21} className="fill-text text-[12px] font-semibold">{n.concept}</text>
+                <text x={12} y={38} className="fill-muted text-[11px]">{pct(belief)} · {S.label}</text>
               </g>
             )
           })}

@@ -43,7 +43,7 @@ test('a new student: landing -> placement -> learning session -> progress pages'
 
   // every /next call = exactly one round on the server
   const s = await session(request, id)
-  expect(s.round_count).toBe(nextCalls.length + 1) // +1: the first /next happened before the reload (counted by the earlier page load)
+  expect(s.round_count).toBe(nextCalls.length) // the listener spans the reload, so rounds == /next calls exactly
 
   // the answer is stored with the chosen option
   const history = await (await request.get(`${API}/students/${id}/history?type=practice`)).json()
