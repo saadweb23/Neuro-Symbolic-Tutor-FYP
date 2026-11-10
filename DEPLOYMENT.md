@@ -17,6 +17,27 @@
 Everything is free; nothing asks for a payment method. If any dashboard asks for a card or a paid upgrade, stop.
 (Hugging Face Docker Spaces were considered and rejected: they now require a paid PRO plan.)
 
+## What was actually deployed here, and why
+
+Neon (database) and Vercel (frontend) are free and work as described below. Both free API hosts that fit were
+blocked behind payment: Hugging Face Docker Spaces need a PRO plan and **Render requires a card on file even for its
+free instance** (HTTP 402 when creating the service). Without adding payment details, the API runs **on your own PC**
+and is published through a free **Cloudflare quick tunnel**:
+
+```
+ Browser ──► Vercel (static site) ──► https://<random>.trycloudflare.com ──► your PC: FastAPI ──► Neon PostgreSQL
+```
+
+* Start it with `deploy\windows\start_public_api.bat` (or `start_public_api.ps1 -AllowedOrigin https://<project>.vercel.app`).
+  It asks for the Neon connection string (hidden input), starts the API on `127.0.0.1`, and prints the tunnel URL.
+  One-time: `pip install -r requirements.txt` and `winget install --id Cloudflare.cloudflared`.
+* **The site works only while that window is open** and your PC is on and online. All student data is in Neon, so nothing is lost when it stops.
+* A quick-tunnel URL is **random and changes every time** it starts. The frontend bakes the API URL in at build time, so
+  after each restart the Vercel site must be redeployed with the new URL (`VITE_API_BASE`). For a stable URL use a Cloudflare
+  *named* tunnel (needs a domain on a free Cloudflare account) or an ngrok free static domain; then set it once.
+* The PC runs the **unmodified research stack** (no `NEURO_LITE`), so no memory limit applies.
+* If you later add a card to Render (the free plan costs $0), `render.yaml` + the lite mode below deploy the API there, always on-demand.
+
 ## Memory: why `NEURO_LITE=1`
 
 Render's free web service has **512 MB** of RAM. The API's real footprint, measured by running the actual stack
