@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link, Outlet, useMatches, useNavigation } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, Outlet, useNavigation } from 'react-router-dom'
 import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
 import { MobileNavigation } from '@/components/nav/MobileNavigation'
 import { SessionPill } from '@/components/nav/SessionPill'
@@ -8,6 +8,7 @@ import { StudentMenu } from '@/components/nav/StudentMenu'
 import { ThemeToggle } from '@/components/nav/ThemeToggle'
 import { ROUTES } from '@/constants/routes'
 import { safeStorage, STORAGE_KEYS } from '@/constants/storage'
+import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { cn } from '@/lib/cn'
 
 export interface RouteHandle {
@@ -46,12 +47,7 @@ export function SkipLink() {
 /** Desktop: collapsible sidebar. Tablet: icon rail. Phone: bottom tab bar. */
 export function AppShell() {
   const [collapsed, toggle] = useCollapsed()
-  const matches = useMatches()
-  const title = [...matches].reverse().map((m) => (m.handle as RouteHandle | undefined)?.title).find(Boolean)
-
-  useEffect(() => {
-    document.title = title ? `${title} · NeuroTutor` : 'NeuroTutor'
-  }, [title])
+  const title = useDocumentTitle()
 
   return (
     <div className="min-h-svh bg-bg">
@@ -64,7 +60,7 @@ export function AppShell() {
             <AnimatedCubeLogo size={24} motion="hover" bare />
             <Wordmark className="text-base" />
           </Link>
-          <h1 className="hidden truncate text-lg font-semibold md:block">{title}</h1>
+          <p aria-hidden className="hidden truncate text-lg font-semibold md:block">{title}</p>
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <SessionPill />
             <ThemeToggle />

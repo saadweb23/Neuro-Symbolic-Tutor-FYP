@@ -118,6 +118,7 @@ export function PlacementPage() {
 
   return (
     <div className="flex min-h-svh flex-col">
+      <h1 className="sr-only">Placement quiz</h1>
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 max-w-3xl items-center gap-3 px-4">
           <AnimatedCubeLogo size={24} motion="none" bare />

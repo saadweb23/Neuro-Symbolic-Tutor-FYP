@@ -4,7 +4,6 @@ import { ROUTES } from '@/constants/routes'
 import { FocusLayout } from '@/layouts/FocusLayout'
 import { AppShell } from '@/layouts/AppShell'
 import { PublicLayout } from '@/layouts/PublicLayout'
-import { ComingSoon } from '@/pages/ComingSoon'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { AdaptiveLayout, RequirePlacement, RequireStudent } from './guards'
 
@@ -13,28 +12,26 @@ export const lazyPage =
   <K extends string>(load: () => Promise<Record<K, ComponentType>>, name: K) =>
   async () => ({ Component: (await load())[name] })
 
-const soon = (name: string) => ({ element: <ComingSoon name={name} /> })
-
 export const routes: RouteObject[] = [
   {
     element: <PublicLayout />,
     children: [
       { path: ROUTES.landing, handle: { title: 'NeuroTutor' }, lazy: lazyPage(() => import('@/pages/landing/LandingPage'), 'LandingPage') },
-      { path: ROUTES.start, lazy: lazyPage(() => import('@/pages/onboarding/OnboardingPage'), 'OnboardingPage') },
+      { path: ROUTES.start, handle: { title: 'Get started' }, lazy: lazyPage(() => import('@/pages/onboarding/OnboardingPage'), 'OnboardingPage') },
     ],
   },
   {
     element: <RequireStudent />,
     children: [
       { element: <FocusLayout />, children: [
-        { path: ROUTES.placement, lazy: lazyPage(() => import('@/pages/placement/PlacementPage'), 'PlacementPage') },
-        { path: ROUTES.placementResults, lazy: lazyPage(() => import('@/pages/placement/PlacementResultsPage'), 'PlacementResultsPage') },
-        { element: <RequirePlacement />, children: [{ path: ROUTES.session, lazy: lazyPage(() => import('@/pages/workspace/WorkspacePage'), 'WorkspacePage') }] },
+        { path: ROUTES.placement, handle: { title: 'Placement quiz' }, lazy: lazyPage(() => import('@/pages/placement/PlacementPage'), 'PlacementPage') },
+        { path: ROUTES.placementResults, handle: { title: 'Your starting point' }, lazy: lazyPage(() => import('@/pages/placement/PlacementResultsPage'), 'PlacementResultsPage') },
+        { element: <RequirePlacement />, children: [{ path: ROUTES.session, handle: { title: 'Learning session' }, lazy: lazyPage(() => import('@/pages/workspace/WorkspacePage'), 'WorkspacePage') }] },
       ] },
       {
         element: <AppShell />,
         children: [
-          { path: ROUTES.settings, handle: { title: 'Profile & settings' }, ...soon('Settings') },
+          { path: ROUTES.settings, handle: { title: 'Profile & settings' }, lazy: lazyPage(() => import('@/pages/settings/SettingsPage'), 'SettingsPage') },
           { element: <RequirePlacement />, children: [
             { path: ROUTES.dashboard, handle: { title: 'Dashboard' }, lazy: lazyPage(() => import('@/pages/dashboard/DashboardPage'), 'DashboardPage') },
             { path: ROUTES.learn, handle: { title: 'Learning paths' }, lazy: lazyPage(() => import('@/pages/learn/LearningPathsPage'), 'LearningPathsPage') },
@@ -47,7 +44,7 @@ export const routes: RouteObject[] = [
       },
     ],
   },
-  { element: <AdaptiveLayout />, children: [{ path: ROUTES.help, handle: { title: 'Help & support' }, ...soon('Help') }] },
+  { element: <AdaptiveLayout />, children: [{ path: ROUTES.help, handle: { title: 'Help & support' }, lazy: lazyPage(() => import('@/pages/help/HelpPage'), 'HelpPage') }] },
   { element: <AdaptiveLayout />, children: [{ path: '*', element: <NotFoundPage /> }] },
 ]
 

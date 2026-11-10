@@ -3,6 +3,7 @@ import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
 import { ThemeToggle } from '@/components/nav/ThemeToggle'
 import { LinkButton } from '@/components/ui/Button'
 import { ROUTES } from '@/constants/routes'
+import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { SkipLink } from './AppShell'
 
 export function PublicHeader() {
@@ -46,6 +47,7 @@ export function PublicFooter() {
 }
 
 export function PublicLayout() {
+  useDocumentTitle()
   return (
     <div className="flex min-h-svh flex-col bg-bg">
       <SkipLink />

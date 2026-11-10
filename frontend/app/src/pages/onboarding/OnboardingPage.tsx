@@ -70,7 +70,7 @@ export function OnboardingPage() {
     <div className="mx-auto grid min-h-[calc(100svh-8rem)] max-w-5xl items-center gap-10 px-4 py-10 md:grid-cols-2 md:px-6">
       <div className="hidden md:block">
         <AnimatedCubeLogo size={72} motion="hover" />
-        <h1 className="mt-10 text-3xl font-semibold">Let&apos;s find your starting point</h1>
+        <h2 className="mt-10 text-3xl font-semibold">Let&apos;s find your starting point</h2>
         <ul className="mt-6 space-y-4">
           {steps.map((s) => (
             <li key={s.text} className="flex gap-3 text-sm text-muted">
@@ -82,7 +82,7 @@ export function OnboardingPage() {
       </div>
 
       <Card className="p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold md:text-xl">Get started</h2>
+        <h1 className="text-2xl font-semibold md:text-xl">Get started</h1>
         <p className="mt-1 text-sm text-muted md:hidden">Enter an ID to begin. New students take a short placement quiz first.</p>
 
         {studentId && (

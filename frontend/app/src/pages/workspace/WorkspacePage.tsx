@@ -66,6 +66,7 @@ function Workspace({ session }: { session: SessionState }) {
 
   return (
     <div className="min-h-svh">
+      <h1 className="sr-only">Learning session: {blockName}</h1>
       <header className="sticky top-0 z-20 border-b border-border bg-surface/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
           <Button variant="ghost" size="sm" onClick={() => setConfirmExit(true)} icon={<ArrowLeft className="size-4" />} aria-label="Leave session">
