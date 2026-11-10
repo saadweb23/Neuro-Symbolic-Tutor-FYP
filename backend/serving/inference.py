@@ -3,13 +3,24 @@ import sys
 import threading
 
 import torch
-from torch_geometric.utils import from_networkx
 
 # Add the backend/ root to the path (this file is now two levels down, in
 # serving/), matching the convention already used by agent/*.py.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from knowledge_graph.graph_builder import CONCEPTS, CONCEPT_TO_ID, build_python_dag
-from agent.tutoring_env import load_frozen_tracker, DEFAULT_CHECKPOINT
+
+# NEURO_LITE=1 (production on a small free host) avoids importing torch_geometric, gymnasium, pandas and
+# stable-baselines3 just to load a tracker and build one edge index: serving/lite.py does both with
+# identical results (proved in tests). Everything else keeps the research code path.
+LITE = os.environ.get("NEURO_LITE") == "1"
+if LITE:
+    from serving.lite import load_frozen_tracker, DEFAULT_CHECKPOINT, edge_index_from_graph
+else:
+    from torch_geometric.utils import from_networkx
+    from agent.tutoring_env import load_frozen_tracker, DEFAULT_CHECKPOINT
+
+    def edge_index_from_graph(graph, device='cpu'):
+        return from_networkx(graph).edge_index.to(device)
 
 MAX_TIME = 180.0
 
@@ -27,8 +38,7 @@ __all__ = [
 
 
 def build_edge_index(device='cpu'):
-    graph = build_python_dag()
-    return from_networkx(graph).edge_index.to(device)
+    return edge_index_from_graph(build_python_dag(), device)
 
 
 # The tracker is frozen (eval mode, no gradients), so one instance per checkpoint file can be

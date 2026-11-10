@@ -1,8 +1,15 @@
 import math
+import os
 
 import torch
 import torch.nn as nn
-from torch_geometric.nn import GATConv
+
+if os.environ.get("NEURO_LITE") == "1":
+    # Serving on a small free host: the same GATConv math in pure PyTorch (tracker/gat_lite.py),
+    # so torch_geometric (~190 MB) is not imported. Research and training leave this unset.
+    from tracker.gat_lite import GATConv
+else:
+    from torch_geometric.nn import GATConv
 
 
 class SparsePathwayGNN(nn.Module):

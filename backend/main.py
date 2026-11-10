@@ -8,9 +8,16 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from stable_baselines3 import PPO
 
 load_dotenv()
+
+if os.environ.get("NEURO_LITE") == "1":
+    from serving.lite_ppo import load_ppo_lite as _load_ppo   # no stable-baselines3 / gymnasium / pandas in memory
+else:
+    from stable_baselines3 import PPO
+
+    def _load_ppo(path):
+        return PPO.load(path)
 
 from serving import persistence
 from serving import inference
@@ -45,7 +52,7 @@ ppo_model = None
 async def lifespan(app: FastAPI):
     global ppo_model
     print(f"[startup] Loading PPO policy from {PPO_CHECKPOINT_PATH} ...")
-    ppo_model = PPO.load(PPO_CHECKPOINT_PATH)
+    ppo_model = _load_ppo(PPO_CHECKPOINT_PATH)
     app.state.ppo_model = ppo_model
     app.state.ppo_path = PPO_CHECKPOINT_PATH
     # The tracker is loaded once per checkpoint file (serving.inference.get_tracker caches it by
