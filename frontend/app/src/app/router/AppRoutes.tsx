@@ -5,6 +5,7 @@ import { FocusLayout } from '@/layouts/FocusLayout'
 import { AppShell } from '@/layouts/AppShell'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { SkeletonCard } from '@/components/ui/Skeleton'
 import { AdaptiveLayout, RequirePlacement, RequireStudent } from './guards'
 
 /** Route-level code splitting: each page module is fetched on first visit. */
@@ -48,7 +49,12 @@ export const routes: RouteObject[] = [
   { element: <AdaptiveLayout />, children: [{ path: '*', element: <NotFoundPage /> }] },
 ]
 
+/** Shown while the first lazily-loaded route module is fetched (the boot screen has usually just left). */
+function InitialLoad() {
+  return <div className="mx-auto max-w-3xl p-6"><SkeletonCard lines={4} /></div>
+}
+
 export function AppRoutes() {
-  const [router] = useState(() => createBrowserRouter(routes))
+  const [router] = useState(() => createBrowserRouter([{ HydrateFallback: InitialLoad, children: routes }]))
   return <RouterProvider router={router} />
 }

@@ -64,8 +64,8 @@ export function LandingPage() {
         </Reveal>
         <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
-            <Reveal key={s.title} delay={i * 0.06}>
-              <li className="h-full list-none">
+            <li key={s.title} className="list-none">
+              <Reveal delay={i * 0.06} className="h-full">
                 <Card className="h-full">
                   <CardBody>
                     <div className="mb-3 flex items-center gap-2.5">
@@ -76,8 +76,8 @@ export function LandingPage() {
                     <p className="mt-1.5 text-sm text-muted">{s.text}</p>
                   </CardBody>
                 </Card>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ol>
       </section>
