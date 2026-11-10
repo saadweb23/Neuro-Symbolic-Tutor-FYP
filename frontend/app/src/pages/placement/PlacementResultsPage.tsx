@@ -5,7 +5,7 @@ import { useRecommendation } from '@/api/queries/hooks'
 import type { Beliefs } from '@/api/types'
 import { useMetaConfig } from '@/app/providers/MetaProvider'
 import { useStudentId } from '@/app/providers/StudentProvider'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { ConceptMap } from '@/components/domain/ConceptMap'
 import { LinkButton } from '@/components/ui/Button'
 import { Card, CardBody } from '@/components/ui/Card'
@@ -34,7 +34,7 @@ export function PlacementResultsPage() {
     <div className="min-h-svh">
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 max-w-5xl items-center gap-3 px-4">
-          <AnimatedCubeLogo size={24} motion="none" bare />
+          <BrandMark size={24} />
           <Wordmark className="text-base" />
         </div>
       </header>

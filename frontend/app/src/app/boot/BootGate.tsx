@@ -5,7 +5,7 @@ import { ApiError } from '@/api/client'
 import { fetchMeta, fetchStatus } from '@/api/queries/hooks'
 import { keys } from '@/api/queries/keys'
 import type { Meta } from '@/api/types'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { Button } from '@/components/ui/Button'
 import { safeStorage, STORAGE_KEYS } from '@/constants/storage'
 import { MetaProvider } from '../providers/MetaProvider'
@@ -127,7 +127,7 @@ export function BootGate({ children }: { children: ReactNode }) {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.03, transition: { duration: 0.4, ease: 'easeOut' } }}
           >
-            <AnimatedCubeLogo size={96} className="mb-[30px]" />
+            <BrandMark size={72} motion="pulse" />
             <motion.div exit={{ scale: 0.9, opacity: 0, transition: { duration: 0.3 } }} className="text-[22px]">
               <Wordmark className="text-[22px] font-semibold" />
             </motion.div>

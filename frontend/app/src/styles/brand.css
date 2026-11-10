@@ -1,0 +1,16 @@
+/* NeuroTutor brand mark animation (loading states only). Linked from index.html so the boot splash
+ * paints before any JavaScript runs; the React <BrandMark /> uses the same classes.
+ * Only transform / opacity are animated. Reduced motion (OS or the in-app override) disables it. */
+.nt-mark .nt-node { transform-box: fill-box; transform-origin: center; }
+.nt-mark[data-motion='pulse'] .nt-node { animation: nt-node-pulse 1.5s ease-in-out infinite; }
+.nt-mark[data-motion='pulse'] .nt-node:nth-child(2) { animation-delay: 0.15s; }
+.nt-mark[data-motion='pulse'] .nt-node:nth-child(3) { animation-delay: 0.3s; }
+.nt-mark[data-motion='pulse'] .nt-node:nth-child(4) { animation-delay: 0.45s; }
+@keyframes nt-node-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  45% { transform: scale(1.5); opacity: 0.75; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nt-mark .nt-node { animation: none !important; }
+}
+html.reduce-motion .nt-mark .nt-node { animation: none !important; }

@@ -1,5 +1,5 @@
 import { Link, Outlet } from 'react-router-dom'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { ThemeToggle } from '@/components/nav/ThemeToggle'
 import { LinkButton } from '@/components/ui/Button'
 import { ROUTES } from '@/constants/routes'
@@ -11,7 +11,7 @@ export function PublicHeader() {
     <header className="sticky top-0 z-30 border-b border-border bg-bg/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 md:px-6">
         <Link to={ROUTES.landing} className="group flex items-center gap-2.5" aria-label="NeuroTutor home">
-          <AnimatedCubeLogo size={26} motion="hover" bare />
+          <BrandMark size={26} />
           <Wordmark />
         </Link>
         <nav aria-label="Site" className="ml-6 hidden items-center gap-5 text-sm font-medium text-muted md:flex">
@@ -33,7 +33,7 @@ export function PublicFooter() {
     <footer className="border-t border-border">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-6">
         <div className="flex items-center gap-2.5">
-          <AnimatedCubeLogo size={20} motion="none" bare />
+          <BrandMark size={20} />
           <span>NeuroTutor, a neuro-symbolic Python tutor (final-year project).</span>
         </div>
         <nav aria-label="Footer" className="flex gap-5">

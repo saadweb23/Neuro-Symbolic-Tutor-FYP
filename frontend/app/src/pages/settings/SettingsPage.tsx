@@ -152,7 +152,7 @@ function SettingsContent({ id }: { id: string }) {
                 </div>
               </fieldset>
               <div className="mt-4 divide-y divide-border border-t border-border">
-                <Switch checked={prefs.reduceMotion} onChange={prefs.setReduceMotion} label="Reduce motion" description="Stops the rotating cube and shortens transitions. Your system's reduced-motion setting is always honoured too." />
+                <Switch checked={prefs.reduceMotion} onChange={prefs.setReduceMotion} label="Reduce motion" description="Stops the loading animation and shortens transitions. Your system's reduced-motion setting is always honoured too." />
                 <Switch checked={prefs.shortcuts} onChange={prefs.setShortcuts} label="Keyboard shortcuts" description="Press 1-4 to choose an answer and Enter to submit or continue during learning." />
               </div>
             </CardBody>

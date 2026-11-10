@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#4F46E5" />
     <meta name="description" content="NeuroTutor: an adaptive Python tutor that explains why you are stuck, not just that you are." />
     <title>NeuroTutor</title>
-    <link rel="stylesheet" href="/src/styles/cube.css" />
+    <link rel="stylesheet" href="/src/styles/brand.css" />
     <script>
       // Pre-paint theme: avoids a flash of the wrong theme. Mirrors src/app/providers/ThemeProvider.
       (function () {
@@ -25,7 +25,7 @@
     </script>
     <style>
       /* Instant boot splash: pure CSS, painted before any JavaScript runs. The React BootGate
-         takes it over (same cube, same position) and removes it. */
+         takes it over (same mark, same position) and removes it. */
       html { background: #F7F8FB; }
       html.dark { background: #0B1020; }
       #nt-splash { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center;
@@ -41,18 +41,12 @@
   <body>
     <div id="root"></div>
     <div id="nt-splash" aria-hidden="true">
-      <div class="nt-cube-wrap" style="--s: 96px; margin-bottom: 30px">
-        <div class="nt-glow"></div>
-        <div class="nt-scene">
-          <div class="nt-tilt"><div class="nt-cube">
-            <i class="nt-face f1"></i><i class="nt-face f2"></i><i class="nt-face f3"></i>
-            <i class="nt-face f4"></i><i class="nt-face f5"></i><i class="nt-face f6"></i>
-            <div class="nt-core"><i class="nt-face f1"></i><i class="nt-face f2"></i><i class="nt-face f3"></i>
-              <i class="nt-face f4"></i><i class="nt-face f5"></i><i class="nt-face f6"></i></div>
-          </div></div>
-        </div>
-        <div class="nt-shadow"></div>
-      </div>
+      <svg class="nt-mark" data-motion="pulse" width="72" height="72" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="nt-mark-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#0d9488"/></linearGradient></defs>
+        <rect width="64" height="64" rx="16" fill="url(#nt-mark-gradient)"/>
+        <path d="M20 44V20L44 44V20" fill="none" stroke="#fff" stroke-opacity=".92" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="#fff"><circle class="nt-node" cx="20" cy="44" r="5.5"/><circle class="nt-node" cx="20" cy="20" r="5.5"/><circle class="nt-node" cx="44" cy="44" r="5.5"/><circle class="nt-node" cx="44" cy="20" r="5.5"/></g>
+      </svg>
       <div class="nt-splash-name">Neuro<span>Tutor</span></div>
       <div class="nt-splash-slot"></div>
     </div>

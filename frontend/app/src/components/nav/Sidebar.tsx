@@ -1,6 +1,6 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { NAV_FOOTER, NAV_INSIGHTS, NAV_LEARN, type NavItem } from '@/constants/nav'
 import { ROUTES } from '@/constants/routes'
@@ -55,7 +55,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
       )}
     >
       <NavLink to={ROUTES.dashboard} className={cn('group flex h-16 items-center gap-3 px-5', collapsed && 'justify-center px-0')} aria-label="NeuroTutor home">
-        <AnimatedCubeLogo size={26} motion="hover" bare />
+        <BrandMark size={26} />
         {!collapsed && <Wordmark />}
       </NavLink>
       <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 py-4">

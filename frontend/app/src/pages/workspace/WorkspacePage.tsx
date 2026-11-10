@@ -7,8 +7,8 @@ import { keys } from '@/api/queries/keys'
 import type { SessionState } from '@/api/types'
 import { useMetaConfig } from '@/app/providers/MetaProvider'
 import { useStudentId } from '@/app/providers/StudentProvider'
-import { AnimatedCubeLogo } from '@/components/brand/AnimatedCubeLogo'
-import { CubeLoader } from '@/components/brand/CubeLoader'
+import { BrandMark } from '@/components/brand/BrandMark'
+import { BrandLoader } from '@/components/brand/BrandLoader'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { ExplanationCallout } from '@/components/learning/ExplanationCallout'
 import { Button } from '@/components/ui/Button'
@@ -44,7 +44,7 @@ export function WorkspacePage() {
   }, [id, qc, navigate])
 
   if (error != null) return <div className="mx-auto max-w-lg p-6"><ErrorState error={error} onRetry={() => { checked.current = false; setError(null); navigate(0) }} /></div>
-  if (!initial) return <CubeLoader label="Opening your session…" className="min-h-svh justify-center" />
+  if (!initial) return <BrandLoader label="Opening your session…" className="min-h-svh justify-center" />
   return <Workspace session={initial} />
 }
 
@@ -72,7 +72,7 @@ function Workspace({ session }: { session: SessionState }) {
           <Button variant="ghost" size="sm" onClick={() => setConfirmExit(true)} icon={<ArrowLeft className="size-4" />} aria-label="Leave session">
             <span className="hidden sm:inline">Exit</span>
           </Button>
-          <AnimatedCubeLogo size={22} motion="none" bare className="hidden sm:block" />
+          <BrandMark size={22} className="hidden sm:block" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{blockName}</p>
             {round && <p className="text-xs text-muted">{round}</p>}
@@ -97,7 +97,7 @@ function Workspace({ session }: { session: SessionState }) {
       </header>
 
       <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
-        {state.phase === 'loading' && <CubeLoader label="Consulting the tutoring agent…" className="py-24" />}
+        {state.phase === 'loading' && <BrandLoader label="Consulting the tutoring agent…" className="py-24" />}
         {state.phase === 'error' && <div className="mx-auto max-w-lg"><ErrorState error={state.error} onRetry={() => void load()} title="Could not load the next step" /></div>}
 
         {terminal?.content_type === 'block_complete' && <div className="mx-auto max-w-2xl"><BlockCompleteCard step={terminal} /></div>}

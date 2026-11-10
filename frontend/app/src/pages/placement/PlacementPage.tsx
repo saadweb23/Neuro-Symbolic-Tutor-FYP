@@ -6,8 +6,8 @@ import { ApiError } from '@/api/client'
 import { useStatus, usePlacementStart, usePlacementSubmit } from '@/api/queries/hooks'
 import type { Beliefs, PlacementAnswer, PlacementQuestion } from '@/api/types'
 import { useStudentContext, useStudentId } from '@/app/providers/StudentProvider'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
-import { CubeLoader } from '@/components/brand/CubeLoader'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
+import { BrandLoader } from '@/components/brand/BrandLoader'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { McqQuestion } from '@/components/learning/McqQuestion'
 import { Button } from '@/components/ui/Button'
@@ -109,7 +109,7 @@ export function PlacementPage() {
 
   useKeyShortcuts({ Enter: next }, !!current && !submit.isPending)
 
-  if (status.isPending) return <CubeLoader label="Loading…" className="min-h-svh justify-center" />
+  if (status.isPending) return <BrandLoader label="Loading…" className="min-h-svh justify-center" />
   if (status.isError) return <div className="mx-auto max-w-lg p-6"><ErrorState error={status.error} onRetry={() => status.refetch()} /></div>
   if (alreadyPlaced) return <Navigate to={ROUTES.dashboard} replace />
 
@@ -121,7 +121,7 @@ export function PlacementPage() {
       <h1 className="sr-only">Placement quiz</h1>
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 max-w-3xl items-center gap-3 px-4">
-          <AnimatedCubeLogo size={24} motion="none" bare />
+          <BrandMark size={24} />
           <Wordmark className="text-base" />
           <span className="ml-2 hidden text-sm text-muted sm:inline">Placement quiz</span>
           <button
@@ -141,8 +141,8 @@ export function PlacementPage() {
           }} />
         )}
 
-        {!questions && error == null && <CubeLoader label="Preparing your placement quiz…" />}
-        {allAnswered && submit.isPending && <CubeLoader label="Scoring your placement quiz…" />}
+        {!questions && error == null && <BrandLoader label="Preparing your placement quiz…" />}
+        {allAnswered && submit.isPending && <BrandLoader label="Scoring your placement quiz…" />}
 
         {current && !submit.isPending && (
           <Card className="p-5 sm:p-8">

@@ -6,7 +6,7 @@ import { fetchStatus } from '@/api/queries/hooks'
 import { keys } from '@/api/queries/keys'
 import { useMetaConfig } from '@/app/providers/MetaProvider'
 import { useStudentContext } from '@/app/providers/StudentProvider'
-import { AnimatedCubeLogo } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark } from '@/components/brand/BrandMark'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
@@ -69,7 +69,7 @@ export function OnboardingPage() {
   return (
     <div className="mx-auto grid min-h-[calc(100svh-8rem)] max-w-5xl items-center gap-10 px-4 py-10 md:grid-cols-2 md:px-6">
       <div className="hidden md:block">
-        <AnimatedCubeLogo size={72} motion="hover" />
+        <BrandMark size={72} />
         <h2 className="mt-10 text-3xl font-semibold">Let&apos;s find your starting point</h2>
         <ul className="mt-6 space-y-4">
           {steps.map((s) => (

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, Outlet, useNavigation } from 'react-router-dom'
-import { AnimatedCubeLogo, Wordmark } from '@/components/brand/AnimatedCubeLogo'
+import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { MobileNavigation } from '@/components/nav/MobileNavigation'
 import { SessionPill } from '@/components/nav/SessionPill'
 import { Sidebar } from '@/components/nav/Sidebar'
@@ -57,7 +57,7 @@ export function AppShell() {
       <div className={cn('transition-[padding] duration-200', collapsed ? 'md:pl-[72px]' : 'md:pl-64')}>
         <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-surface/90 px-4 backdrop-blur md:px-6">
           <Link to={ROUTES.dashboard} className="group flex items-center gap-2.5 md:hidden" aria-label="NeuroTutor home">
-            <AnimatedCubeLogo size={24} motion="hover" bare />
+            <BrandMark size={24} />
             <Wordmark className="text-base" />
           </Link>
           <p aria-hidden className="hidden truncate text-lg font-semibold md:block">{title}</p>
