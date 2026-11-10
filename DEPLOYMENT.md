@@ -19,24 +19,24 @@ Everything is free; nothing asks for a payment method. If any dashboard asks for
 
 ## What was actually deployed here, and why
 
-Neon (database) and Vercel (frontend) are free and work as described below. Both free API hosts that fit were
-blocked behind payment: Hugging Face Docker Spaces need a PRO plan and **Render requires a card on file even for its
-free instance** (HTTP 402 when creating the service). Without adding payment details, the API runs **on your own PC**
-and is published through a free **Cloudflare quick tunnel**:
+Neon (database) is free and works. Both free API hosts that fit were blocked behind payment: Hugging Face Docker Spaces
+need a PRO plan and **Render requires a card on file even for its free instance** (HTTP 402). Vercel was unavailable at the
+time. Without adding payment details, **one process on your own PC serves the website and the API**, published through a
+free **Cloudflare quick tunnel**:
 
 ```
- Browser ──► Vercel (static site) ──► https://<random>.trycloudflare.com ──► your PC: FastAPI ──► Neon PostgreSQL
+ Anyone ──► https://<random>.trycloudflare.com ──► your PC: FastAPI (API + built website) ──► local database or Neon PostgreSQL
 ```
 
-* Start it with `deploy\windows\start_public_api.bat` (or `start_public_api.ps1 -AllowedOrigin https://<project>.vercel.app`).
-  It asks for the Neon connection string (hidden input), starts the API on `127.0.0.1`, and prints the tunnel URL.
-  One-time: `pip install -r requirements.txt` and `winget install --id Cloudflare.cloudflared`.
-* **The site works only while that window is open** and your PC is on and online. All student data is in Neon, so nothing is lost when it stops.
-* A quick-tunnel URL is **random and changes every time** it starts. The frontend bakes the API URL in at build time, so
-  after each restart the Vercel site must be redeployed with the new URL (`VITE_API_BASE`). For a stable URL use a Cloudflare
-  *named* tunnel (needs a domain on a free Cloudflare account) or an ngrok free static domain; then set it once.
+* **Start:** double-click `deploy\windows\start_public_api.bat` (one-time: `pip install -r requirements.txt` and
+  `winget install --id Cloudflare.cloudflared`). It builds the site if needed, asks for a database (press Enter for this
+  PC's own `backend\tutor_state.db`, which keeps existing students, or paste the Neon string), then prints the public link.
+* One URL serves both the site and the API (the production build calls the API on its own origin), so there is **no CORS and no second host**.
+* **The link works only while that window is open** and the PC is on and online. A quick-tunnel URL is random and changes on each
+  start; for a stable link use a Cloudflare *named* tunnel (needs a free Cloudflare account and a domain) or an ngrok free static domain.
 * The PC runs the **unmodified research stack** (no `NEURO_LITE`), so no memory limit applies.
-* If you later add a card to Render (the free plan costs $0), `render.yaml` + the lite mode below deploy the API there, always on-demand.
+* Nothing is exposed except through the tunnel: the server listens on `127.0.0.1` only. There is no authentication; a student ID is a label.
+* If you later add a card to Render (the free plan costs $0), `render.yaml` + the lite mode below deploy the API there; Vercel works the same way for the site (`vercel.json`).
 
 ## Memory: why `NEURO_LITE=1`
 

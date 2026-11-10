@@ -103,9 +103,14 @@ async def unhandled_error(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"detail": "Internal server error"})
 
 
-@app.get("/", include_in_schema=False)
-def root():
-    return {"name": "NeuroTutor API", "docs": "/docs", "health": "/health"}
+_DIST = os.environ.get("FRONTEND_DIST") or os.path.join(os.path.dirname(SCRIPT_DIR), "frontend", "app", "dist")
+_SERVE_SITE = os.path.isfile(os.path.join(_DIST, "index.html"))
+
+
+if not _SERVE_SITE:
+    @app.get("/", include_in_schema=False)
+    def root():
+        return {"name": "NeuroTutor API", "docs": "/docs", "health": "/health"}
 
 
 @app.get("/health", tags=["meta"])
@@ -256,3 +261,23 @@ def mastery(student_id: StudentId):
 
 # Read-only insight endpoints (/meta, /graph, /status, /summary, /history, ...)
 app.include_router(insights_router)
+
+
+# ---- Optional: serve the built website from this same process (one URL for site + API) ----------
+# Active when frontend/app/dist exists (run `npm run build` in frontend/app) or FRONTEND_DIST points
+# at a build. Registered LAST so every API route above takes precedence over the catch-all.
+if _SERVE_SITE:
+    from fastapi.responses import FileResponse
+
+    _API_PREFIXES = ("students/", "docs", "redoc", "openapi.json", "meta", "graph", "health")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def site(full_path: str):
+        if full_path.startswith(_API_PREFIXES):
+            raise HTTPException(status_code=404, detail="Not found")
+        candidate = os.path.realpath(os.path.join(_DIST, full_path))
+        inside = candidate == os.path.realpath(_DIST) or candidate.startswith(os.path.realpath(_DIST) + os.sep)
+        if full_path and inside and os.path.isfile(candidate):
+            headers = {"Cache-Control": "public, max-age=31536000, immutable"} if full_path.startswith("assets/") else None
+            return FileResponse(candidate, headers=headers)
+        return FileResponse(os.path.join(_DIST, "index.html"), headers={"Cache-Control": "no-cache"})  # SPA fallback

@@ -13,7 +13,8 @@ def test_health_is_lightweight_and_db_health_reports_the_backend(client):
     assert r["status"] == "ok" and r["database"] in ("sqlite", "postgresql")
     assert r["memory_mb"] is None or r["memory_mb"] > 50
     assert r["database"] == ("postgresql" if persistence.IS_PG else "sqlite")
-    assert client.get("/").json()["docs"] == "/docs"
+    root = client.get("/")
+    assert root.status_code == 200      # the API stub, or the website when a frontend build exists
 
 
 def test_cors_origins_come_from_the_environment(monkeypatch):
@@ -38,9 +39,11 @@ def test_cors_preflight_is_answered_for_the_configured_origin_only(client, monke
 
 def test_unexpected_errors_are_generic_and_never_leak_details():
     import main
-    @main.app.get("/_boom_for_test")
+    from fastapi.routing import APIRoute
+
     def boom():
         raise RuntimeError("password=hunter2 postgresql://user:secret@host/db")
+    main.app.router.routes.insert(0, APIRoute("/_boom_for_test", boom, methods=["GET"]))   # before any catch-all
     r = TestClient(main.app, raise_server_exceptions=False).get("/_boom_for_test")
     assert r.status_code == 500
     assert r.json() == {"detail": "Internal server error"}
@@ -91,3 +94,30 @@ def test_snapshot_compaction_keeps_only_the_newest_hidden_state(client, db):
     first = client.get(f"/students/{sid}/mastery/trajectory").json()
     client.post(f"/students/{sid}/session/start", json={"block_index": 0})
     assert client.get(f"/students/{sid}/mastery/trajectory").json() == first
+
+
+def test_backend_serves_the_built_site_with_spa_fallback_and_never_shadows_the_api(tmp_path):
+    """With a build present the same process serves the website (one public URL for site + API)."""
+    import importlib, os, sys
+    dist = tmp_path / "dist"; (dist / "assets").mkdir(parents=True)
+    (dist / "index.html").write_text("<!doctype html><title>NeuroTutor</title><div id=root></div>")
+    (dist / "assets" / "app.js").write_text("console.log(1)")
+    (dist / "favicon.svg").write_text("<svg/>")
+    os.environ["FRONTEND_DIST"] = str(dist)
+    try:
+        sys.modules.pop("main", None)
+        main = importlib.import_module("main")
+        c = TestClient(main.app)
+        assert "<title>NeuroTutor</title>" in c.get("/").text
+        assert "<title>NeuroTutor</title>" in c.get("/learn/session").text          # SPA deep link / refresh
+        assert c.get("/assets/app.js").text == "console.log(1)"
+        assert "immutable" in c.get("/assets/app.js").headers["cache-control"]
+        assert c.get("/favicon.svg").text == "<svg/>"
+        assert c.get("/health").json() == {"status": "ok"}                          # API still wins
+        assert c.get("/meta").status_code != 404 and "NeuroTutor" not in c.get("/graph").text
+        assert c.get("/students/x/nope").status_code == 404                          # unknown API path: JSON 404, not the site
+        assert c.get("/../../etc/passwd").status_code in (200, 404) and "root:" not in c.get("/..%2f..%2fetc%2fpasswd").text
+    finally:
+        os.environ.pop("FRONTEND_DIST", None)
+        sys.modules.pop("main", None)
+        importlib.import_module("main")
