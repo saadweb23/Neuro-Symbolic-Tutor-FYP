@@ -5,13 +5,27 @@ import torch
 from serving import persistence
 from serving import question_generator
 from serving.inference import (
-    build_edge_index,
+    get_edge_index,
+    get_tracker,
     get_mastery_beliefs,
     apply_interaction,
-    load_frozen_tracker,
     model_version_from_checkpoint,
     DEFAULT_CHECKPOINT,
 )
+
+
+class PlacementAlreadyCompleted(Exception):
+    """The student already has placement answers on record. Re-running placement would reset
+    the tracker state to placement-only and silently discard later learning history."""
+
+
+def placement_completed(student_id, db_path=persistence.DEFAULT_DB_PATH):
+    conn = persistence.init_db(db_path)
+    row = conn.execute(
+        "SELECT 1 FROM interactions WHERE student_id = ? AND source = 'placement' LIMIT 1", (student_id,)
+    ).fetchone()
+    conn.close()
+    return row is not None
 
 # One concept per curriculum block (its earliest/most foundational node),
 # plus both graph roots explicitly. Short questions instead of one give a
@@ -62,6 +76,8 @@ def submit_placement_answers(student_id, answers, db_path=persistence.DEFAULT_DB
     into run_placement_quiz() to seed mastery state. Mirrors the
     grade-then-log pattern in content_engine.submit_mcq_answer, but for the
     whole placement batch at once instead of one in-loop question."""
+    if placement_completed(student_id, db_path):
+        raise PlacementAlreadyCompleted(student_id)
     conn = persistence.init_db(db_path)
     graded = []
     for answer in answers:
@@ -74,6 +90,8 @@ def submit_placement_answers(student_id, answers, db_path=persistence.DEFAULT_DB
             "concept": question_payload["concept"],
             "passed": passed,
             "time_taken": answer["time_taken"],
+            "content_id": answer["content_id"],
+            "selected_index": answer["selected_index"],
         })
     conn.close()
     return run_placement_quiz(student_id, graded, db_path=db_path, checkpoint_path=checkpoint_path)
@@ -95,8 +113,8 @@ def run_placement_quiz(student_id, answers, db_path=persistence.DEFAULT_DB_PATH,
     if missing:
         raise ValueError(f"Missing placement answers for: {sorted(missing)}")
 
-    tracker = load_frozen_tracker(checkpoint_path=checkpoint_path)
-    edge_index = build_edge_index()
+    tracker = get_tracker(checkpoint_path)
+    edge_index = get_edge_index()
 
     conn = persistence.init_db(db_path)
     persistence.ensure_student(conn, student_id)
@@ -109,7 +127,11 @@ def run_placement_quiz(student_id, answers, db_path=persistence.DEFAULT_DB_PATH,
         passed = int(answer["passed"])
         time_taken = float(answer["time_taken"])
 
-        persistence.log_interaction(conn, student_id, step_index, concept, passed, time_taken, source='placement')
+        # content_id / selected_index are optional: placement rows written by simulation scripts
+        # have no question behind them. Real placement answers carry both, which lets History
+        # show the question and keeps later practice questions from repeating it.
+        persistence.log_interaction(conn, student_id, step_index, concept, passed, time_taken, source='placement',
+                                    content_id=answer.get("content_id"), selected_index=answer.get("selected_index"))
         h_t = apply_interaction(tracker, edge_index, h_t, concept, passed, time_taken)
         step_index += 1
 
@@ -129,8 +151,8 @@ def load_or_rebuild_state(student_id, db_path=persistence.DEFAULT_DB_PATH,
     retrain) -- the cache is a derived optimization, `interactions` is the
     source of truth.
     """
-    tracker = load_frozen_tracker(checkpoint_path=checkpoint_path)
-    edge_index = build_edge_index()
+    tracker = get_tracker(checkpoint_path)
+    edge_index = get_edge_index()
     current_version = model_version_from_checkpoint(checkpoint_path)
 
     conn = persistence.init_db(db_path)

@@ -37,3 +37,13 @@ Thumbs.db
 backend/data_generation/extra/
 backend/experiments/results/tracker_v2/runs/*.pth
 backend/experiments/results/tracker_v2/runs/*.npz
+
+# SQLite WAL side files (the backend runs the database in WAL mode)
+*.db-wal
+*.db-shm
+
+# Test / tooling output
+.pytest_cache/
+frontend/app/playwright-report/
+frontend/app/test-results/
+frontend/app/coverage/

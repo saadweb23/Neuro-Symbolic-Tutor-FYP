@@ -2,13 +2,13 @@ import json
 import os
 import random
 
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 # Same Gemini setup already used in data_generation/llm_simulator.py, reused
 # here for consistency rather than introducing a second LLM integration path.
+# google.generativeai (deprecated, slow to import) is imported lazily in _get_model(), so
+# the server starts without it when serving from the question bank or in mock mode.
 load_dotenv()
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Set MOCK_LLM=true in the environment to skip real Gemini calls entirely and
 # get instant, free, varied placeholder questions instead -- for frontend/API
@@ -34,6 +34,8 @@ _question_bank = None
 def _get_model():
     global _model
     if _model is None:
+        import google.generativeai as genai
+        genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
         # gemini-2.5-flash is being retired (Google's API now rejects it for
         # this project with a 404 pointing here) and its free tier was also
         # capped at a very restrictive 20 requests/day for this key --
@@ -44,6 +46,12 @@ def _get_model():
     return _model
 
 
+# Belief cut-offs for the difficulty tiers (also reported by GET /meta so the UI never
+# hardcodes them).
+EASY_BELOW = 0.4
+MEDIUM_BELOW = 0.7
+
+
 def difficulty_for_belief(belief):
     """Maps the tracker's current mastery belief for a concept to a question
     difficulty tier. This is where "difficulty" actually earns its keep in
@@ -52,9 +60,9 @@ def difficulty_for_belief(belief):
     time, using the belief the tracker already computed -- weak belief gets
     an easier question, strong belief gets pushed harder.
     """
-    if belief < 0.4:
+    if belief < EASY_BELOW:
         return "easy"
-    if belief < 0.7:
+    if belief < MEDIUM_BELOW:
         return "medium"
     return "hard"
 

@@ -11,9 +11,17 @@ DEFAULT_DB_PATH = os.environ.get('TUTOR_DB_PATH') or os.path.join(os.path.dirnam
 
 
 def get_connection(db_path=DEFAULT_DB_PATH):
-    conn = sqlite3.connect(db_path)
+    # timeout + WAL: the API serves requests from a thread pool, so two requests for the
+    # same student can overlap. WAL lets readers and a writer coexist; the busy timeout
+    # makes a second writer wait instead of failing with "database is locked".
+    conn = sqlite3.connect(db_path, timeout=15)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA busy_timeout = 15000")
+    try:
+        conn.execute("PRAGMA journal_mode = WAL")
+    except sqlite3.OperationalError:
+        pass  # e.g. an in-memory or read-only database; WAL is an optimisation only
     return conn
 
 
@@ -69,6 +77,19 @@ def init_db(db_path=DEFAULT_DB_PATH):
             created_at TEXT NOT NULL DEFAULT (datetime('now'))
         );
 
+        -- Derived cache (like mastery_state): the tracker's beliefs after each interaction,
+        -- replayed with the model identified by model_version. Powers the mastery
+        -- trajectory / analytics / history belief-change fields. If you hand-edit or delete
+        -- `interactions` rows, delete that student's belief_snapshots too.
+        CREATE TABLE IF NOT EXISTS belief_snapshots (
+            student_id TEXT NOT NULL REFERENCES students(student_id),
+            step_index INTEGER NOT NULL,
+            model_version TEXT NOT NULL,
+            beliefs_json TEXT NOT NULL,
+            h_t_blob BLOB NOT NULL,
+            PRIMARY KEY (student_id, step_index, model_version)
+        );
+
         CREATE TABLE IF NOT EXISTS sessions (
             student_id TEXT PRIMARY KEY REFERENCES students(student_id),
             block_index INTEGER NOT NULL,
@@ -79,6 +100,9 @@ def init_db(db_path=DEFAULT_DB_PATH):
     """)
     conn.commit()
     _migrate_add_column(conn, "interactions", "content_id", "TEXT")
+    # Which option the student picked (MCQ rows only; NULL for older rows and for video /
+    # deep-dive views). Lets the History page show "your answer" after the fact.
+    _migrate_add_column(conn, "interactions", "selected_index", "INTEGER")
     return conn
 
 
@@ -104,13 +128,34 @@ def get_next_step_index(conn, student_id):
     return row["max_step"] + 1
 
 
-def log_interaction(conn, student_id, step_index, concept, passed, time_taken, source='quiz', content_id=None):
+def log_interaction(conn, student_id, step_index, concept, passed, time_taken, source='quiz', content_id=None,
+                    selected_index=None):
     conn.execute(
-        "INSERT INTO interactions (student_id, step_index, concept, passed, time_taken, source, content_id) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (student_id, step_index, concept, int(passed), float(time_taken), source, content_id)
+        "INSERT INTO interactions (student_id, step_index, concept, passed, time_taken, source, content_id, "
+        "selected_index) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (student_id, step_index, concept, int(passed), float(time_taken), source, content_id,
+         None if selected_index is None else int(selected_index))
     )
     conn.commit()
+
+
+def log_interaction_next(conn, student_id, concept, passed, time_taken, source='quiz', content_id=None,
+                         selected_index=None):
+    """Appends an interaction at the next free step_index in ONE statement, so two overlapping
+    requests for the same student can't both pick the same index (which would violate
+    UNIQUE(student_id, step_index)). Returns the step_index that was used."""
+    conn.execute(
+        "INSERT INTO interactions (student_id, step_index, concept, passed, time_taken, source, content_id, "
+        "selected_index) "
+        "SELECT ?, COALESCE(MAX(step_index), -1) + 1, ?, ?, ?, ?, ?, ? FROM interactions WHERE student_id = ?",
+        (student_id, concept, int(passed), float(time_taken), source, content_id,
+         None if selected_index is None else int(selected_index), student_id)
+    )
+    conn.commit()
+    row = conn.execute(
+        "SELECT MAX(step_index) AS s FROM interactions WHERE student_id = ?", (student_id,)
+    ).fetchone()
+    return row["s"]
 
 
 def get_interaction_history(conn, student_id):
@@ -120,6 +165,72 @@ def get_interaction_history(conn, student_id):
         (student_id,)
     ).fetchall()
     return [dict(row) for row in rows]
+
+
+def get_interaction_rows(conn, student_id):
+    """Every interaction for a student, oldest first, with all columns the read-only
+    insight endpoints need (timestamps, chosen option, ...)."""
+    rows = conn.execute(
+        "SELECT step_index, concept, passed, time_taken, source, content_id, selected_index, created_at "
+        "FROM interactions WHERE student_id = ? ORDER BY step_index ASC",
+        (student_id,)
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_latest_interaction(conn, student_id):
+    row = conn.execute(
+        "SELECT step_index, concept, passed, time_taken, source, content_id FROM interactions "
+        "WHERE student_id = ? ORDER BY step_index DESC LIMIT 1",
+        (student_id,)
+    ).fetchone()
+    return dict(row) if row is not None else None
+
+
+def get_student_row(conn, student_id):
+    row = conn.execute(
+        "SELECT student_id, created_at FROM students WHERE student_id = ?", (student_id,)
+    ).fetchone()
+    return dict(row) if row is not None else None
+
+
+def get_generated_questions_by_ids(conn, content_ids):
+    """{content_id: payload-with-concept/difficulty} for the given ids (missing ids omitted)."""
+    ids = list(content_ids)
+    out = {}
+    for i in range(0, len(ids), 500):
+        chunk = ids[i:i + 500]
+        marks = ",".join("?" for _ in chunk)
+        rows = conn.execute(
+            f"SELECT content_id, concept, difficulty, question_json FROM generated_questions "
+            f"WHERE content_id IN ({marks})", chunk
+        ).fetchall()
+        for r in rows:
+            payload = json.loads(r["question_json"])
+            payload["concept"] = r["concept"]
+            payload["difficulty"] = r["difficulty"]
+            out[r["content_id"]] = payload
+    return out
+
+
+def get_belief_snapshots(conn, student_id, model_version):
+    """{step_index: {"beliefs": [...25 floats in concept-id order], "h_t": tensor}} for this
+    student under this model version."""
+    rows = conn.execute(
+        "SELECT step_index, beliefs_json, h_t_blob FROM belief_snapshots "
+        "WHERE student_id = ? AND model_version = ? ORDER BY step_index ASC",
+        (student_id, model_version)
+    ).fetchall()
+    return {r["step_index"]: {"beliefs": json.loads(r["beliefs_json"]),
+                              "h_t": _deserialize_tensor(r["h_t_blob"])} for r in rows}
+
+
+def save_belief_snapshot(conn, student_id, step_index, model_version, beliefs, h_t):
+    conn.execute(
+        "INSERT OR IGNORE INTO belief_snapshots (student_id, step_index, model_version, beliefs_json, h_t_blob) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (student_id, step_index, model_version, json.dumps(beliefs), _serialize_tensor(h_t))
+    )
 
 
 def get_interaction_by_content_id(conn, student_id, content_id):
