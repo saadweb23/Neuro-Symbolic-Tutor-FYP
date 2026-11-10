@@ -1,10 +1,12 @@
+import logging
 import os
 from contextlib import asynccontextmanager
 from typing import List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from stable_baselines3 import PPO
 
@@ -25,6 +27,9 @@ from serving.placement_quiz import (
 )
 from api.routes import router as insights_router
 from api.schemas import StudentId, TimeTaken
+
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO").upper(), format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+log = logging.getLogger("neurotutor.api")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # ppo_tutor_v2.zip was trained against the v2 tracker; ppo_tutor.zip is the original (pairs with dual_gcn_weights_v1.pth).
@@ -48,19 +53,72 @@ async def lifespan(app: FastAPI):
     # first request does not pay for it.
     inference.warm_up()
     print("[startup] PPO policy and tracker loaded.")
+    log.info("storage backend: %s | CORS origins: %s", persistence.describe_backend(), CORS_ORIGINS or "none (cross-origin browser requests blocked)")
     yield
+    persistence.close_pool()
 
 
 app = FastAPI(title="Neuro-Symbolic Tutor API", lifespan=lifespan)
 
-# Local FYP dev/demo: frontend runs on a Vite dev server on an arbitrary
-# localhost port, so allow any origin rather than hardcoding one.
+def _cors_origins():
+    """Allowed browser origins, from CORS_ORIGINS (comma-separated, e.g. the Vercel URL).
+    Unset in development: any origin (the Vite dev server runs on an arbitrary port).
+    Unset with NEURO_ENV=production: none -- fail closed rather than open to every website."""
+    raw = os.environ.get("CORS_ORIGINS", "").strip()
+    if raw:
+        return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
+    return [] if os.environ.get("NEURO_ENV", "development").lower() == "production" else ["*"]
+
+
+CORS_ORIGINS = _cors_origins()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=CORS_ORIGINS,
+    allow_origin_regex=os.environ.get("CORS_ORIGIN_REGEX") or None,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    return response
+
+
+@app.exception_handler(Exception)
+async def unhandled_error(request: Request, exc: Exception):
+    """Unexpected failures are logged in full on the server and answered with a generic message:
+    stack traces, SQL and connection details never reach the client."""
+    log.exception("unhandled error on %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return {"name": "NeuroTutor API", "docs": "/docs", "health": "/health"}
+
+
+@app.get("/health", tags=["meta"])
+def health():
+    """Liveness for the hosting platform. Deliberately does not touch the database, so frequent
+    probes never wake a scale-to-zero database or count against its free compute allowance."""
+    return {"status": "ok"}
+
+
+@app.get("/health/db", tags=["meta"])
+def health_db():
+    """Verifies the database connection (use it to confirm a deployment; not for frequent probing)."""
+    try:
+        conn = persistence.init_db()
+        conn.execute("SELECT 1").fetchone()
+        conn.close()
+    except Exception:
+        log.exception("database health check failed")
+        return JSONResponse(status_code=503, content={"status": "unavailable", "database": persistence.describe_backend().split(":")[0]})
+    return {"status": "ok", "database": persistence.describe_backend().split(":")[0]}
 
 
 class PlacementAnswerIn(BaseModel):

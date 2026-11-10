@@ -27,6 +27,13 @@ Frontend and backend are developed separately; the HTTP API is the contract, so 
 - Read-only: `GET blocks`, `session`, `mastery`, `status`, `summary`, `history`, `mastery/trajectory`, `concepts`, `resources`, `recommendation` (preview), `analytics`; global `GET /meta` (readiness + the thresholds the UI shows) and `GET /graph`.
 - Read-only endpoints must never call `ensure_student`, write interactions, generate a question or increment a round. `/next`'s response shape (`content_engine.recommend_content`) is typed by hand in `frontend/app/src/api/types/next.ts`: keep them in sync.
 
+## Deployment (free tier; see `DEPLOYMENT.md`)
+- Vercel (frontend, `frontend/app/vercel.json`) + Hugging Face Space (API, `deploy/huggingface/`) + Neon PostgreSQL. Render's free 512 MB cannot hold the stack (~750 MB measured), so it is not used.
+- `DATABASE_URL` set => PostgreSQL (`serving/persistence.py`; same schema and behaviour as SQLite, tested on both: `DATABASE_URL=postgresql://... python -m pytest tests`). Unset => the local SQLite file. Never commit either a database or a connection string.
+- Production env: `NEURO_ENV=production`, `CORS_ORIGINS` (the Vercel origin; empty = no cross-origin access), `DATABASE_URL` (secret), `VITE_API_BASE` (frontend build). `GET /health` never touches the DB; `GET /health/db` does.
+- Move existing data: `python backend/scripts/migrate_sqlite_to_postgres.py --sqlite tutor_state.db --database-url ...` (read-only on SQLite, idempotent, verified).
+- `belief_snapshots` keeps the hidden state only for the newest step per student (older ones are compacted); that is intended.
+
 ## Rules and gotchas
 - Don't commit or push unless asked. Never commit `.env`, `*.db`, `venv/`, `node_modules/` (all gitignored). `backend/tutor_state.db` is created on first run and holds real student records.
 - **The 25-concept graph is baked into the trained models** (tracker `num_nodes=25`, PPO action space 25, observation 75). Adding, renaming or reordering concepts in `graph_builder.py` means retraining both (`train_tracker.py`, `agent/ppo_trainer.py`); concept IDs are list order.

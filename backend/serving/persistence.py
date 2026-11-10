@@ -1,16 +1,115 @@
 import io
 import json
+import logging
 import os
 import sqlite3
+import threading
 
 import torch
+
+log = logging.getLogger("neurotutor.db")
+
+# ---------------------------------------------------------------------------------------------
+# Two interchangeable storage backends behind the same functions below:
+#   * SQLite (default): a local file. TUTOR_DB_PATH points tests / demos at a throwaway file.
+#   * PostgreSQL: used whenever DATABASE_URL is set (e.g. Neon in production). Hosts with an
+#     ephemeral filesystem (Render's free tier) cannot keep a SQLite file, so student progress
+#     must live in an external database there.
+# The schema, column names, stored formats (timestamps are 'YYYY-MM-DD HH:MM:SS' UTC text) and
+# every function's behaviour are identical on both, so nothing above this module can tell.
+# ---------------------------------------------------------------------------------------------
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+IS_PG = DATABASE_URL.startswith(("postgres://", "postgresql://"))
 
 # backend/ root, regardless of this file's own package depth
 # TUTOR_DB_PATH lets tests/demos use a throwaway database instead of the real student records.
 DEFAULT_DB_PATH = os.environ.get('TUTOR_DB_PATH') or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tutor_state.db')
 
+_NOW = "(to_char(now() AT TIME ZONE 'utc', 'YYYY-MM-DD HH24:MI:SS'))" if IS_PG else "datetime('now')"
+
+_pool = None
+_pool_lock = threading.Lock()
+_schema_ready = False
+
+
+def describe_backend():
+    """Safe-to-log description of the active storage backend (never includes credentials)."""
+    return "postgresql" if IS_PG else f"sqlite:{os.path.basename(DEFAULT_DB_PATH)}"
+
+
+def _get_pool():
+    global _pool
+    if _pool is None:
+        with _pool_lock:
+            if _pool is None:
+                from psycopg.rows import dict_row
+                from psycopg_pool import ConnectionPool
+                # prepare_threshold=None: server-side prepared statements break behind PgBouncer
+                # (Neon's pooled endpoint). check: a connection that Neon suspended while idle is
+                # replaced transparently instead of failing a request.
+                _pool = ConnectionPool(
+                    DATABASE_URL,
+                    min_size=0,
+                    max_size=int(os.environ.get("DB_POOL_MAX", "6")),
+                    timeout=30,
+                    max_idle=240,
+                    max_lifetime=1800,
+                    check=ConnectionPool.check_connection,
+                    kwargs={"row_factory": dict_row, "prepare_threshold": None, "connect_timeout": 15},
+                    open=False,
+                    name="neurotutor",
+                )
+                _pool.open(wait=False)
+    return _pool
+
+
+def close_pool():
+    """Closes the PostgreSQL pool (server shutdown / end of a script). Safe to call when unused."""
+    global _pool, _schema_ready
+    with _pool_lock:
+        if _pool is not None:
+            _pool.close()
+            _pool = None
+            _schema_ready = False
+
+
+class _PgConnection:
+    """Adapts a pooled psycopg connection to the small sqlite3-style surface this module uses
+    (`execute`, `commit`, `close`), translating `?` placeholders. `close()` returns the
+    connection to the pool; a connection that is dropped without close() is returned on GC."""
+
+    def __init__(self, pool):
+        self._pool = pool
+        self._conn = pool.getconn()
+
+    def execute(self, sql, params=()):
+        return self._conn.execute(sql.replace("?", "%s"), params)
+
+    def commit(self):
+        self._conn.commit()
+
+    def rollback(self):
+        self._conn.rollback()
+
+    def close(self):
+        conn, self._conn = self._conn, None
+        if conn is None:
+            return
+        try:
+            conn.rollback()  # ends any open read transaction; a no-op after commit()
+        finally:
+            self._pool.putconn(conn)
+
+    def __del__(self):  # safety net: never leak a pooled connection on an exception path
+        try:
+            self.close()
+        except Exception:  # pragma: no cover
+            pass
+
 
 def get_connection(db_path=DEFAULT_DB_PATH):
+    if IS_PG:
+        return _PgConnection(_get_pool())
     # timeout + WAL: the API serves requests from a thread pool, so two requests for the
     # same student can overlap. WAL lets readers and a writer coexist; the busy timeout
     # makes a second writer wait instead of failing with "database is locked".
@@ -23,6 +122,73 @@ def get_connection(db_path=DEFAULT_DB_PATH):
     except sqlite3.OperationalError:
         pass  # e.g. an in-memory or read-only database; WAL is an optimisation only
     return conn
+
+
+_PG_SCHEMA = [
+    f"""CREATE TABLE IF NOT EXISTS students (
+        student_id TEXT PRIMARY KEY,
+        created_at TEXT NOT NULL DEFAULT {_NOW}
+    )""",
+    f"""CREATE TABLE IF NOT EXISTS interactions (
+        id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+        student_id TEXT NOT NULL REFERENCES students(student_id),
+        step_index INTEGER NOT NULL,
+        concept TEXT NOT NULL,
+        passed INTEGER NOT NULL,
+        time_taken DOUBLE PRECISION NOT NULL,
+        source TEXT NOT NULL DEFAULT 'quiz',
+        content_id TEXT,
+        selected_index INTEGER,
+        created_at TEXT NOT NULL DEFAULT {_NOW},
+        UNIQUE(student_id, step_index)
+    )""",
+    f"""CREATE TABLE IF NOT EXISTS mastery_state (
+        student_id TEXT PRIMARY KEY REFERENCES students(student_id),
+        h_t_blob BYTEA NOT NULL,
+        model_version TEXT NOT NULL,
+        last_step_index INTEGER NOT NULL,
+        updated_at TEXT NOT NULL DEFAULT {_NOW}
+    )""",
+    f"""CREATE TABLE IF NOT EXISTS generated_questions (
+        content_id TEXT PRIMARY KEY,
+        concept TEXT NOT NULL,
+        difficulty TEXT NOT NULL,
+        question_json TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT {_NOW}
+    )""",
+    """CREATE TABLE IF NOT EXISTS belief_snapshots (
+        student_id TEXT NOT NULL REFERENCES students(student_id),
+        step_index INTEGER NOT NULL,
+        model_version TEXT NOT NULL,
+        beliefs_json TEXT NOT NULL,
+        h_t_blob BYTEA NOT NULL,
+        PRIMARY KEY (student_id, step_index, model_version)
+    )""",
+    f"""CREATE TABLE IF NOT EXISTS sessions (
+        student_id TEXT PRIMARY KEY REFERENCES students(student_id),
+        block_index INTEGER NOT NULL,
+        round_count INTEGER NOT NULL DEFAULT 0,
+        round_cap INTEGER NOT NULL,
+        updated_at TEXT NOT NULL DEFAULT {_NOW}
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_interactions_student_content ON interactions (student_id, content_id)",
+]
+
+
+def _ensure_pg_schema(conn):
+    """Creates the tables once per process (every statement is IF NOT EXISTS, so concurrent
+    starts and re-runs are harmless). Never drops or alters existing data."""
+    global _schema_ready
+    if _schema_ready:
+        return
+    with _pool_lock:
+        if _schema_ready:
+            return
+        for stmt in _PG_SCHEMA:
+            conn.execute(stmt)
+        conn.commit()
+        _schema_ready = True
+        log.info("PostgreSQL schema verified")
 
 
 def init_db(db_path=DEFAULT_DB_PATH):
@@ -42,6 +208,9 @@ def init_db(db_path=DEFAULT_DB_PATH):
       generated question doesn't exist anywhere else to look up later.
     """
     conn = get_connection(db_path)
+    if IS_PG:
+        _ensure_pg_schema(conn)
+        return conn
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS students (
             student_id TEXT PRIMARY KEY,
@@ -107,8 +276,9 @@ def init_db(db_path=DEFAULT_DB_PATH):
 
 
 def _migrate_add_column(conn, table, column, sql_type):
-    """Adds a column to an existing DB created before that column existed,
-    so the schema can evolve without deleting real student data."""
+    """Adds a column to an existing SQLite DB created before that column existed,
+    so the schema can evolve without deleting real student data. (PostgreSQL databases are
+    created with the full schema.)"""
     columns = [row["name"] for row in conn.execute(f"PRAGMA table_info({table})").fetchall()]
     if column not in columns:
         conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {sql_type}")
@@ -116,7 +286,7 @@ def _migrate_add_column(conn, table, column, sql_type):
 
 
 def ensure_student(conn, student_id):
-    conn.execute("INSERT OR IGNORE INTO students (student_id) VALUES (?)", (student_id,))
+    conn.execute("INSERT INTO students (student_id) VALUES (?) ON CONFLICT DO NOTHING", (student_id,))
     conn.commit()
 
 
@@ -142,20 +312,36 @@ def log_interaction(conn, student_id, step_index, concept, passed, time_taken, s
 def log_interaction_next(conn, student_id, concept, passed, time_taken, source='quiz', content_id=None,
                          selected_index=None):
     """Appends an interaction at the next free step_index in ONE statement, so two overlapping
-    requests for the same student can't both pick the same index (which would violate
-    UNIQUE(student_id, step_index)). Returns the step_index that was used."""
-    conn.execute(
+    requests for the same student can't both pick the same index. Returns the step_index used.
+
+    SQLite serialises writers, so the single statement is enough there. On PostgreSQL two
+    concurrent transactions can still compute the same MAX+1; the loser hits the
+    UNIQUE(student_id, step_index) constraint and simply retries with the new maximum."""
+    sql = (
         "INSERT INTO interactions (student_id, step_index, concept, passed, time_taken, source, content_id, "
         "selected_index) "
-        "SELECT ?, COALESCE(MAX(step_index), -1) + 1, ?, ?, ?, ?, ?, ? FROM interactions WHERE student_id = ?",
-        (student_id, concept, int(passed), float(time_taken), source, content_id,
-         None if selected_index is None else int(selected_index), student_id)
+        "SELECT CAST(? AS TEXT), COALESCE(MAX(step_index), -1) + 1, CAST(? AS TEXT), CAST(? AS INTEGER), "
+        "CAST(? AS DOUBLE PRECISION), CAST(? AS TEXT), CAST(? AS TEXT), CAST(? AS INTEGER) "
+        "FROM interactions WHERE student_id = ? RETURNING step_index"
+    ) if IS_PG else (
+        "INSERT INTO interactions (student_id, step_index, concept, passed, time_taken, source, content_id, "
+        "selected_index) "
+        "SELECT ?, COALESCE(MAX(step_index), -1) + 1, ?, ?, ?, ?, ?, ? FROM interactions WHERE student_id = ? "
+        "RETURNING step_index"
     )
-    conn.commit()
-    row = conn.execute(
-        "SELECT MAX(step_index) AS s FROM interactions WHERE student_id = ?", (student_id,)
-    ).fetchone()
-    return row["s"]
+    params = (student_id, concept, int(passed), float(time_taken), source, content_id,
+              None if selected_index is None else int(selected_index), student_id)
+    for attempt in range(6):
+        try:
+            row = conn.execute(sql, params).fetchone()
+            conn.commit()
+            return row["step_index"]
+        except Exception as exc:  # sqlite3.IntegrityError / psycopg.errors.UniqueViolation
+            conn.rollback()
+            unique_clash = type(exc).__name__ in ("UniqueViolation", "IntegrityError")
+            if not unique_clash or attempt == 5:
+                raise
+            log.info("step_index clash for a student; retrying (%d)", attempt + 1)
 
 
 def get_interaction_history(conn, student_id):
@@ -214,22 +400,37 @@ def get_generated_questions_by_ids(conn, content_ids):
 
 
 def get_belief_snapshots(conn, student_id, model_version):
-    """{step_index: {"beliefs": [...25 floats in concept-id order], "h_t": tensor}} for this
-    student under this model version."""
+    """{step_index: {"beliefs": [...25 floats in concept-id order], "h_t": tensor | None}} for this
+    student under this model version. Only the newest snapshot keeps its hidden state (older
+    ones are compacted to save space), so `h_t` is None for those."""
     rows = conn.execute(
         "SELECT step_index, beliefs_json, h_t_blob FROM belief_snapshots "
         "WHERE student_id = ? AND model_version = ? ORDER BY step_index ASC",
         (student_id, model_version)
     ).fetchall()
     return {r["step_index"]: {"beliefs": json.loads(r["beliefs_json"]),
-                              "h_t": _deserialize_tensor(r["h_t_blob"])} for r in rows}
+                              "h_t": _deserialize_tensor(bytes(r["h_t_blob"])) if r["h_t_blob"] else None}
+            for r in rows}
 
 
 def save_belief_snapshot(conn, student_id, step_index, model_version, beliefs, h_t):
     conn.execute(
-        "INSERT OR IGNORE INTO belief_snapshots (student_id, step_index, model_version, beliefs_json, h_t_blob) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO belief_snapshots (student_id, step_index, model_version, beliefs_json, h_t_blob) "
+        "VALUES (?, ?, ?, ?, ?) "
+        "ON CONFLICT (student_id, step_index, model_version) DO UPDATE SET "
+        "beliefs_json = excluded.beliefs_json, h_t_blob = excluded.h_t_blob",
         (student_id, step_index, model_version, json.dumps(beliefs), _serialize_tensor(h_t))
+    )
+
+
+def compact_belief_snapshots(conn, student_id, model_version, keep_step_index):
+    """Drops the (6.6 KB) hidden state of every snapshot older than `keep_step_index`. Incremental
+    extension only ever resumes from the newest one, so this shrinks storage ~25x -- which matters
+    on a 0.5 GB free database -- without losing any belief value."""
+    conn.execute(
+        "UPDATE belief_snapshots SET h_t_blob = ? "
+        "WHERE student_id = ? AND model_version = ? AND step_index < ?",
+        (b"", student_id, model_version, keep_step_index)
     )
 
 
@@ -262,10 +463,10 @@ def save_mastery_state(conn, student_id, h_t, model_version, last_step_index):
     blob = _serialize_tensor(h_t)
     conn.execute(
         "INSERT INTO mastery_state (student_id, h_t_blob, model_version, last_step_index, updated_at) "
-        "VALUES (?, ?, ?, ?, datetime('now')) "
+        f"VALUES (?, ?, ?, ?, {_NOW}) "
         "ON CONFLICT(student_id) DO UPDATE SET "
         "h_t_blob=excluded.h_t_blob, model_version=excluded.model_version, "
-        "last_step_index=excluded.last_step_index, updated_at=datetime('now')",
+        f"last_step_index=excluded.last_step_index, updated_at={_NOW}",
         (student_id, blob, model_version, last_step_index)
     )
     conn.commit()
@@ -279,7 +480,7 @@ def load_mastery_state(conn, student_id):
     if row is None:
         return None
     return {
-        "h_t": _deserialize_tensor(row["h_t_blob"]),
+        "h_t": _deserialize_tensor(bytes(row["h_t_blob"])),
         "model_version": row["model_version"],
         "last_step_index": row["last_step_index"],
     }
@@ -287,8 +488,10 @@ def load_mastery_state(conn, student_id):
 
 def save_generated_question(conn, content_id, concept, difficulty, question_payload):
     conn.execute(
-        "INSERT OR REPLACE INTO generated_questions (content_id, concept, difficulty, question_json) "
-        "VALUES (?, ?, ?, ?)",
+        "INSERT INTO generated_questions (content_id, concept, difficulty, question_json) "
+        "VALUES (?, ?, ?, ?) "
+        "ON CONFLICT (content_id) DO UPDATE SET concept = excluded.concept, "
+        "difficulty = excluded.difficulty, question_json = excluded.question_json",
         (content_id, concept, difficulty, json.dumps(question_payload))
     )
     conn.commit()
@@ -313,10 +516,10 @@ def start_session(conn, student_id, block_index, round_cap):
     abandoning whatever was in progress before."""
     conn.execute(
         "INSERT INTO sessions (student_id, block_index, round_count, round_cap, updated_at) "
-        "VALUES (?, ?, 0, ?, datetime('now')) "
+        f"VALUES (?, ?, 0, ?, {_NOW}) "
         "ON CONFLICT(student_id) DO UPDATE SET "
         "block_index=excluded.block_index, round_count=0, round_cap=excluded.round_cap, "
-        "updated_at=datetime('now')",
+        f"updated_at={_NOW}",
         (student_id, block_index, round_cap)
     )
     conn.commit()
@@ -332,7 +535,7 @@ def get_session(conn, student_id):
 
 def increment_session_round(conn, student_id):
     conn.execute(
-        "UPDATE sessions SET round_count = round_count + 1, updated_at = datetime('now') "
+        f"UPDATE sessions SET round_count = round_count + 1, updated_at = {_NOW} "
         "WHERE student_id = ?", (student_id,)
     )
     conn.commit()
@@ -342,7 +545,7 @@ def extend_session(conn, student_id, extra_rounds):
     """Raises the round cap on the current session -- the "keep going"
     action from a soft-pause screen, without resetting round_count."""
     conn.execute(
-        "UPDATE sessions SET round_cap = round_cap + ?, updated_at = datetime('now') "
+        f"UPDATE sessions SET round_cap = round_cap + ?, updated_at = {_NOW} "
         "WHERE student_id = ?", (extra_rounds, student_id)
     )
     conn.commit()

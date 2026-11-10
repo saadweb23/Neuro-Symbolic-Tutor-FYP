@@ -1,0 +1,24 @@
+name: Deploy API to Hugging Face Space
+
+# Runs on every change to the API on main, or on demand. It does nothing until the repository has the
+# secret HF_TOKEN and the variable HF_SPACE (Settings > Secrets and variables > Actions).
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', 'deploy/huggingface/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          if [ -z "$HF_TOKEN" ] || [ -z "$HF_SPACE" ]; then
+            echo "HF_TOKEN / HF_SPACE not configured: skipping deployment."; exit 0
+          fi
+          bash deploy/huggingface/deploy.sh

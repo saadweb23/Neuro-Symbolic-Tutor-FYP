@@ -47,3 +47,6 @@ backend/experiments/results/tracker_v2/runs/*.npz
 frontend/app/playwright-report/
 frontend/app/test-results/
 frontend/app/coverage/
+
+# staged deployment output
+build/

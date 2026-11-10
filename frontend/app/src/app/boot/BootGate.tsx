@@ -26,7 +26,8 @@ const FIRST_MIN_MS = 1400
 const RELOAD_MIN_MS = 700
 const QUICK_DELAY_MS = 250
 const SLOW_AFTER_MS = 4000
-const FAIL_AFTER_MS = 60_000
+// Free hosting puts the API to sleep when idle; waking it (loading the models) can take a minute or two.
+const FAIL_AFTER_MS = 150_000
 const RETRY_EVERY_MS = 1500
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -142,7 +143,7 @@ export function BootGate({ children }: { children: ReactNode }) {
                 <>
                   <p className="text-sm text-muted">
                     {slow && stage === 'server'
-                      ? 'Waking the tutoring engine. The first start can take up to 40 seconds.'
+                      ? 'Waking the tutoring engine. After a period of inactivity this can take a minute or two.'
                       : `${STAGE_TEXT[stage]}…`}
                   </p>
                   <div className="nt-indeterminate h-1 w-40 rounded-full bg-raised" aria-hidden />

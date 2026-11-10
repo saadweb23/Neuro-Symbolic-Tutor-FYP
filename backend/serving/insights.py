@@ -159,6 +159,8 @@ def ensure_snapshots(student_id, rows, checkpoint_path=inference.DEFAULT_CHECKPO
     prefix = 0
     while prefix < len(steps) and steps[prefix] in cached:
         prefix += 1
+    if prefix and cached[steps[prefix - 1]]["h_t"] is None:
+        prefix = 0  # the newest cached snapshot lost its hidden state: replay from the start
     snapshots = {s: cached[s]["beliefs"] for s in steps[:prefix]}
 
     if prefix < len(steps):
@@ -168,6 +170,7 @@ def ensure_snapshots(student_id, rows, checkpoint_path=inference.DEFAULT_CHECKPO
             b = beliefs_list(h_t)
             snapshots[r["step_index"]] = b
             persistence.save_belief_snapshot(conn, student_id, r["step_index"], version, b, h_t)
+        persistence.compact_belief_snapshots(conn, student_id, version, rows[-1]["step_index"])
         conn.commit()
     conn.close()
     return version, initial, snapshots
