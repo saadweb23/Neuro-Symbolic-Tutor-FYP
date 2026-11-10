@@ -1,0 +1,39 @@
+# --- Secrets (never commit; copy backend/.env.example to backend/.env) ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.pyc
+venv/
+.venv/
+.ipynb_checkpoints/
+
+# --- Node ---
+node_modules/
+dist/
+frontend/app/vite_run.log
+
+# --- Runtime data (generated locally; contains real student records) ---
+*.db
+*.db-journal
+
+# --- Large / regenerable artifacts ---
+backend.zip
+# Intermediate PPO checkpoints (hundreds of MB over time). The final model
+# used by the app is backend/agent/ppo_tutor.zip and stays tracked.
+backend/agent/checkpoints/
+
+# --- Editor / OS / tooling ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.claude/scheduled_tasks.lock
+.claude/settings.local.json
+
+# Regenerable simulated students (see data_generation/generate_extra_students.py)
+backend/data_generation/extra/
+backend/experiments/results/tracker_v2/runs/*.pth
+backend/experiments/results/tracker_v2/runs/*.npz

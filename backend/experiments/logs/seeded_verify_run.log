@@ -1,0 +1,28 @@
+2026-09-19 19:17:37.509906: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-19 19:17:40.526684: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Running paired/seeded verification on 100 fixed episodes (same seeds for all 3 policies)...
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+[222s] random: {'success_rate': 0.03, 'mean_steps_to_mastery': 126.66666666666667, 'mean_final_avg_mastery': 0.26025138320721247}
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+[402s] linear_curriculum: {'success_rate': 0.15, 'mean_steps_to_mastery': 77.66666666666667, 'mean_final_avg_mastery': 0.3097980173820782}
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+[609s] ppo_new (retrained with fixes): {'success_rate': 0.07, 'mean_steps_to_mastery': 100.0, 'mean_final_avg_mastery': 0.29596959745551643}
+
+=== ALL RESULTS (paired, same 100 seeds, total time 609s) ===
+{
+  "random": {
+    "success_rate": 0.03,
+    "mean_steps_to_mastery": 126.66666666666667,
+    "mean_final_avg_mastery": 0.26025138320721247
+  },
+  "linear_curriculum": {
+    "success_rate": 0.15,
+    "mean_steps_to_mastery": 77.66666666666667,
+    "mean_final_avg_mastery": 0.3097980173820782
+  },
+  "ppo_new": {
+    "success_rate": 0.07,
+    "mean_steps_to_mastery": 100.0,
+    "mean_final_avg_mastery": 0.29596959745551643
+  }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroTutor Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden { display: none; }
+        .node { padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; margin: 5px; }
+        .mastered { background-color: #d1fae5; color: #065f46; border: 2px solid #10b981; }
+        .failed { background-color: #fee2e2; color: #991b1b; border: 2px solid #ef4444; }
+        .recommended { background-color: #fef08a; color: #854d0e; border: 2px dashed #eab308; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col font-sans">
+    
+    <nav class="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold">NeuroTutor Solutions</h1>
+        <span class="text-sm bg-blue-800 px-3 py-1 rounded-full">Student Mode</span>
+    </nav>
+
+    <div class="flex-grow flex items-center justify-center p-6">
+        
+        <div id="screen1" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4">Phase 1: Adaptive Diagnostic</h2>
+            <p class="text-gray-600 mb-6">Let's determine your baseline Python knowledge to initialize the state vector.</p>
+            
+            <div class="border-l-4 border-blue-500 pl-4 mb-6">
+                <p class="font-mono bg-gray-100 p-3 rounded text-sm">
+                    x = [1, 2, 3]<br>
+                    y = x<br>
+                    y.append(4)<br>
+                    print(x)
+                </p>
+                <p class="mt-4 font-semibold">What is the output of the code above?</p>
+            </div>
+
+            <div class="space-y-3">
+                <button class="w-full text-left p-3 border rounded hover:bg-gray-50">[1, 2, 3]</button>
+                <button onclick="nextScreen('screen2')" class="w-full text-left p-3 border rounded hover:bg-blue-50 border-blue-200">[1, 2, 3, 4] (Select to simulate error)</button>
+                <button class="w-full text-left p-3 border rounded hover:bg-gray-50">Error</button>
+            </div>
+        </div>
+
+        <div id="screen2" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl hidden">
+            <h2 class="text-2xl font-bold mb-2">Knowledge Graph Dashboard</h2>
+            <p class="text-gray-600 mb-6">Your customized learning path based on the Dual-GCN analysis.</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 bg-gray-100 p-6 rounded-lg mb-6 border border-gray-200">
+                <div class="node mastered">Syntax</div>
+                <div class="node mastered">Variables</div>
+                <div class="node failed">Lists (Gap Detected)</div>
+                <div class="node mastered">Conditionals</div>
+                <div class="node recommended cursor-pointer" onclick="nextScreen('screen3')">PPO Target: List Methods &rarr;</div>
+            </div>
+
+            <button onclick="nextScreen('screen3')" class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700">Start Recommended Lesson</button>
+        </div>
+
+        <div id="screen3" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl hidden border-t-8 border-yellow-400">
+            <h2 class="text-2xl font-bold mb-2 text-yellow-700">Intervention Triggered</h2>
+            <p class="text-gray-700 mb-6 bg-yellow-50 p-3 rounded border border-yellow-200">
+                <strong>Why you are here:</strong> The system noticed a gap in foundational <em>List Mutability</em> during the diagnostic. We need to clear this dependency before advancing to <em>List Comprehensions</em>.
+            </p>
+            
+            <div class="flex gap-6">
+                <div class="w-1/2">
+                    <h3 class="font-bold border-b pb-2 mb-3">Micro-Lesson: Pass by Reference</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">In Python, variables pointing to lists do not copy the list; they point to the exact same spot in memory. If you change 'y', you also change 'x'.</p>
+                </div>
+                <div class="w-1/2 bg-gray-50 p-4 rounded border">
+                    <h3 class="font-bold border-b pb-2 mb-3">Knowledge Check</h3>
+                    <p class="text-sm mb-3">To make a true copy of a list without linking them, which method is best?</p>
+                    <button class="w-full text-left p-2 border rounded text-sm mb-2 hover:bg-green-50" onclick="alert('Correct! State vector updated. PPO Reward: +1')">y = x.copy()</button>
+                    <button class="w-full text-left p-2 border rounded text-sm hover:bg-red-50">y = list(x)</button>
+                </div>
+            </div>
+            
+            <button onclick="nextScreen('screen1')" class="mt-8 text-sm text-gray-500 underline">Restart Prototype Flow</button>
+        </div>
+
+    </div>
+
+    <script>
+        function nextScreen(screenId) {
+            document.getElementById('screen1').classList.add('hidden');
+            document.getElementById('screen2').classList.add('hidden');
+            document.getElementById('screen3').classList.add('hidden');
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

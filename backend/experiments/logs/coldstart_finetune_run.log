@@ -1,0 +1,7 @@
+Fine-tuning on: cpu
+Split sizes -> train: 2000 | val: 250 | test: 250
+Loaded starting checkpoint from epoch 4, val_auc=0.7347
+[pos_weight] train pass rate: 29.76% -> pos_weight=2.3598
+Starting point -- val AUC: 0.7347 (cold: 0.5221, steady: 0.7250)
+Finetune epoch 01/10 | Train BCE/Step: 1.0281 | Val AUC: 0.7365 (cold: 0.4810, steady: 0.7280)
+Finetune epoch 02/10 | Train BCE/Step: 1.0331 | Val AUC: 0.7372 (cold: 0.4822, steady: 0.7284)

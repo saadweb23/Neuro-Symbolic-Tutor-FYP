@@ -1,0 +1,71 @@
+{
+  "args": {
+    "name": "r1_v2tracker_imit",
+    "tracker": "tracker/dual_gcn_weights_v2.pth",
+    "timesteps": 300000,
+    "envs": 2,
+    "no_imitation": false,
+    "imitation_episodes": 120,
+    "imitation_epochs": 30,
+    "imitation_noise": 0.15,
+    "lr": 0.0001,
+    "ent_start": 0.01,
+    "ent_end": 0.001,
+    "eval_every": 30000,
+    "seed": 0
+  },
+  "minutes": 65.7403298219045,
+  "validation": [
+    {
+      "timesteps": 30000,
+      "val_efficiency": 0.71628146290629,
+      "val_attainment": 0.9361117023650383
+    },
+    {
+      "timesteps": 60000,
+      "val_efficiency": 0.7139685204580883,
+      "val_attainment": 0.9413077820569178
+    },
+    {
+      "timesteps": 90000,
+      "val_efficiency": 0.7103817249229161,
+      "val_attainment": 0.9336459076478313
+    },
+    {
+      "timesteps": 120000,
+      "val_efficiency": 0.7201006604611282,
+      "val_attainment": 0.929477054322683
+    },
+    {
+      "timesteps": 150000,
+      "val_efficiency": 0.7219988187048519,
+      "val_attainment": 0.9296828471650358
+    },
+    {
+      "timesteps": 180000,
+      "val_efficiency": 0.7430710136979083,
+      "val_attainment": 0.9376371743982954
+    },
+    {
+      "timesteps": 210000,
+      "val_efficiency": 0.74592049146076,
+      "val_attainment": 0.9318142135474841
+    },
+    {
+      "timesteps": 240000,
+      "val_efficiency": 0.7536179085600949,
+      "val_attainment": 0.9425806097610504
+    },
+    {
+      "timesteps": 270000,
+      "val_efficiency": 0.7579267846939685,
+      "val_attainment": 0.9378626553799752
+    },
+    {
+      "timesteps": 300000,
+      "val_efficiency": 0.7274744972820313,
+      "val_attainment": 0.9282863524028606
+    }
+  ],
+  "best_validation_efficiency": 0.7579267846939685
+}

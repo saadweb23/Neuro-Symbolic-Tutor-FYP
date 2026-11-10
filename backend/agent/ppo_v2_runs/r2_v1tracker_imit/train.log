@@ -1,0 +1,24 @@
+run r2_v1tracker_imit: tracker=tracker/dual_gcn_weights_v1.pth imitation=True timesteps=300,000
+collecting sweep-expert demonstrations...
+  collected 16,447 demonstrations from 120 episodes
+imitation pretraining...
+  imitation epoch 1/30 | NLL 3.2080
+  imitation epoch 5/30 | NLL 2.8544
+  imitation epoch 10/30 | NLL 2.0771
+  imitation epoch 15/30 | NLL 1.7453
+  imitation epoch 20/30 | NLL 1.5881
+  imitation epoch 25/30 | NLL 1.4752
+  imitation epoch 30/30 | NLL 1.3773
+  after imitation only: validation efficiency 0.6538 | attainment 0.9205
+reinforcement-learning fine-tuning...
+  [ 30,000 steps] validation efficiency 0.6837 | attainment 0.9208  <- new best, saved
+  [ 60,000 steps] validation efficiency 0.7259 | attainment 0.9341  <- new best, saved
+  [ 90,000 steps] validation efficiency 0.7160 | attainment 0.9327
+  [120,000 steps] validation efficiency 0.7059 | attainment 0.9284
+  [150,000 steps] validation efficiency 0.7305 | attainment 0.9301  <- new best, saved
+  [180,000 steps] validation efficiency 0.7240 | attainment 0.9326
+  [210,000 steps] validation efficiency 0.7300 | attainment 0.9374
+  [240,000 steps] validation efficiency 0.6996 | attainment 0.9280
+  [270,000 steps] validation efficiency 0.7151 | attainment 0.9275
+  [300,000 steps] validation efficiency 0.7298 | attainment 0.9310
+done in 67.6 min | best validation efficiency 0.7305 -> E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\agent\ppo_v2_runs\r2_v1tracker_imit\best.zip

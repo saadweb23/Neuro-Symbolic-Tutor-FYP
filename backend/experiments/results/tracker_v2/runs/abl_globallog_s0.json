@@ -1,0 +1,91 @@
+{
+  "name": "abl_globallog_s0",
+  "variant": "global_logtime",
+  "data": "orig",
+  "seed": 0,
+  "extra_n": 0,
+  "train_students": 2000,
+  "best_epoch": 10,
+  "best_val_auc": 0.7624865997598359,
+  "epochs_run": 10,
+  "train_minutes": 9.61416099468867,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5984543600082397,
+      "val_auc": 0.7262919314906277
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5463220357894898,
+      "val_auc": 0.7422409458757531
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5422451095581055,
+      "val_auc": 0.7436949073600048
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.539759182214737,
+      "val_auc": 0.750013416822754
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5356878070831299,
+      "val_auc": 0.757309575486904
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.5294090795516968,
+      "val_auc": 0.7605098344406283
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.5275512881278992,
+      "val_auc": 0.7620974214494776
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.526684579372406,
+      "val_auc": 0.7623357283417205
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.525756805896759,
+      "val_auc": 0.7624351635809181
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5258278489112854,
+      "val_auc": 0.7624865997598359
+    }
+  ],
+  "val_oracle_auc": 0.804911678714069,
+  "args": {
+    "name": "abl_globallog_s0",
+    "variant": "global_logtime",
+    "data": "orig",
+    "extra_n": 0,
+    "seed": 0,
+    "epochs": 10,
+    "patience": 3,
+    "bs": 64,
+    "lr": 0.002,
+    "dropout": 0.1,
+    "hidden": 64,
+    "threads": 2
+  },
+  "test": {
+    "orig_test": {
+      "auc": 0.7512740731371645,
+      "oracle_auc": 0.7957240386555483,
+      "students": 250
+    },
+    "fresh_test": {
+      "auc": 0.7599228103524492,
+      "oracle_auc": 0.8050444645905147,
+      "students": 1000
+    }
+  }
+}

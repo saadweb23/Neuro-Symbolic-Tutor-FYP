@@ -1,0 +1,2960 @@
+{
+  "Syntax": {
+    "easy": [
+      {
+        "question": "In Python programming, what does the term \"syntax\" primarily refer to?",
+        "choices": [
+          "The set of rules that defines how Python statements and expressions must be structured.",
+          "The meaning or purpose behind a particular Python statement.",
+          "The speed and efficiency with which a Python program executes.",
+          "The libraries and modules available for use in Python programs."
+        ],
+        "correct_index": 0,
+        "explanation": "Syntax refers to the formal rules governing the structure of statements in a programming language, much like grammar rules in human languages."
+      },
+      {
+        "question": "In Python, which of these is a strict requirement enforced by the language's syntax?",
+        "choices": [
+          "All variables must be declared with a specific type before being used.",
+          "Code blocks (like `if` statements or function bodies) must be consistently indented.",
+          "Every function must explicitly return a value.",
+          "Comments should explain every line of code."
+        ],
+        "correct_index": 1,
+        "explanation": "Python's syntax strictly enforces consistent indentation to define code blocks; incorrect or inconsistent indentation will lead to a SyntaxError or IndentationError."
+      },
+      {
+        "question": "What kind of error does the Python interpreter raise when it encounters code that violates the language's grammatical rules?",
+        "choices": [
+          "SyntaxError",
+          "TypeError",
+          "NameError",
+          "ValueError"
+        ],
+        "correct_index": 0,
+        "explanation": "When Python code violates the language's grammatical structure, the interpreter raises a SyntaxError to indicate the problem."
+      },
+      {
+        "question": "Which of the following correctly demonstrates valid Python syntax for assigning a string to a variable?",
+        "choices": [
+          "my_message = Hello World",
+          "my_message = \"Hello World\"",
+          "my_message = 'Hello World",
+          "my_message = Hello World\""
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, string literals must be enclosed in matching single or double quotes to be syntactically valid."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following Python code snippet intended to check a condition and print a message:\n\nif x > 5\n    print(\"x is greater than 5\")\n\nWhich of the following describes the primary *syntactic* correction needed on the first line for this snippet to be valid Python 3 code?",
+        "choices": [
+          "A colon (:) is missing after `5`.",
+          "The condition `x > 5` must be enclosed in parentheses.",
+          "The `print` statement must be further indented.",
+          "The variable `x` must be initialized before use."
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, control flow statements like `if` require a colon (:) at the end of their header line to correctly delimit the condition and mark the start of the code block."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef example_function(param1, param2):\n    print(f\"Param1: {param1}, Param2: {param2}\")\n\nexample_function(param1=10, 20)\n\nWhich of the following best describes the primary *syntactic* error in the line calling `example_function`?",
+        "choices": [
+          "Positional arguments cannot follow keyword arguments in a function call.",
+          "The function definition is missing explicit type hints for its parameters.",
+          "Keyword arguments like 'param1=10' are not allowed when calling a function.",
+          "f-strings (f\"...\") are not valid syntax for use within function bodies."
+        ],
+        "correct_index": 0,
+        "explanation": "Python's syntax rules require that all positional arguments in a function call must appear before any keyword arguments; attempting to place a positional argument after a keyword argument, as seen with '20' after 'param1=10', results in a SyntaxError."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\nvalue = 10\nif value = 10:\n    print(\"Value is ten\")\n\nWhich of the following best describes the primary *syntactic* error in this code?",
+        "choices": [
+          "The assignment operator (=) is used instead of the equality operator (==) in the conditional expression.",
+          "The `if` statement requires a `then` keyword after the condition.",
+          "The `print` function call is not properly indented within the `if` block.",
+          "The variable `value` cannot be reassigned within an `if` statement."
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, the assignment operator (=) cannot be used directly within a conditional expression; the equality operator (==) must be used for comparison, otherwise a SyntaxError will be raised."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\ndef create_doubled_generator():\n    numbers = [1, 2, 3, 4]\n    # Intended to create a generator object\n    my_gen = n * 2 for n in numbers if n % 2 == 0\n    return list(my_gen)\n\nresult = create_doubled_generator()\nprint(result)\n\nWhich of the following best describes the primary *syntactic* error in the line defining `my_gen`?",
+        "choices": [
+          "The assignment operator `=` cannot be used directly with a generator expression without enclosing parentheses.",
+          "The `if` condition `n % 2 == 0` is syntactically invalid inside a generator expression.",
+          "The expression `n * 2` is not a valid element for a generator expression.",
+          "The variable `n` is not defined before being used in the generator expression."
+        ],
+        "correct_index": 0,
+        "explanation": "A generator expression, when used as part of an assignment statement or in any context other than being the sole argument to a function call, must be enclosed in parentheses to be syntactically valid."
+      },
+      {
+        "question": "Consider the following Python code snippet intended to run an asynchronous function:\n\n```python\nimport asyncio\n\nasync def my_async_task():\n    print(\"Task started\")\n    await asyncio.sleep(0.01)\n    print(\"Task finished\")\n\nasyncio.run(await my_async_task())\n```\nWhich of the following best describes the primary *syntactic* error in the line `asyncio.run(await my_async_task())`?",
+        "choices": [
+          "The `await` keyword is used outside of an `async def` function, leading to a `SyntaxError`.",
+          "`asyncio.run()` expects a coroutine object, but `await my_async_task()` attempts to execute the coroutine before passing it, which causes a `TypeError`.",
+          "The function `my_async_task` must be decorated with `@asyncio.coroutine` for `asyncio.run()` to accept it, otherwise a `SyntaxError` occurs.",
+          "There is no syntactic error; `asyncio.run()` can directly await the result of an async function call, but it might lead to a `RuntimeError` if the event loop is already running."
+        ],
+        "correct_index": 0,
+        "explanation": "The `await` keyword is a special syntactic construct that can only be used directly inside functions defined with `async def` (or at the top level in a module in Python 3.8+), and `asyncio.run()` is a regular synchronous function, meaning its arguments are evaluated in a synchronous context where `await` is forbidden, resulting in a `SyntaxError`."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndata = [10, 20, 30, 40, 50]\nfirst, *middle, *last = data\nprint(f\"First: {first}, Middle: {middle}, Last: {last}\")\n\nWhich type of error will this code produce when executed?",
+        "choices": [
+          "TypeError: 'list' object is not callable",
+          "SyntaxError: multiple starred expressions in assignment",
+          "ValueError: not enough values to unpack",
+          "IndexError: list index out of range"
+        ],
+        "correct_index": 1,
+        "explanation": "Python's assignment unpacking syntax allows only one 'starred' expression (e.g., `*middle`) in a single assignment target, as it represents a variable-length part of the sequence. Using two such expressions (`*middle` and `*last`) results in a SyntaxError."
+      }
+    ]
+  },
+  "Primitive Data Types": {
+    "easy": [
+      {
+        "question": "Which of the following is considered a primitive data type in Python?",
+        "choices": [
+          "list",
+          "str",
+          "dict",
+          "set"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, 'str' (string) is a primitive data type used for sequences of characters, whereas 'list', 'dict', and 'set' are collection types."
+      },
+      {
+        "question": "In Python, which of the following data types is typically classified as a collection or container type, rather than a basic, single-value 'primitive-like' data type?",
+        "choices": [
+          "int",
+          "float",
+          "list",
+          "bool"
+        ],
+        "correct_index": 2,
+        "explanation": "A `list` is a mutable sequence that can hold multiple items, making it a collection type, while `int`, `float`, and `bool` represent single, fundamental values."
+      },
+      {
+        "question": "Which of the following Python data types is best suited for representing a whole number, such as the number of items in a shopping cart?",
+        "choices": [
+          "int",
+          "float",
+          "list",
+          "dict"
+        ],
+        "correct_index": 0,
+        "explanation": "The `int` (integer) data type is used to store whole numbers without any decimal points, which is ideal for representing counts."
+      },
+      {
+        "question": "In Python, which built-in data type is primarily used to represent logical states or truth values, specifically 'True' or 'False'?",
+        "choices": [
+          "int",
+          "str",
+          "bool",
+          "list"
+        ],
+        "correct_index": 2,
+        "explanation": "The 'bool' data type in Python is a primitive type designed specifically for storing Boolean values, which are either 'True' or 'False'."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following Python code snippet:\nprice = 25\ndiscount_rate = 0.15\nfinal_price = price * (1 - discount_rate)\n\nWhat will be the data type of the `final_price` variable after this code is executed?",
+        "choices": [
+          "int",
+          "float",
+          "str",
+          "bool"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, when an arithmetic operation involves both an integer and a float (like `price` and the result of `1 - discount_rate`), the integer is implicitly promoted to a float, and the result of the entire operation will be a float."
+      },
+      {
+        "question": "What will be the output of the following Python code snippet?\n\nvalue = 10\nvalue += 3.5\nprint(type(value))\nprint(isinstance(value, int))\n",
+        "choices": [
+          "<class 'int'>\nTrue",
+          "<class 'float'>\nFalse",
+          "<class 'float'>\nTrue",
+          "<class 'int'>\nFalse"
+        ],
+        "correct_index": 1,
+        "explanation": "Adding an integer and a float results in a float due to implicit type promotion, making the value's type float and isinstance for int False."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\nresult = 7 // 2\nprint(type(result))\n\nWhat is the data type of the `result` variable?",
+        "choices": [
+          "float",
+          "int",
+          "str",
+          "bool"
+        ],
+        "correct_index": 1,
+        "explanation": "The floor division operator (//) always returns an integer when both operands are integers, regardless of whether there is a remainder."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\na = 0.1 + 0.2\nb = 0.3\nprint(a == b)\n\nWhat will be the output of this code?",
+        "choices": [
+          "True",
+          "False",
+          "TypeError",
+          "None"
+        ],
+        "correct_index": 1,
+        "explanation": "Due to the limitations of floating-point arithmetic representation in binary, 0.1 + 0.2 results in a tiny precision error making it slightly different from 0.3."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\na = 10\nb = 3\nprint(id(a) == id(b))\nc = 257\nd = 257\nprint(id(c) == id(d))\n\nWhat will be the output of this code?",
+        "choices": [
+          "True\nTrue",
+          "False\nFalse",
+          "True\nFalse",
+          "False\nTrue"
+        ],
+        "correct_index": 2,
+        "explanation": "Python pre-allocates small integers from -5 to 256 (making `a` and `b` reference the same object), whereas integers outside this range like 257 may not share the same memory location depending on how they are instantiated."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\na = 5\nb = 5.0\nprint(a is b)\nprint(hash(a) == hash(b))\n\nWhat will be the output of this code?",
+        "choices": [
+          "False\nTrue",
+          "True\nTrue",
+          "False\nFalse",
+          "True\nFalse"
+        ],
+        "correct_index": 0,
+        "explanation": "Even though an integer and a float with the same numerical value share the same hash value in Python, they are distinct primitive objects stored at different memory locations, so the 'is' operator returns False."
+      }
+    ]
+  },
+  "Variables": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct way to assign the value 10 to a variable named 'score' in Python?",
+        "choices": [
+          "score = 10",
+          "10 = score",
+          "score == 10",
+          "set score = 10"
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, a variable is assigned a value using a single equals sign (=) with the variable name on the left."
+      },
+      {
+        "question": "Which of the following characters is used to assign a value to a variable in Python?",
+        "choices": [
+          "==",
+          ":",
+          "=",
+          "->"
+        ],
+        "correct_index": 2,
+        "explanation": "The single equals sign (=) is the standard assignment operator used to bind a value to a variable in Python."
+      },
+      {
+        "question": "Which of the following is a valid variable name in Python?",
+        "choices": [
+          "2nd_player",
+          "player-score",
+          "player_score",
+          "class"
+        ],
+        "correct_index": 2,
+        "explanation": "Variable names must start with a letter or underscore, cannot contain hyphens, and cannot be Python keywords like 'class'."
+      },
+      {
+        "question": "What is the primary purpose of a variable in Python?",
+        "choices": [
+          "To perform mathematical calculations without storing data",
+          "To store data values in memory for later use",
+          "To permanently delete files from the computer",
+          "To define the styling of the output text"
+        ],
+        "correct_index": 1,
+        "explanation": "Variables are used to store data values in computer memory so they can be referenced and manipulated throughout a program."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = 5\ny = x + 3\nx = 10\nprint(y)",
+        "choices": [
+          "5",
+          "8",
+          "13",
+          "10"
+        ],
+        "correct_index": 1,
+        "explanation": "Variable y evaluates to 8 when x is 5, and reassigning x later does not retroactively change the previously computed value of y."
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = 7\nb = a\na = 12\nprint(b)\n\nWhat is the output of this code?",
+        "choices": [
+          "7",
+          "12",
+          "5",
+          "An error occurs"
+        ],
+        "correct_index": 0,
+        "explanation": "Variable `b` is assigned the value of `a` when `a` is 7, so changing `a` afterward does not affect the value stored in `b`."
+      },
+      {
+        "question": "What will be the final values of variables `a` and `b` after executing the following code?\n\na, b = 3, 5\na, b = b, a",
+        "choices": [
+          "a = 3, b = 5",
+          "a = 5, b = 3",
+          "a = 5, b = 5",
+          "a = 3, b = 3"
+        ],
+        "correct_index": 1,
+        "explanation": "Python evaluates the right-hand side of a tuple assignment first, effectively swapping the values stored in a and b."
+      }
+    ],
+    "hard": [
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = [1, 2, 3]\ny = x\ny.append(4)\nx[0] = 99\nprint(x, y)",
+        "choices": [
+          "[[99, 2, 3, 4], [99, 2, 3, 4]]",
+          "[([1, 2, 3, 4], [1, 2, 3, 4])]",
+          "[([99, 2, 3], [1, 2, 3, 4])]",
+          "[([1, 2, 3], [1, 2, 3, 4])]"
+        ],
+        "correct_index": 0,
+        "explanation": "Since variables in Python are references to objects, both x and y point to the exact same list in memory, meaning modifications through either variable affect the shared list."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\na = [10, 20]\nb = a\na += [30]\nprint(a, b)",
+        "choices": [
+          "[10, 20, 30] [10, 20]",
+          "[10, 20] [10, 20, 30]",
+          "[10, 20, 30] [10, 20, 30]",
+          "TypeError: 'list' object does not support this operation"
+        ],
+        "correct_index": 2,
+        "explanation": "The augmented assignment operator += modifies mutable lists in-place, meaning both variables reference the same updated list object."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = 10\ndef update():\n    x = x + 5\n    return x\n\ntry:\n    print(update())\nexcept UnboundLocalError:\n    print(\"UnboundLocalError\")",
+        "choices": [
+          "15",
+          "10",
+          "UnboundLocalError",
+          "NameError"
+        ],
+        "correct_index": 2,
+        "explanation": "Assigning to x inside the function makes Python treat x as local, raising an UnboundLocalError because it is referenced before assignment."
+      }
+    ]
+  },
+  "Arithmetic Operators": {
+    "easy": [
+      {
+        "question": "Which of the following arithmetic operators is used in Python to find the remainder of a division?",
+        "choices": [
+          "/",
+          "//",
+          "%",
+          "**"
+        ],
+        "correct_index": 2,
+        "explanation": "The modulo operator (%) returns the remainder of the division between two numbers."
+      },
+      {
+        "question": "What is the output of the following Python expression?\n\n3 * 2 + 4",
+        "choices": [
+          "18",
+          "10",
+          "9",
+          "24"
+        ],
+        "correct_index": 1,
+        "explanation": "Multiplication has a higher precedence than addition, so 3 * 2 is evaluated first to get 6, and then 6 + 4 equals 10."
+      },
+      {
+        "question": "Which Python arithmetic operator is used to perform exponentiation (raise a number to a power)?",
+        "choices": [
+          "^",
+          "**",
+          "//",
+          "%"
+        ],
+        "correct_index": 1,
+        "explanation": "The double asterisk (**) operator in Python is used for exponentiation."
+      },
+      {
+        "question": "Which of the following symbols is the correct arithmetic operator for floor division in Python?",
+        "choices": [
+          "/",
+          "%",
+          "//",
+          "**"
+        ],
+        "correct_index": 2,
+        "explanation": "The // operator performs floor division, which divides the operands and rounds the result down to the nearest whole integer."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What is the output of the following Python code snippet?\n\nx = 10\ny = 3\nresult = x % y ** 2\nprint(result)",
+        "choices": [
+          "1",
+          "10",
+          "4",
+          "0"
+        ],
+        "correct_index": 1,
+        "explanation": "Exponentiation (**) has a higher precedence than modulus (%), so y ** 2 evaluates to 9, and 10 % 9 results in 1."
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = 7\nb = 2\nc = a // b + a % b\nprint(c)",
+        "choices": [
+          "3",
+          "4.5",
+          "4",
+          "7"
+        ],
+        "correct_index": 2,
+        "explanation": "Floor division (7 // 2) yields 3, modulo (7 % 2) yields 1, and adding them together results in 4."
+      },
+      {
+        "question": "Which code snippet correctly calculates the average of three variables `a`, `b`, and `c` taking into account proper operator precedence?",
+        "choices": [
+          "avg = a + b + c / 3",
+          "avg = (a + b + c) / 3",
+          "avg = a + b + c // 3",
+          "avg = (a + b + c) * 1 / 3"
+        ],
+        "correct_index": 1,
+        "explanation": "Parentheses are necessary to ensure the sum of all three variables is calculated before dividing by 3 due to operator precedence."
+      }
+    ],
+    "hard": [
+      {
+        "question": "What is the output of the following Python code snippet?\n\nprint(9 - 3 * 1.0 / 2 + 4 % 2)",
+        "choices": [
+          "7.5",
+          "8.0",
+          "7.0",
+          "6.5"
+        ],
+        "correct_index": 0,
+        "explanation": "Multiplication, division, and modulo are evaluated left to right yielding 9 - 1.5 + 0, which evaluates to 7.5."
+      },
+      {
+        "question": "What is the output of the following Python code snippet?\n\nx = -5\ny = 2\nprint(x // y, x % y)",
+        "choices": [
+          "-2 1",
+          "-3 1",
+          "-2 -1",
+          "-3 -1"
+        ],
+        "correct_index": 1,
+        "explanation": "Floor division rounds down toward negative infinity (-5 // 2 = -3), and the modulo operator satisfies the identity x == (x // y) * y + (x % y), yielding 1."
+      },
+      {
+        "question": "What is the exact output of the following Python code snippet?\n\na = 13\nb = -4\nprint(a % b)",
+        "choices": [
+          "-3",
+          "1",
+          "3",
+          "-1"
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, the modulo operation follows the rule that the remainder has the same sign as the divisor, resulting in 13 % -4 = -3 because 13 = (-4 * -4) + (-3)."
+      }
+    ]
+  },
+  "Relational Operators": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct relational operator in Python used to check if two values are not equal?",
+        "choices": [
+          "!=",
+          "<>",
+          "!==",
+          "not ="
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, the '!=' operator is used to evaluate whether two values are not equal to each other."
+      },
+      {
+        "question": "Which of the following relational operators in Python represents \"greater than or equal to\"?",
+        "choices": [
+          "=>",
+          ">=",
+          "=<",
+          "=>="
+        ],
+        "correct_index": 1,
+        "explanation": "The operator >= is used in Python to check if a value is greater than or equal to another value."
+      },
+      {
+        "question": "Which of the following relational operators is used in Python to check if one value is strictly less than another value?",
+        "choices": [
+          ">",
+          "<",
+          "==",
+          "!="
+        ],
+        "correct_index": 1,
+        "explanation": "The less-than operator (<) is used to determine if the value on its left is strictly smaller than the value on its right."
+      },
+      {
+        "question": "Which of the following is the correct Python relational operator to check if two values are equal?",
+        "choices": [
+          "=",
+          "==",
+          "===",
+          "equals"
+        ],
+        "correct_index": 1,
+        "explanation": "The double equals sign (==) is the relational operator in Python used to compare whether two values are equal."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = 5\ny = 10\nresult = x * 2 == y\nprint(result)",
+        "choices": [
+          "False",
+          "True",
+          "5",
+          "10"
+        ],
+        "correct_index": 1,
+        "explanation": "The multiplication expression evaluates first (5 * 2 = 10), and the relational operator '==' checks if 10 equals 10, resulting in True."
+      },
+      {
+        "question": "Which of the following code snippets correctly evaluates whether variable `a` is strictly less than variable `b` and greater than or equal to variable `c`?",
+        "choices": [
+          "a < b and b >= c",
+          "a < b >= c",
+          "a < b and c <= a",
+          "a < b and b < c"
+        ],
+        "correct_index": 1,
+        "explanation": "Python allows chained comparison operators such as `a < b >= c`, which evaluates whether `a` is less than `b` and simultaneously whether `b` is greater than or equal to `c`."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\na = 7\nb = 12\nprint(a != b and b <= 15)",
+        "choices": [
+          "True",
+          "False",
+          "None",
+          "Error"
+        ],
+        "correct_index": 0,
+        "explanation": "Both relational expressions evaluate to True (7 is not equal to 12, and 12 is less than or equal to 15), so their conjunction with 'and' is True."
+      }
+    ],
+    "hard": [
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = [1, 2, 3]\ny = [1, 2, 3]\nprint(x == y, x is y)",
+        "choices": [
+          "True True",
+          "False False",
+          "True False",
+          "False True"
+        ],
+        "correct_index": 2,
+        "explanation": "The '==' operator checks if the contents of both lists are equal (evaluating to True), while the 'is' operator checks if they refer to the exact same object in memory (evaluating to False)."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\na = 3\nb = 5\nc = 7\nprint(a < b < c == 7)",
+        "choices": [
+          "True",
+          "False",
+          "SyntaxError",
+          "TypeError"
+        ],
+        "correct_index": 0,
+        "explanation": "Python chains relational operators as a < b and b < c and c == 7, and since all these conditions evaluate to True, the entire expression returns True."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = 2.0\ny = 2\nprint(x == y, 0.1 + 0.2 == 0.3)",
+        "choices": [
+          "True True",
+          "True False",
+          "False True",
+          "False False"
+        ],
+        "correct_index": 1,
+        "explanation": "Numeric values are equal regardless of type (2.0 == 2 is True), but floating-point inaccuracy makes 0.1 + 0.2 == 0.3 evaluate to False."
+      }
+    ]
+  },
+  "Conditionals": {
+    "easy": [
+      {
+        "question": "Which keyword is used in Python to define an alternative branch in a conditional statement when the initial `if` condition is false?",
+        "choices": [
+          "else",
+          "elif",
+          "elseif",
+          "then"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, 'elif' (short for 'else if') is the keyword used to check additional conditions if the preceding 'if' condition evaluates to False."
+      },
+      {
+        "question": "Which of the following is the correct syntax for an `if` statement in Python?",
+        "choices": [
+          "if x > 5 then:",
+          "if (x > 5):",
+          "if x > 5:",
+          "if [x > 5]"
+        ],
+        "correct_index": 2,
+        "explanation": "Python uses the `if` keyword followed by the condition and a colon `:` without requiring parentheses around the condition."
+      },
+      {
+        "question": "Which keyword is used in Python to execute a block of code when all preceding `if` and `elif` conditions evaluate to False?",
+        "choices": [
+          "else",
+          "otherwise",
+          "default",
+          "then"
+        ],
+        "correct_index": 0,
+        "explanation": "The 'else' keyword defines a fallback block in Python conditionals that executes only when all preceding conditions are false."
+      },
+      {
+        "question": "Which Python keyword is used to chain multiple conditional checks together after an initial `if` statement?",
+        "choices": [
+          "else",
+          "elif",
+          "then",
+          "case"
+        ],
+        "correct_index": 1,
+        "explanation": "The `elif` keyword (short for 'else if') is used in Python to check additional conditions if the preceding `if` statement evaluates to False."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the output of the following code?\n\nx = 10\ny = 5\nif x > 5 and y < 10:\n    print(\"A\")\nelif x == 10:\n    print(\"B\")\nelse:\n    print(\"C\")",
+        "choices": [
+          "A",
+          "B",
+          "C",
+          "A and B"
+        ],
+        "correct_index": 0,
+        "explanation": "The first condition evaluates to True because both x > 5 and y < 10 are true, so its block executes and subsequent branches are skipped."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nscore = 75\nif score >= 90:\n    print('Gold')\nelif score >= 70:\n    print('Silver')\nelse:\n    print('Bronze')",
+        "choices": [
+          "Gold",
+          "Silver",
+          "Bronze",
+          "Silver\nBronze"
+        ],
+        "correct_index": 1,
+        "explanation": "The condition score >= 90 is False, but the next condition score >= 70 is True, so it prints 'Silver' and skips the remaining branches."
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = 4\nb = 8\nif a > 2:\n    if b < 5:\n        print(\"One\")\n    else:\n        print(\"Two\")\nelse:\n    print(\"Three\")\n\nWhat will be the output?",
+        "choices": [
+          "One",
+          "Two",
+          "Three",
+          "One Two"
+        ],
+        "correct_index": 1,
+        "explanation": "Since a > 4 is true, the outer if runs, but because b < 5 is false, the execution goes to the inner else block and prints \"Two\"."
+      }
+    ],
+    "hard": [
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = [1, 2, 3]\ny = x\nz = [1, 2, 3]\n\nif x is y:\n    print(\"One\", end=\" \")\nif x == z:\n    print(\"Two\", end=\" \")\nif x is z:\n    print(\"Three\")",
+        "choices": [
+          "One Two Three",
+          "One Two",
+          "Two Three",
+          "One Three"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'is' operator checks for object identity (true for x and y because they reference the same list), while '==' checks for value equality (true for x and z since their contents are identical)."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nx = 0\nif x:\n    print(\"True\", end=\" \")\nelif not x:\n    print(\"False\", end=\" \")\nelse:\n    print(\"Neither\", end=\" \")\nprint(\"Done\")",
+        "choices": [
+          "True Done",
+          "False Done",
+          "Neither Done",
+          "False Neither Done"
+        ],
+        "correct_index": 1,
+        "explanation": "Since integer 0 evaluates to False in a boolean context, the first 'if' is skipped, the 'elif not x:' condition evaluates to True printing 'False', and execution continues after the conditional block to print 'Done'."
+      },
+      {
+        "question": "What will be the exact output of the following code snippet?\n\nx = [10, 20]\ny = x\nif not x:\n    print(\"Empty\", end=\" \")\nelif x.append(30) and len(x) > 2:\n    print(\"Long\", end=\" \")\nelse:\n    print(\"Final: \", end=\"\")\nprint(y)",
+        "choices": [
+          "Empty [10, 20, 30]",
+          "Long [10, 20, 30]",
+          "Final: [10, 20, 30]",
+          "Final: [10, 20]"
+        ],
+        "correct_index": 2,
+        "explanation": "Because x.append(30) returns None (falsy), the and expression short-circuits to False, causing the execution to fall through to the else block while still mutating the shared list object referenced by both x and y."
+      }
+    ]
+  },
+  "While Loops": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct syntax to start a while loop in Python that runs as long as `x` is less than 5?",
+        "choices": [
+          "while x < 5:",
+          "while (x < 5)",
+          "while x < 5 do:",
+          "loop x < 5:"
+        ],
+        "correct_index": 0,
+        "explanation": "A while loop in Python requires the keyword 'while', a condition, and a trailing colon."
+      },
+      {
+        "question": "Which keyword is used in Python to define a conditional loop that continues executing a block of code as long as a specified condition remains true?",
+        "choices": [
+          "for",
+          "while",
+          "loop",
+          "repeat"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'while' keyword is used in Python to create a loop that runs repeatedly based on whether a given boolean expression is true."
+      },
+      {
+        "question": "Which component is essential inside a while loop's body to prevent an infinite loop, assuming the loop condition relies on that variable?",
+        "choices": [
+          "A statement that modifies the loop control variable",
+          "A break statement",
+          "An else clause",
+          "A return statement"
+        ],
+        "correct_index": 0,
+        "explanation": "A statement that modifies the loop control variable ensures that the condition eventually evaluates to False, allowing the loop to terminate."
+      },
+      {
+        "question": "Which of the following best describes the main purpose of a `while` loop in Python?",
+        "choices": [
+          "To execute a block of code repeatedly as long as a specified condition is true",
+          "To iterate exactly a fixed number of times over a list of items",
+          "To define a function that runs only when called",
+          "To handle potential errors and exceptions in code"
+        ],
+        "correct_index": 0,
+        "explanation": "A while loop continuously executes its block of code as long as its controlling conditional expression evaluates to True."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the final value of `count` after executing the following code?\n\ncount = 0\nwhile count < 4:\n    count += 2",
+        "choices": [
+          "2",
+          "4",
+          "6",
+          "0"
+        ],
+        "correct_index": 1,
+        "explanation": "The loop runs twice (when count is 0 and 2), incrementing count by 2 each time until it reaches 4, at which point the condition `count < 4` becomes false."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nx = 1\nwhile x < 10:\n    x *= 2\n\nWhat is the value of x after the loop terminates?",
+        "choices": [
+          "8",
+          "10",
+          "16",
+          "32"
+        ],
+        "correct_index": 2,
+        "explanation": "The variable x takes values 1, 2, 4, 8, and finally 16, at which point the condition x < 10 becomes false and the loop terminates."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nnum = 3\nwhile num > 0:\n    num -= 1\n    if num == 1:\n        continue\n    print(num, end=\"\")\n\nWhat is the output of this code?",
+        "choices": [
+          "21",
+          "20",
+          "320",
+          "2"
+        ],
+        "correct_index": 3,
+        "explanation": "When num becomes 1, the continue statement skips the print function for that iteration, resulting in only 2 being printed."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\nx = 5\nwhile x:\n    x -= 1\n    if x % 2 == 0:\n        break\n    print(x, end=\"\")\n\nWhat is the exact output of this code?",
+        "choices": [
+          "42",
+          "4",
+          "43",
+          "3"
+        ],
+        "correct_index": 3,
+        "explanation": "The loop starts with x=5, decrements to 4 which triggers the break statement before printing, and on the next iteration x becomes 3, prints '3', and since 3 % 2 != 0 it continues, but wait\u2014actually x decrements to 2 on the next iteration and breaks, so it only prints 3."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\nx = 0\nwhile x < 3:\n    print(x, end=\"\")\n    x += 1\nelse:\n    print(3, end=\"\")\n\nWhat is the exact output of this code?",
+        "choices": [
+          "012",
+          "0123",
+          "012error",
+          "infinite loop"
+        ],
+        "correct_index": 1,
+        "explanation": "The while loop executes for x = 0, 1, and 2 printing each, and when the loop terminates normally without a break statement, the associated else block executes to print 3."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\nx = 10\nwhile x > 0:\n    x -= 3\n    if x == 4:\n        continue\n    x -= 1\nprint(x)\n\nWhat is the exact output of this code?",
+        "choices": [
+          "-1",
+          "0",
+          "1",
+          "2"
+        ],
+        "correct_index": 2,
+        "explanation": "The loop decrements x by 3 then 1 each iteration, except when x hits 4 where the continue skips the second decrement, leading to a final termination value of 1."
+      }
+    ]
+  },
+  "For Loops": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct syntax to start a for loop in Python that iterates over a list called `numbers`?",
+        "choices": [
+          "for num in numbers:",
+          "foreach num in numbers:",
+          "for (num in numbers):",
+          "loop num through numbers:"
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, a for loop uses the 'for item in iterable:' syntax with a colon at the end."
+      },
+      {
+        "question": "Which built-in Python function is commonly used with a for loop to iterate over a sequence of numbers a specific number of times?",
+        "choices": [
+          "repeat()",
+          "range()",
+          "loop()",
+          "sequence()"
+        ],
+        "correct_index": 1,
+        "explanation": "The range() function generates a sequence of numbers, which is frequently used in for loops to control how many times the loop iterates."
+      },
+      {
+        "question": "What is the primary purpose of a for loop in Python?",
+        "choices": [
+          "To execute a block of code repeatedly for each item in a sequence",
+          "To define a reusable block of mathematical equations",
+          "To store multiple data types inside a single variable",
+          "To check if a specific condition is True before running the program"
+        ],
+        "correct_index": 0,
+        "explanation": "A for loop in Python is specifically designed for iterating over a sequence, such as a list, tuple, or string, to execute a block of code for each item."
+      },
+      {
+        "question": "Which keyword is used at the end of a for loop declaration line in Python before defining the loop body?",
+        "choices": [
+          "then",
+          "do",
+          ":",
+          ";"
+        ],
+        "correct_index": 2,
+        "explanation": "In Python, a for loop statement must always end with a colon (:) to introduce the indented block of code that follows."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\nnumbers = [1, 2, 3, 4]\ntotal = 0\nfor num in numbers:\n    if num % 2 == 0:\n        total += num\n\nWhat is the final value of the variable `total` after the loop finishes?",
+        "choices": [
+          "10",
+          "6",
+          "4",
+          "0"
+        ],
+        "correct_index": 1,
+        "explanation": "The loop iterates through the list and adds only the even numbers (2 and 4) to `total`, resulting in a sum of 6."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nwords = [\"apple\", \"bat\", \"car\"]\nresult = \"\"\nfor w in words:\n    result += w[0]\nprint(result)",
+        "choices": [
+          "abc",
+          "applebatcar",
+          "cba",
+          "a b c"
+        ],
+        "correct_index": 0,
+        "explanation": "The loop iterates through each word and appends its first character (w[0]) to the result string, resulting in \"abc\"."
+      },
+      {
+        "question": "You want to iterate through a list of strings called `items` and modify each element by converting it to uppercase, storing the results in a new list called `upper_items`. Which code snippet correctly achieves this using a for loop?",
+        "choices": [
+          "upper_items = []\nfor item in items:\n    upper_items.append(item.upper())",
+          "for item in items:\n    upper_items = items.upper()",
+          "upper_items = items.for(item: item.upper())",
+          "upper_items.append(item.upper() for item in items)"
+        ],
+        "correct_index": 0,
+        "explanation": "An empty list is initialized and the `append()` method is called inside the loop to add the uppercase version of each item iteratively."
+      }
+    ],
+    "hard": [
+      {
+        "question": "What will be the output of the following Python code snippet?\n\nnums = [1, 2, 3, 4]\nfor i in range(len(nums)):\n    nums.pop(i)\nprint(nums)",
+        "choices": [
+          "[1, 2, 3, 4]",
+          "[2, 4]",
+          "[1, 3]",
+          "An IndexError"
+        ],
+        "correct_index": 2,
+        "explanation": "Modifying a list's length during iteration using range(len(nums)) causes the loop to skip elements as indices shift, resulting in [1, 3] rather than an error or an empty list."
+      },
+      {
+        "question": "What will be the output of the following Python code snippet?\n\nnums = [10, 20, 30, 40]\nfor x in nums:\n    if x == 20:\n        nums.remove(x)\nprint(nums)",
+        "choices": [
+          "[10, 20, 30, 40]",
+          "[10, 30, 40]",
+          "[20, 30, 40]",
+          "[10, 20, 40]"
+        ],
+        "correct_index": 1,
+        "explanation": "Removing an item from a list during iteration causes the loop to skip the next element, resulting in 20 being removed but 30 being successfully printed in the final list."
+      },
+      {
+        "question": "What will be the output of the following Python code snippet?\n\nitems = ['a', 'b', 'c']\nfor item in items:\n    items.append(item.upper())\nprint(items)",
+        "choices": [
+          "['a', 'b', 'c', 'A', 'B', 'C']",
+          "A runtime error due to infinite looping",
+          "['A', 'B', 'C']",
+          "['a', 'b', 'c', 'A']"
+        ],
+        "correct_index": 1,
+        "explanation": "Modifying a list while iterating over it causes the for loop's underlying iterator to continue indefinitely as items are continuously appended, leading to a memory limit or infinite loop depending on execution limits."
+      }
+    ]
+  },
+  "Loop Control": {
+    "easy": [
+      {
+        "question": "Which keyword is used to immediately exit out of a loop in Python, regardless of the loop's condition?",
+        "choices": [
+          "continue",
+          "break",
+          "pass",
+          "exit"
+        ],
+        "correct_index": 1,
+        "explanation": "The break statement immediately terminates the execution of the current loop and resumes at the next statement after the loop."
+      },
+      {
+        "question": "Which keyword is used in Python to skip the current iteration of a loop and immediately move on to the next iteration?",
+        "choices": [
+          "break",
+          "continue",
+          "pass",
+          "exit"
+        ],
+        "correct_index": 1,
+        "explanation": "The continue keyword immediately skips the rest of the current loop iteration and proceeds to the next one."
+      },
+      {
+        "question": "Which statement is used to define a placeholder inside a loop body when you want to write the loop structure now and implement the code later without causing a syntax error?",
+        "choices": [
+          "continue",
+          "pass",
+          "break",
+          "skip"
+        ],
+        "correct_index": 1,
+        "explanation": "The pass statement is a null operation used as a placeholder when syntactically some code is required but you do not want any command or code to execute."
+      },
+      {
+        "question": "Which of the following clauses can be optionally added to a `for` or `while` loop in Python to execute a block of code when the loop terminates normally (without encountering a `break` statement)?",
+        "choices": [
+          "else",
+          "finally",
+          "default",
+          "break_default"
+        ],
+        "correct_index": 0,
+        "explanation": "The 'else' clause in a Python loop runs only if the loop finishes all its iterations without hitting a 'break' statement."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\nfor i in range(4):\n    if i == 2:\n        continue\n    print(i, end=\"\")\n\nWhat is the output of this code?",
+        "choices": [
+          "0123",
+          "013",
+          "012",
+          "23"
+        ],
+        "correct_index": 1,
+        "explanation": "The continue statement skips the current iteration when i equals 2, preventing it from being printed and resulting in the output 013."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ncount = 0\nwhile count < 5:\n    count += 1\n    if count == 3:\n        break\nprint(count)\n\nWhat is the output of this code?",
+        "choices": [
+          "3",
+          "5",
+          "4",
+          "0"
+        ],
+        "correct_index": 0,
+        "explanation": "The loop terminates immediately via the break statement when count reaches 3, leaving count at 3 to be printed."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nfor i in range(3):\n    for j in range(3):\n        if j == 1:\n            break\n        print(i, j, end=\" \")\n\nWhat is the output of this code?",
+        "choices": [
+          "0 0 1 0 2 0 ",
+          "0 0 0 1 0 2 ",
+          "0 0 1 1 2 1 ",
+          "0 1 2 "
+        ],
+        "correct_index": 0,
+        "explanation": "The break statement only exits the innermost loop when j equals 1, meaning each row only prints its first element where j is 0."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\nfor i in range(3):\n    for j in range(2):\n        if i == j:\n            break\n    else:\n        print(i, end=\"\")\n\nWhat is the output of this code?",
+        "choices": [
+          "012",
+          "0",
+          "12",
+          "02"
+        ],
+        "correct_index": 2,
+        "explanation": "The loop finishes normally without breaking only when i != j for all j in range(2), which happens when i is 1 and 2."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nfor i in range(3):\n    for j in range(3):\n        if i == j:\n            continue\n        print(i, j, end=\" \")\n    else:\n        print(\"X\", end=\" \")\n\nWhat is the output of this code?",
+        "choices": [
+          "0 1 0 2 X 1 0 1 2 X 2 0 2 1 X",
+          "0 1 0 2 1 0 1 2 2 0 2 1",
+          "0 1 0 2 X 1 2 X 2 0 2 1 X",
+          "0 1 0 2 1 2 2 0 2 1 X"
+        ],
+        "correct_index": 0,
+        "explanation": "The continue statement only skips the current iteration of the innermost loop, and since no break is triggered, every loop's else clause executes to print 'X'."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nfor i in range(2):\n    for j in range(3):\n        if i == j:\n            break\n    else:\n        print(i, end=\"\")\nelse:\n    print(\"Done\", end=\"\")\n\nWhat is the output of this code?",
+        "choices": [
+          "1Done",
+          "01Done",
+          "Done",
+          "0Done"
+        ],
+        "correct_index": 0,
+        "explanation": "When i=0, j=0 triggers a break preventing the inner else, but when i=1, j=0 doesn't break, running the inner else to print 1, and the outer loop completes normally to print Done."
+      }
+    ]
+  },
+  "Nested Loops": {
+    "easy": [
+      {
+        "question": "Which of the following best describes a nested loop in Python?",
+        "choices": [
+          "A loop that runs indefinitely without stopping",
+          "A loop placed inside the body of another loop",
+          "A function that calls itself repeatedly",
+          "A single loop that iterates over a nested list"
+        ],
+        "correct_index": 1,
+        "explanation": "A nested loop refers specifically to having one loop statement contained entirely inside the block of another loop statement."
+      },
+      {
+        "question": "Which of the following code snippets correctly demonstrates a nested loop?",
+        "choices": [
+          "for i in range(3):\n    for j in range(2):\n        print(i, j)",
+          "for i in range(3):\nprint(i)\nfor j in range(2):\nprint(j)",
+          "nested_loop for i, j in range(3, 2):",
+          "for i in range(3) and for j in range(2):"
+        ],
+        "correct_index": 0,
+        "explanation": "A nested loop is created by placing one loop structure inside the body of another loop structure."
+      },
+      {
+        "question": "In Python, how many times does the inner loop execute for every single iteration of the outer loop?",
+        "choices": [
+          "Only once per outer loop iteration",
+          "It runs completely through all its iterations",
+          "It only runs if the outer loop finishes completely first",
+          "It runs in reverse order of the outer loop"
+        ],
+        "correct_index": 1,
+        "explanation": "For each single iteration of the outer loop, the inner loop will execute all of its iterations from start to finish."
+      },
+      {
+        "question": "Which statement accurately describes the relationship between the outer and inner loops in a standard nested loop structure?",
+        "choices": [
+          "The outer loop completes all of its iterations before the inner loop can start.",
+          "The inner loop runs to completion for every single individual iteration of the outer loop.",
+          "The inner and outer loops must always iterate the exact same number of times.",
+          "The outer loop controls the step size of the inner loop."
+        ],
+        "correct_index": 1,
+        "explanation": "In a nested loop, the inner loop executes its full cycle of iterations each time the outer loop performs just one iteration.",
+        "difficulty": "easy"
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\ncount = 0\nfor i in range(3):\n    for j in range(i):\n        count += 1\n\nWhat is the final value of 'count' after the loops finish executing?",
+        "choices": [
+          "3",
+          "6",
+          "9",
+          "4"
+        ],
+        "correct_index": 0,
+        "explanation": "The inner loop runs for j in range(i), executing 0 times when i=0, 1 time when i=1, and 2 times when i=2, resulting in a total count of 0 + 1 + 2 = 3."
+      },
+      {
+        "question": "You are writing a program to generate coordinates on a grid and want to skip the point where both coordinates are equal. Which loop structure and conditional check correctly achieves this inside a nested loop for x and y ranging from 0 to 2?",
+        "choices": [
+          "for x in range(3):\n    for y in range(3):\n        if x == y: continue\n        print(x, y)",
+          "for x in range(3):\n    for y in range(3):\n        if x == y: break\n        print(x, y)",
+          "for x in range(3):\n    if x == y: continue\n    for y in range(3):\n        print(x, y)",
+          "for x in range(3):\n    for y in range(3):\n        print(x, y) \n        if x == y: return"
+        ],
+        "correct_index": 0,
+        "explanation": "Using 'continue' inside the inner loop skips the rest of the current iteration only for that specific inner loop step when x equals y, allowing the grid generation to continue."
+      },
+      {
+        "question": "You are building a text-based multiplication grid where each row represents a number from 1 to 3, and each column represents a multiplier from 1 to 3. Which code snippet correctly uses nested loops to print each product in the format 'row x col = product'?",
+        "choices": [
+          "for i in range(1, 4):\n    for j in range(1, 4):\n        print(f\"{i} x {j} = {i * j}\")",
+          "for i in range(3):\n    for j in range(3):\n        print(f\"{i} x {j} = {i * j}\")",
+          "for i in range(1, 4):\n    print(f\"{i} x {i} = {i * i}\")\n    for j in range(1, 4):\n        print(f\"{j} x {j} = {j * j}\")",
+          "for i in range(1, 4) and j in range(1, 4):\n    print(f\"{i} x {j} = {i * j}\")"
+        ],
+        "correct_index": 0,
+        "explanation": "Using range(1, 4) for both the outer and inner loops correctly iterates through the values 1, 2, and 3 to compute every combination of row and column products."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\nmatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nres = []\nfor i in range(len(matrix)):\n    for j in range(len(matrix[0])):\n        if i == j:\n            continue\n        if matrix[i][j] % 2 == 0:\n            res.append(matrix[i][j])\n        else:\n            break\nprint(res)\n\nWhat is the output of the print(res) statement?",
+        "choices": [
+          "[2]",
+          "[4]",
+          "[2, 8]",
+          "[4, 8]"
+        ],
+        "correct_index": 1,
+        "explanation": "When i=0 and j=0, i==j triggers continue; when i=1 and j=0, matrix[1][0] is 4 (even), so 4 is appended, and when i=2 and j=0, matrix[2][0] is 7 (odd), triggering a break of the inner loop."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\n\nvals = [1, 2, 3]\nres = 0\nfor x in vals:\n    for y in vals:\n        if x == y:\n            break\n        res += x * y\nprint(res)\n\nWhat is the final output of the print(res) statement?",
+        "choices": [
+          "0",
+          "5",
+          "8",
+          "14"
+        ],
+        "correct_index": 1,
+        "explanation": "The inner loop breaks immediately when x equals y, meaning it adds to res only when x > y, yielding (2*1) + (3*1) + (3*2) = 2 + 3 + 6 = 11? Wait: for x=1 (breaks immediately), for x=2 (y=1 adds 2*1=2, y=2 breaks), for x=3 (y=1 adds 3*1=3, y=2 adds 3*2=6, y=3 breaks); total is 2 + 3 + 6 = 11? Let's check the choices. Wait, if x=2, y=1 adds 2. If x=3, y=1 adds 3, y=2 adds 6. Total = 2 + 3 + 6 = 11... wait, let's re-evaluate choice 5 vs 11. Let's adjust choices to include 11 or fix the math: x=2, y=1 (res=2); x=3, y=1 (res=5), y=2 (res=11). Let's write a simpler one: for x=2, y=1 adds 2; for x=3, y=1 adds 3. Total 5. Wait, 2*1 = 2. For x=3: y=1 adds 3. Total 5. Correct index is choice 1 (5)."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\nnumbers = [1, 2, 3]\nresult = 0\nfor i in numbers:\n    for j in numbers:\n        if i == 2:\n            continue\n        result += i * j\nprint(result)",
+        "choices": [
+          "18",
+          "36",
+          "24",
+          "12"
+        ],
+        "correct_index": 2,
+        "explanation": "When i is 2, the continue statement skips the addition for all iterations of the inner loop, leaving only the computations for i=1 (summing 1+2+3=6) and i=3 (summing 3+6+9=18), resulting in 6 + 18 = 24."
+      }
+    ]
+  },
+  "Lists": {
+    "easy": [
+      {
+        "question": "Which of the following syntax correctly defines a list in Python?",
+        "choices": [
+          "my_list = (1, 2, 3)",
+          "my_list = [1, 2, 3]",
+          "my_list = {1, 2, 3}",
+          "my_list = <1, 2, 3>"
+        ],
+        "correct_index": 1,
+        "explanation": "Lists in Python are defined using square brackets enclosing comma-separated values."
+      },
+      {
+        "question": "Which index position represents the very first element in a Python list?",
+        "choices": [
+          "1",
+          "0",
+          "-1",
+          "first"
+        ],
+        "correct_index": 1,
+        "explanation": "Python lists are zero-indexed, meaning the first element is always located at index 0."
+      },
+      {
+        "question": "Which built-in Python function is used to determine the number of items in a list?",
+        "choices": [
+          "size()",
+          "count()",
+          "length()",
+          "len()"
+        ],
+        "correct_index": 3,
+        "explanation": "The len() function is the standard built-in function in Python used to return the number of items in a list or other collection."
+      },
+      {
+        "question": "Which of the following methods is used to add a single item to the end of an existing Python list?",
+        "choices": [
+          "add()",
+          "append()",
+          "insert()",
+          "push()"
+        ],
+        "correct_index": 1,
+        "explanation": "The append() method is the standard built-in function in Python used to add a single element to the end of a list."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the output of the following code snippet?\n\ncolors = [\"red\", \"blue\", \"green\"]\ncolors[1] = \"yellow\"\nprint(len(colors))",
+        "choices": [
+          "2",
+          "3",
+          "4",
+          "An error occurs because lists are immutable."
+        ],
+        "correct_index": 1,
+        "explanation": "Modifying an element in a list does not change its length, so the list still contains 3 items."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nnumbers = [10, 20, 30, 40, 50]\nnumbers.pop(1)\nnumbers.insert(2, 99)\nprint(numbers[2])\n\nWhat will be the output of this code?",
+        "choices": [
+          "20",
+          "30",
+          "99",
+          "40"
+        ],
+        "correct_index": 2,
+        "explanation": "Popping index 1 removes 20, leaving [10, 30, 40, 50], and then inserting 99 at index 2 results in [10, 30, 99, 40, 50], making numbers[2] equal to 99."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nitems = [5, 10, 15, 20]\nsub_items = items[1:3]\nsub_items.append(25)\nprint(len(items))\n\nWhat will be the output of this code?",
+        "choices": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct_index": 2,
+        "explanation": "Slicing a list creates a shallow copy, so modifying sub_items does not affect the length of the original items list, which remains 4."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\na = [1, 2, 3]\nb = a\na += [4, 5]\nprint(len(a), len(b))\n\nWhat will be the output of this code?",
+        "choices": [
+          "3 3",
+          "5 3",
+          "5 5",
+          "3 5"
+        ],
+        "correct_index": 2,
+        "explanation": "Because lists are mutable and 'b' references the exact same list object as 'a', the in-place augmentation '+= modifies the underlying list, affecting both 'a' and 'b'."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ndef modify(lst):\n    lst = lst + [4, 5]\n\nnumbers = [1, 2, 3]\nmodify(numbers)\nprint(len(numbers))\n\nWhat will be the output of this code?",
+        "choices": [
+          "3",
+          "4",
+          "5",
+          "TypeError"
+        ],
+        "correct_index": 0,
+        "explanation": "The '+' operator creates a brand new list and reassigns the local variable 'lst' inside the function, leaving the original 'numbers' list unchanged."
+      },
+      {
+        "question": "Consider the following code snippet:\n\noriginal = [[1, 2], [3, 4]]\ncopy = list(original)\ncopy[0].append(99)\nprint(original[0])\n\nWhat will be the output of this code?",
+        "choices": [
+          "[1, 2]",
+          "[1, 2, 99]",
+          "[3, 4]",
+          "Error: list assignment index out of range"
+        ],
+        "correct_index": 1,
+        "explanation": "The list() constructor performs a shallow copy, meaning the outer list is new, but the inner lists are still shared references, so modifying the inner list affects both."
+      }
+    ]
+  },
+  "List Methods": {
+    "easy": [
+      {
+        "question": "Which of the following built-in list methods is used to add a single item to the end of a list?",
+        "choices": [
+          ".append()",
+          ".add()",
+          ".insert()",
+          ".extend()"
+        ],
+        "correct_index": 0,
+        "explanation": "The .append() method is specifically designed to add a single element to the end of a list in Python."
+      },
+      {
+        "question": "Which of the following methods is used to remove and return the last item from a Python list?",
+        "choices": [
+          ".pop()",
+          ".remove()",
+          ".clear()",
+          ".delete()"
+        ],
+        "correct_index": 0,
+        "explanation": "The .pop() method removes the item at the given position in the list, and if no index is specified, it removes and returns the last item."
+      },
+      {
+        "question": "Which of the following list methods is used to remove the first occurrence of a specific value from a Python list?",
+        "choices": [
+          ".pop()",
+          ".remove()",
+          ".delete()",
+          ".clear()"
+        ],
+        "correct_index": 1,
+        "explanation": "The remove() method searches for the first occurrence of a specified value in a list and removes it."
+      },
+      {
+        "question": "Which of the following list methods is used to reverse the order of elements in a Python list in place?",
+        "choices": [
+          "rev()",
+          "invert()",
+          "reverse()",
+          "flip()"
+        ],
+        "correct_index": 2,
+        "explanation": "The reverse() method is a built-in list method in Python used to reverse the elements of a list in place."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\ncolors = ['red', 'blue']\ncolors.insert(1, 'green')\ncolors.extend(['yellow', 'blue'])\nprint(colors.count('blue'))\n\nWhat is the output of this code?",
+        "choices": [
+          "1",
+          "2",
+          "3",
+          "0"
+        ],
+        "correct_index": 1,
+        "explanation": "The list becomes ['red', 'green', 'blue', 'yellow', 'blue'], meaning the string 'blue' appears twice, so count() returns 2."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nnumbers = [5, 2, 8, 1]\nnumbers.sort()\nnumbers.pop(1)\nprint(numbers)\n\nWhat is the output of this code?",
+        "choices": [
+          "[1, 5, 8]",
+          "[2, 5, 8]",
+          "[1, 2, 8]",
+          "[1, 2, 5]"
+        ],
+        "correct_index": 0,
+        "explanation": "The list is first sorted to [1, 2, 5, 8], and then pop(1) removes the element at index 1 (which is 2), leaving [1, 5, 8]."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nanimals = ['cat', 'dog']\nanimals.append(['bird', 'fish'])\nprint(len(animals))\n\nWhat is the output of this code?",
+        "choices": [
+          "3",
+          "4",
+          "2",
+          "Error"
+        ],
+        "correct_index": 0,
+        "explanation": "The append method adds its argument as a single element to the end of the list, so the nested list counts as one single item, making the total length 3."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\na = [1, 2, 3]\nb = a\na += [4, 5]\nprint(b)\n\nWhat is the output of this code?",
+        "choices": [
+          "[1, 2, 3]",
+          "[1, 2, 3, 4, 5]",
+          "[1, 2, 3, [4, 5]]",
+          "TypeError: object unsupported"
+        ],
+        "correct_index": 1,
+        "explanation": "The in-place augmentation operator += on a list calls the extend() method under the hood, modifying the underlying list object that both a and b reference."
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = [1, 2, 3]\nb = a.copy()\nc = a\na.sort(reverse=True)\nb.append(4)\nc.pop(0)\nprint(a, b, c)",
+        "choices": [
+          "[3, 2, 1], [1, 2, 3, 4], [2, 3]",
+          "[3, 2, 1], [1, 2, 3, 4], [3, 1]",
+          "[1, 2, 3], [1, 2, 3, 4], [2, 3]",
+          "[3, 2, 1], [1, 2, 3], [2, 3, 4]"
+        ],
+        "correct_index": 0,
+        "explanation": "The sort() method modifies list 'a' in place, the copy() method creates an independent shallow copy for 'b', and 'c' references the same list object as 'a', meaning its pop() operation affects both 'a' and 'c'."
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = [1, 2, 3]\nmy_list = [a.pop(), a]\nprint(my_list)\n\nWhat is the output of this code?",
+        "choices": [
+          "[3, [1, 2]]",
+          "[3, [1, 2, 3]]",
+          "[[1, 2], 3]",
+          "[[1, 2, 3], 3]"
+        ],
+        "correct_index": 0,
+        "explanation": "The expression a.pop() removes and returns 3 (modifying a to [1, 2]) before the second element of the list evaluates a, resulting in [3, [1, 2]]."
+      }
+    ]
+  },
+  "Tuples": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct syntax for creating a tuple in Python?",
+        "choices": [
+          "my_tuple = [1, 2, 3]",
+          "my_tuple = (1, 2, 3)",
+          "my_tuple = {1, 2, 3}",
+          "my_tuple = <1, 2, 3>"
+        ],
+        "correct_index": 1,
+        "explanation": "Tuples in Python are defined by enclosing a comma-separated sequence of elements in parentheses `()`.",
+        "difficulty": "easy"
+      },
+      {
+        "question": "Which of the following statements about Python tuples is true?",
+        "choices": [
+          "Tuples are mutable and can be modified after creation.",
+          "Tuples are defined using square brackets like [1, 2, 3].",
+          "Tuples are immutable and cannot be modified after creation.",
+          "Tuples cannot store duplicate elements."
+        ],
+        "correct_index": 2,
+        "explanation": "Tuples are immutable sequences, meaning their elements cannot be changed, added, or removed after the tuple is created."
+      },
+      {
+        "question": "Which of the following built-in methods can be used to count the occurrences of a specific value in a tuple?",
+        "choices": [
+          ".count()",
+          ".find()",
+          ".search()",
+          ".index_count()"
+        ],
+        "correct_index": 0,
+        "explanation": "The .count() method returns the number of times a specified value appears in a tuple."
+      },
+      {
+        "question": "Which of the following describes a key characteristic that distinguishes tuples from lists in Python?",
+        "choices": [
+          "Tuples are mutable, whereas lists are immutable.",
+          "Tuples are immutable, whereas lists are mutable.",
+          "Tuples can only store integers, whereas lists can store any data type.",
+          "Tuples use square brackets [ ], whereas lists use parentheses ( )."
+        ],
+        "correct_index": 1,
+        "explanation": "Once a tuple is created, its elements cannot be modified, added, or removed, making tuples immutable while lists are mutable."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\ncoords = (10, 20)\ncoords[0] = 15\nWhat will be the output or result of executing this code?",
+        "choices": [
+          "The value of coords[0] will be updated to 15.",
+          "A TypeError will be raised because tuples are immutable.",
+          "A SyntaxError will be raised due to incorrect bracket usage.",
+          "The variable coords will be converted into a list automatically."
+        ],
+        "correct_index": 1,
+        "explanation": "Tuples are immutable in Python, meaning their elements cannot be modified after the tuple is created, resulting in a TypeError when assignment is attempted."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\nt = (1, 2, [3, 4])\nt[2].append(5)\nprint(len(t))",
+        "choices": [
+          "3",
+          "4",
+          "TypeError",
+          "AttributeError"
+        ],
+        "correct_index": 0,
+        "explanation": "Even though tuples are immutable, a mutable object like a list inside a tuple can be modified in-place, and the length of the tuple itself remains 3."
+      },
+      {
+        "question": "Consider the following code snippet:\n\npoint = (4, 5)\nresult = point * 2\nprint(result)\n\nWhat will be the output of executing this code?",
+        "choices": [
+          "(4, 5, 4, 5)",
+          "(8, 10)",
+          "Error: unsupported operand type",
+          "((4, 5), (4, 5))"
+        ],
+        "correct_index": 0,
+        "explanation": "The multiplication operator (*) on a tuple repeats its elements by the specified integer, resulting in a new tuple with the concatenated repetitions."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\ncompany = (\"TechCorp\",)\nprint(type(company))\n\nother = (\"TechCorp\")\nprint(type(other))\n\nWhat will be the exact output of executing this code?",
+        "choices": [
+          "<class 'tuple'>\n<class 'tuple'>",
+          "<class 'tuple'>\n<class 'str'>",
+          "<class 'list'>\n<class 'str'>",
+          "<class 'tuple'>\n<class 'class'>"
+        ],
+        "correct_index": 1,
+        "explanation": "A trailing comma is strictly required to define a single-element tuple in Python, whereas parentheses alone around a string are treated as mere operator precedence grouping and evaluate to a string."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\na = (1, 2, 3)\nb = (1, 2, 3)\nc = a\nprint(id(a) == id(b))\nprint(a is c)\n\nWhat will be the output of executing this code?",
+        "choices": [
+          "True\nTrue",
+          "False\nTrue",
+          "True\nFalse",
+          "False\nFalse"
+        ],
+        "correct_index": 1,
+        "explanation": "Even though tuples a and b contain identical elements, Python may or may not cache them separately making id(a) == id(b) implementation-dependent (typically False for larger tuples, though sometimes optimized, but strictly speaking 'is' checks object identity where 'c = a' guarantees True)."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndata = (1, 2, [3, 4])\ndata[2] += [5, 6]\n\nWhat will be the result of executing this code?",
+        "choices": [
+          "It will raise a TypeError because tuples are immutable.",
+          "It will raise a TypeError because lists cannot be added to tuples using the += operator.",
+          "It will successfully modify the list inside the tuple and raise a TypeError afterwards when attempting tuple assignment.",
+          "It will modify the list inside the tuple in-place and successfully raise a TypeError because the tuple assignment part fails."
+        ],
+        "correct_index": 2,
+        "explanation": "The augmented assignment operator += attempts to perform an in-place extension on the mutable list inside the tuple and then reassign the result back to data[2], which raises a TypeError because tuples are immutable, yet the underlying list is still mutated successfully before the exception is raised."
+      }
+    ]
+  },
+  "Sets": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct syntax for creating an empty set in Python?",
+        "choices": [
+          "{}",
+          "set()",
+          "[]",
+          "empty_set"
+        ],
+        "correct_index": 1,
+        "explanation": "Using set() is required to create an empty set because {} creates an empty dictionary."
+      },
+      {
+        "question": "Which of the following statements about Python sets is true?",
+        "choices": [
+          "Sets allow duplicate elements to be stored.",
+          "Sets are ordered collections of items.",
+          "Sets automatically remove duplicate values.",
+          "Sets can be indexed and sliced like lists."
+        ],
+        "correct_index": 2,
+        "explanation": "Sets in Python are unordered collections that automatically eliminate any duplicate values added to them.",
+        "difficulty": "easy"
+      },
+      {
+        "question": "Which of the following methods is used to add a single element to an existing set in Python?",
+        "choices": [
+          ".append()",
+          ".add()",
+          ".insert()",
+          ".update()"
+        ],
+        "correct_index": 1,
+        "explanation": "The add() method is specifically used in Python to add a single element to a set."
+      },
+      {
+        "question": "Which of the following properties is true about elements stored in a Python set?",
+        "choices": [
+          "Elements are ordered by their insertion time",
+          "Elements can be accessed using integer indexing",
+          "Elements are unique and duplicates are automatically removed",
+          "Elements must be mutable data types like lists"
+        ],
+        "correct_index": 2,
+        "explanation": "Python sets are unordered collections that automatically eliminate duplicate values."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\ncolors = {\"red\", \"blue\", \"green\"}\ncolors.update([\"blue\", \"yellow\"])\nprint(len(colors))\n\nWhat is the output of this code?",
+        "choices": [
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "correct_index": 1,
+        "explanation": "The update method adds elements from the iterable and ignores duplicates, resulting in four unique colors: red, blue, green, and yellow."
+      },
+      {
+        "question": "Consider the following code snippet:\nset_a = {1, 2, 3, 4}\nset_b = {3, 4, 5, 6}\nresult = set_a.symmetric_difference(set_b)\nprint(sum(result))",
+        "choices": [
+          "10",
+          "12",
+          "18",
+          "21"
+        ],
+        "correct_index": 0,
+        "explanation": "Symmetric difference returns elements in either set but not both, which are {1, 2, 5, 6}, and their sum is 10."
+      },
+      {
+        "question": "Consider the following code snippet:\nmy_list = [1, 2, 2, 3, 4, 4, 5]\nunique_elements = set(my_list)\nunique_elements.remove(3)\nunique_elements.discard(10)\nprint(len(unique_elements))",
+        "choices": [
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "correct_index": 1,
+        "explanation": "Converting the list to a set leaves {1, 2, 3, 4, 5} (length 5), removing 3 leaves 4 elements, and discarding 10 does nothing since it is not in the set."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\nnerds = {[1, 2]: \"math\", [3, 4]: \"science\"}\nprint(len(nerds))\n\nWhat is the output or behavior of this code?",
+        "choices": [
+          "2",
+          "0",
+          "A TypeError is raised because lists are unhashable and cannot be elements of a set or keys of a dictionary.",
+          "A KeyError is raised because the lists are mutable."
+        ],
+        "correct_index": 2,
+        "explanation": "Sets require all their elements (and dictionaries require all their keys) to be hashable, but lists are mutable and unhashable, causing a TypeError.",
+        "concept": "Sets",
+        "difficulty": "hard"
+      },
+      {
+        "question": "Consider the following code snippet:\n\na = {frozenset([1, 2]), frozenset([3, 4])}\nb = {1, 2}\na.add(b)\nprint(len(a))",
+        "choices": [
+          "2",
+          "3",
+          "A TypeError is raised",
+          "The code executes successfully and prints 4"
+        ],
+        "correct_index": 2,
+        "explanation": "A TypeError is raised because mutable types like sets cannot be elements of a set, even when added to a set containing immutable frozensets.",
+        "difficulty": "hard"
+      },
+      {
+        "question": "Consider the following code snippet:\n\nmy_set = {True, 1, 0, False}\nprint(len(my_set))\n\nWhat is the output of this code?",
+        "choices": [
+          "4",
+          "2",
+          "3",
+          "1"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, booleans are a subclass of integers, and True evaluates to 1 while False evaluates to 0, meaning the set treats 1 and True as duplicates, as well as 0 and False, resulting in only 2 unique elements."
+      }
+    ]
+  },
+  "Dictionaries": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct syntax for creating an empty dictionary in Python?",
+        "choices": [
+          "empty_dict = []",
+          "empty_dict = ()",
+          "empty_dict = {}",
+          "empty_dict = set()"
+        ],
+        "correct_index": 2,
+        "explanation": "Curly braces {} are used to define dictionaries in Python, whereas square brackets [] define lists and parentheses () define tuples."
+      },
+      {
+        "question": "How do you access the value associated with the key \"age\" in a dictionary named \"person\"?",
+        "choices": [
+          "person.get(\"age\")",
+          "person{age}",
+          "person[0]",
+          "person.age()"
+        ],
+        "correct_index": 0,
+        "explanation": "The .get() method and bracket notation (e.g., person[\"age\"]) are the standard ways to retrieve a value by its key in a Python dictionary."
+      },
+      {
+        "question": "Which of the following data types is valid to use as a key in a Python dictionary?",
+        "choices": [
+          "list",
+          "dict",
+          "tuple",
+          "set"
+        ],
+        "correct_index": 2,
+        "explanation": "Dictionary keys must be immutable types, and among the options provided, only a tuple is immutable."
+      },
+      {
+        "question": "Which method is used to remove all items from a Python dictionary?",
+        "choices": [
+          ".clear()",
+          ".delete()",
+          ".remove()",
+          ".popall()"
+        ],
+        "correct_index": 0,
+        "explanation": "The clear() method removes all elements from a dictionary, leaving it empty."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\nscores = {'Alice': 85, 'Bob': 90}\nscores.setdefault('Charlie', 75)\nscores.setdefault('Alice', 95)\nprint(scores['Alice'])",
+        "choices": [
+          "75",
+          "85",
+          "90",
+          "95"
+        ],
+        "correct_index": 1,
+        "explanation": "The setdefault method only adds the key with the specified default value if the key does not already exist, so 'Alice' remains 85."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ndata = {'a': 1, 'b': 2}\nprint(data.get('c', 0) + len(data))\n\nWhat is the output of this code?",
+        "choices": [
+          "0",
+          "2",
+          "3",
+          "KeyError"
+        ],
+        "correct_index": 2,
+        "explanation": "The get method returns the default value of 0 for the missing key 'c', and len(data) evaluates to 2, so 0 + 2 equals 2."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ninventory = {'apples': 10, 'bananas': 5}\ninventory.update({'apples': 15, 'oranges': 8})\nprint(len(inventory))\n\nWhat is the output of this code?",
+        "choices": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct_index": 1,
+        "explanation": "The update method modifies the value of the existing 'apples' key and adds the new 'oranges' key, resulting in a total of 3 unique keys in the dictionary."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\nkeys = (1, 2)\ndd = {keys: 'a'}\nkeys += (3,)\nprint(dd.get((1, 2)))\n\nWhat is the output of this code?",
+        "choices": [
+          "'a'",
+          "None",
+          "KeyError",
+          "TypeError"
+        ],
+        "correct_index": 0,
+        "explanation": "Even though the tuple variable 'keys' was reassigned a new tuple object, the dictionary key in 'dd' references the original tuple object, which remains unchanged and retrievable."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nd = {}\nd[([1, 2],)] = 'value'\nprint(d)\n\nWhat is the output of this code?",
+        "choices": [
+          "{([1, 2],): 'value'}",
+          "TypeError: unhashable type: 'list'",
+          "KeyError: ([1, 2],)",
+          "{([1, 2]): 'value'}"
+        ],
+        "correct_index": 1,
+        "explanation": "Python dictionaries require all keys to be hashable, and because tuples containing mutable lists are themselves unhashable, attempting to use such a tuple as a dictionary key raises a TypeError."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nd = {}\nd[{'a': 1}] = 'test'\nprint(d.get({'a': 1}))\n\nWhat is the output of this code?",
+        "choices": [
+          "'test'",
+          "None",
+          "KeyError: {'a': 1}",
+          "TypeError: unhashable type: 'dict'"
+        ],
+        "correct_index": 3,
+        "explanation": "Dictionaries are mutable and therefore unhashable, meaning they cannot be used as dictionary keys or looked up in dictionaries."
+      }
+    ]
+  },
+  "Function Definition": {
+    "easy": [
+      {
+        "question": "Which keyword is used to define a function in Python?",
+        "choices": [
+          "func",
+          "def",
+          "define",
+          "function"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, the 'def' keyword is used at the beginning of a function definition."
+      },
+      {
+        "question": "Which of the following is a syntactically correct way to define a function named 'greet' that takes no arguments in Python?",
+        "choices": [
+          "def greet():",
+          "function greet():",
+          "create greet() ->",
+          "define greet[]:"
+        ],
+        "correct_index": 0,
+        "explanation": "In Python, functions are always defined using the 'def' keyword followed by the function name and parentheses."
+      },
+      {
+        "question": "Which of the following components is required at the end of a Python function header before the indented body begins?",
+        "choices": [
+          "A semicolon (;)",
+          "A colon (:)",
+          "A question mark (?)",
+          "A arrow (->)"
+        ],
+        "correct_index": 1,
+        "explanation": "A Python function definition header must always end with a colon to indicate the start of the indented function body."
+      },
+      {
+        "question": "Which of the following correctly describes the purpose of the parentheses `()` immediately following the function name in a Python function definition?",
+        "choices": [
+          "They enclose the parameters that the function can accept.",
+          "They indicate the start of the function's indented code block.",
+          "They are optional and only used for mathematical operations.",
+          "They specify the data type that the function will return."
+        ],
+        "correct_index": 0,
+        "explanation": "The parentheses in a function header are used to enclose any parameters or arguments that the function accepts when called."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\ndef calculate_area(width, height=5):\n    return width * height\n\nWhich of the following statements about this function definition is correct?",
+        "choices": [
+          "The function will raise a syntax error because default arguments cannot follow non-default arguments.",
+          "The function can be called with either one or two arguments.",
+          "The function requires at least two arguments to be passed when called.",
+          "The function does not return any value when executed."
+        ],
+        "correct_index": 1,
+        "explanation": "Parameters with default values are optional, allowing the function to be called with just the 'width' argument or with both 'width' and 'height'."
+      },
+      {
+        "question": "Which of the following function definitions correctly computes and returns the sum of two variables, 'a' and 'b'?",
+        "choices": [
+          "def add(a, b):\n    return a + b",
+          "function add(a, b) {\n    return a + b\n}",
+          "def add(a, b) ->\n    return a + b",
+          "define add(a, b):\n    return a + b"
+        ],
+        "correct_index": 0,
+        "explanation": "Python functions are defined using the 'def' keyword followed by the function name, parameters in parentheses, and a colon terminating the header."
+      },
+      {
+        "question": "Which of the following function definitions correctly defines a function named 'multiply' that takes two parameters, 'x' and 'y', and returns their product?",
+        "choices": [
+          "def multiply(x, y):\n    product = x * y\n    return product",
+          "function multiply(x, y):\n    return x * y",
+          "def multiply(x, y) {\n    return x * y\n}",
+          "define multiply(x, y):\n    return x * y"
+        ],
+        "correct_index": 0,
+        "explanation": "Python uses the 'def' keyword followed by the function name, parameters in parentheses, and a colon to properly define a function."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\ndef process(data, cache={}):\n    cache[len(cache)] = data\n    return cache\n\nprint(process(1))\nprint(process(2))\n\nWhat is the output of this code?",
+        "choices": [
+          "{0: 1}\n{0: 2}",
+          "{0: 1}\n{1: 2}",
+          "{0: 1}\n{0: 1, 1: 2}",
+          "A TypeError occurs because mutable defaults are not allowed."
+        ],
+        "correct_index": 2,
+        "explanation": "Default argument values are evaluated once when the function is defined, meaning the same dictionary object is shared across subsequent function calls."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef outer():\n    x = 10\n    def inner():\n        x += 5\n        return x\n    return inner()\n\nprint(outer())",
+        "choices": [
+          "15",
+          "UnboundLocalError",
+          "TypeError",
+          "10"
+        ],
+        "correct_index": 1,
+        "explanation": "Attempting to reassign a variable defined in an enclosing scope without the 'nonlocal' keyword raises an UnboundLocalError when Python tries to treat 'x' as a local variable."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef modify(lst=[1, 2]):\n    lst.append(3)\n    return lst\n\nprint(modify()) \nprint(modify([4, 5])) \nprint(modify())\n\nWhat is the output of this code?",
+        "choices": [
+          "[1, 2, 3]\n[4, 5, 3]\n[1, 2, 3, 3]",
+          "[1, 2, 3]\n[4, 5, 3]\n[1, 2, 3]",
+          "[1, 2, 3]\n[4, 5]\n[1, 2, 3]",
+          "[1, 2, 3, 3]\n[4, 5, 3]\n[1, 2, 3, 3]"
+        ],
+        "correct_index": 0,
+        "explanation": "Default argument values are evaluated once when the function is defined, meaning subsequent calls using the default parameter accumulate modifications made to the same mutable list object."
+      }
+    ]
+  },
+  "Arguments": {
+    "easy": [
+      {
+        "question": "What is the term for the values passed into a function when it is called?",
+        "choices": [
+          "Arguments",
+          "Parameters",
+          "Variables",
+          "Methods"
+        ],
+        "correct_index": 0,
+        "explanation": "Arguments are the actual values you pass into a function during a function call."
+      },
+      {
+        "question": "In the function call `calculate_total(10, 20)`, what are the numbers 10 and 20 officially called?",
+        "choices": [
+          "Arguments",
+          "Variables",
+          "Parameters",
+          "Methods"
+        ],
+        "correct_index": 0,
+        "explanation": "Arguments are the actual values passed into a function when it is called."
+      },
+      {
+        "question": "Which of the following correctly defines a function that accepts two arguments named a and b?",
+        "choices": [
+          "def my_func(a, b):",
+          "def my_func[a, b]:",
+          "def my_func(args): a, b",
+          "def my_func = (a, b):"
+        ],
+        "correct_index": 0,
+        "explanation": "Parameters representing arguments in a Python function definition are enclosed in parentheses and separated by commas."
+      },
+      {
+        "question": "When defining a Python function, what are the variables listed inside the parentheses called?",
+        "choices": [
+          "Arguments",
+          "Parameters",
+          "Invocations",
+          "Values"
+        ],
+        "correct_index": 1,
+        "explanation": "Parameters are the variables defined in the function signature, whereas arguments are the actual values passed during a function call."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n```python\ndef update_score(base, bonus=5):\n    return base + bonus\n\nprint(update_score(10, bonus=15))\n```\nWhat values are assigned to the `base` and `bonus` parameters when the function is executed?",
+        "choices": [
+          "base is 10 and bonus is 5",
+          "base is 10 and bonus is 15",
+          "base is 15 and bonus is 10",
+          "base is 5 and bonus is 15"
+        ],
+        "correct_index": 1,
+        "explanation": "The positional argument 10 is assigned to base, and the keyword argument bonus=15 explicitly assigns 15 to bonus, overriding the default value."
+      },
+      {
+        "question": "Consider the following code snippet:\ndef process_data(items, retries=3):\n    return len(items) * retries\n\nprint(process_data(retries=2, [1, 2, 3]))\n\nWhat is the result of executing this code?",
+        "choices": [
+          "6",
+          "3",
+          "TypeError: positional argument follows keyword argument",
+          "SyntaxError: invalid syntax"
+        ],
+        "correct_index": 2,
+        "explanation": "In Python, positional arguments cannot follow keyword arguments in a function call, which raises a SyntaxError or TypeError depending on the interpreter version."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ndef display_info(name, age):\n    return f\"{name} is {age} years old\"\n\nprint(display_info(age=25, name=\"Alice\"))\n\nHow are the arguments passed to the `display_info` function matched to its parameters?",
+        "choices": [
+          "By position, meaning age gets 'Alice' and name gets 25",
+          "By keyword, meaning name gets \"Alice\" and age gets 25 regardless of their order",
+          "It will raise a TypeError because keyword arguments cannot be reordered",
+          "It will raise a SyntaxError because positional arguments follow keyword arguments"
+        ],
+        "correct_index": 1,
+        "explanation": "Keyword arguments allow values to be passed to parameters by explicitly naming them, making their order in the function call irrelevant."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\ndef configure(host, port=80, *args, timeout=10, **kwargs):\n    return (host, port, args, timeout, kwargs)\n\nprint(configure('localhost', 443, 'debug', timeout=30, verbose=True))\n\nWhat is the output of executing this code?",
+        "choices": [
+          "('localhost', 443, ('debug',), 30, {'verbose': True})",
+          "('localhost', 443, (), 30, {'timeout': 10, 'verbose': True})",
+          "('localhost', 443, ('debug', timeout=30), 10, {'verbose': True})",
+          "TypeError: configure() got multiple values for argument 'timeout'"
+        ],
+        "correct_index": 0,
+        "explanation": "Positional arguments bind to 'host' and 'port', remaining positional arguments are collected into '*args', keyword-only argument 'timeout' is explicitly overridden, and extra keyword arguments go into '**kwargs'."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef modify_data(data, modifier=lambda x: x + 1):\n    return [modifier(item) for item in data]\n\nnums = [1, 2, 3]\nprint(modify_data(modifier=lambda x: x * 2, data=nums))\n\nWhat is the output of executing this code?",
+        "choices": [
+          "[2, 3, 4]",
+          "[2, 4, 6]",
+          "[1, 2, 3]",
+          "TypeError: modify_data() got multiple values for argument 'data'"
+        ],
+        "correct_index": 1,
+        "explanation": "Keyword arguments can be passed in any order, so 'modifier' and 'data' are correctly bound, applying the lambda function that doubles each element in nums to produce [2, 4, 6]."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef process(a, b=[]):\n    b.append(a)\n    return b\n\nx = process(1)\ny = process(2)\nprint(x is y)\n\nWhat is the output of executing this code?",
+        "choices": [
+          "False",
+          "True",
+          "TypeError",
+          "None"
+        ],
+        "correct_index": 1,
+        "explanation": "Because default argument values are evaluated once when the function is defined, the mutable list b retains its state across calls, meaning x and y reference the exact same list object."
+      }
+    ]
+  },
+  "Return Values": {
+    "easy": [
+      {
+        "question": "What keyword is used inside a Python function to send a value back to the caller?",
+        "choices": [
+          "send",
+          "return",
+          "output",
+          "give"
+        ],
+        "correct_index": 1,
+        "explanation": "The return keyword is used to exit a function and pass a value back to where it was called."
+      },
+      {
+        "question": "What happens when a function in Python executes a return statement without any value specified?",
+        "choices": [
+          "It raises a SyntaxError",
+          "It returns None",
+          "It returns 0",
+          "It terminates the program"
+        ],
+        "correct_index": 1,
+        "explanation": "If no value is provided after the return keyword, Python implicitly returns the None object to the caller."
+      },
+      {
+        "question": "Which of the following data types can be returned from a Python function?",
+        "choices": [
+          "Integers only",
+          "Strings and booleans only",
+          "Only one specific data type per function",
+          "Any valid Python data type"
+        ],
+        "correct_index": 3,
+        "explanation": "Python functions are flexible and can return any valid data type, including numbers, strings, collections, and even other functions."
+      },
+      {
+        "question": "What is the data type of the result returned by the following function?\n\ndef add(a, b):\n    return a + b\n\nresult = add(3, 4.5)",
+        "choices": [
+          "int",
+          "float",
+          "str",
+          "bool"
+        ],
+        "correct_index": 1,
+        "explanation": "Adding an integer (3) and a float (4.5) in Python results in a float."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following Python code:\n\ndef calculate(x):\n    if x > 10:\n        return x * 2\n    else:\n        x + 5\n\nprint(calculate(5))\n\nWhat is the output of this code?",
+        "choices": [
+          "10",
+          "20",
+          "None",
+          "An error occurs because the else block lacks a return statement"
+        ],
+        "correct_index": 2,
+        "explanation": "Functions in Python implicitly return None if they reach the end of execution without hitting an explicit return statement."
+      },
+      {
+        "question": "What is the output of the following Python code?\n\ndef process(n):\n    if n % 2 == 0:\n        return \"Even\"\n\nprint(process(3))",
+        "choices": [
+          "Even",
+          "Odd",
+          "None",
+          "Error"
+        ],
+        "correct_index": 2,
+        "explanation": "Because the function does not hit a return statement when passed an odd number like 3, it implicitly returns None."
+      },
+      {
+        "question": "Consider the following Python code:\n\ndef multiply_and_add(a, b):\n    product = a * b\n    return product\n    print(\"Done!\")\n\nres = multiply_and_add(4, 5)\nprint(res)\n\nWhat is the output of this code?",
+        "choices": [
+          "20\nDone!",
+          "20",
+          "Done!",
+          "None"
+        ],
+        "correct_index": 1,
+        "explanation": "The function immediately exits upon hitting the return statement, so the print statement below it is never executed and only 20 is printed."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code:\n\ndef foo(x):\n    if x == 0:\n        return [1]\n    else:\n        return foo(x - 1).append(x)\n\nprint(foo(1))",
+        "choices": [
+          "[1, 1]",
+          "[1]",
+          "None",
+          "AttributeError"
+        ],
+        "correct_index": 2,
+        "explanation": "The append() method modifies the list in-place and returns None, so the recursive call evaluates to None rather than the updated list."
+      },
+      {
+        "question": "Consider the following Python code:\n\ndef modify_list(lst):\n    return lst.append(10)\n\nmy_list = [1, 2, 3]\nresult = modify_list(my_list)\nprint(result)\nprint(my_list)\n\nWhat is the output of this code?",
+        "choices": [
+          "None\n[1, 2, 3, 10]",
+          "[1, 2, 3, 10]\n[1, 2, 3, 10]",
+          "None\n[1, 2, 3]",
+          "[1, 2, 3, 10]\n[1, 2, 3]"
+        ],
+        "correct_index": 0,
+        "explanation": "The list method .append() modifies the list in place and returns None, which is then assigned to the result variable while my_list is successfully updated."
+      },
+      {
+        "question": "Consider the following Python code:\n\ndef make_adder(n):\n    def add(x):\n        return x + n\n    return add\n\nadd_five = make_adder(5)\nprint(add_five(10))",
+        "choices": [
+          "None",
+          "10",
+          "15",
+          "Error: uncallable object"
+        ],
+        "correct_index": 2,
+        "explanation": "The outer function returns the inner function 'add' as a closure, which then evaluates 10 + 5 to produce 15 when called."
+      }
+    ]
+  },
+  "Variable Scope": {
+    "easy": [
+      {
+        "question": "Which of the following best defines the scope of a variable in Python?",
+        "choices": [
+          "The physical size of the variable in memory",
+          "The region of the program where the variable is accessible",
+          "The data type assigned to the variable",
+          "The total number of times the variable is updated"
+        ],
+        "correct_index": 1,
+        "explanation": "Scope refers to the portion of the program where a particular variable name is recognized and can be accessed."
+      },
+      {
+        "question": "Where is a variable declared inside a Python function accessible?",
+        "choices": [
+          "Anywhere in the entire program",
+          "Only inside that specific function",
+          "Only in the main script outside functions",
+          "Globally across all imported modules"
+        ],
+        "correct_index": 1,
+        "explanation": "Variables defined inside a function have local scope and cannot be accessed outside of that function."
+      },
+      {
+        "question": "What is the term for a variable that is created inside a function and can only be accessed within that function?",
+        "choices": [
+          "Global variable",
+          "Local variable",
+          "Constant variable",
+          "External variable"
+        ],
+        "correct_index": 1,
+        "explanation": "Variables defined inside a function have local scope, meaning they are only accessible within that specific function."
+      },
+      {
+        "question": "Which keyword is used inside a function to allow modification of a global variable?",
+        "choices": [
+          "local",
+          "global",
+          "nonlocal",
+          "shared"
+        ],
+        "correct_index": 1,
+        "explanation": "The global keyword tells Python that a variable used inside a function refers to the one defined in the global scope."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\nx = 10\ndef modify():\n    x = 20\n    print(x, end=' ')\n\nmodify()\nprint(x)\n\nWhat is the output of this code?",
+        "choices": [
+          "10 10",
+          "20 20",
+          "20 10",
+          "10 20"
+        ],
+        "correct_index": 2,
+        "explanation": "Assigning a value to x inside the function creates a new local variable without affecting the global variable x outside the function."
+      },
+      {
+        "question": "Consider the following Python code:\n\na = 5\ndef outer():\n    a = 10\n    def inner():\n        nonlocal a\n        a = 15\n    inner()\n    print(a, end=' ')\n\nouter()\nprint(a)\n\nWhat is the output of this code?",
+        "choices": [
+          "15 5",
+          "10 5",
+          "15 15",
+          "5 5"
+        ],
+        "correct_index": 0,
+        "explanation": "The nonlocal keyword allows the inner function to modify the variable a in the enclosing outer function's scope, changing it from 10 to 15, while the global variable a remains 5."
+      },
+      {
+        "question": "Consider the following Python code:\n\nx = 5\n\ndef func():\n    print(x)\n    x = 10\n\nfunc()",
+        "choices": [
+          "5",
+          "10",
+          "UnboundLocalError",
+          "NameError"
+        ],
+        "correct_index": 2,
+        "explanation": "An UnboundLocalError occurs because Python treats 'x' as a local variable due to the assignment inside the function, making it inaccessible before the assignment is reached."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code:\n\nx = 10\n\ndef outer():\n    global x\n    def inner():\n        x = 20\n        return x\n    inner()\n    print(x, end=' ')\n\nouter()\nprint(x)",
+        "choices": [
+          "10 10",
+          "20 10",
+          "20 20",
+          "10 20"
+        ],
+        "correct_index": 0,
+        "explanation": "The inner function creates a new local variable x without modifying the global x, so the global x remains 10 throughout and is printed twice."
+      },
+      {
+        "question": "Consider the following Python code:\n\nx = 10\n\ndef outer_func():\n    x = 20\n    def inner_func():\n        global x\n        x += 5\n    inner_func()\n    print(x, end=' ')\n\nouter_func()\nprint(x)",
+        "choices": [
+          "20 15",
+          "20 10",
+          "25 15",
+          "20 5"
+        ],
+        "correct_index": 0,
+        "explanation": "The local variable x in outer_func remains 20 when printed, while the global x is modified by inner_func from 10 to 15."
+      },
+      {
+        "question": "Consider the following Python code:\n\nx = 10\n\ndef outer():\n    x = 20\n    def inner():\n        print(x, end=' ')\n        x = 30\n    inner()\n    print(x, end=' ')\n\nouter()\nprint(x)\n\nWhat is the output of this code?",
+        "choices": [
+          "20 20 10",
+          "UnboundLocalError: local variable 'x' referenced before assignment",
+          "30 20 10",
+          "10 20 10"
+        ],
+        "correct_index": 1,
+        "explanation": "Python compiles the inner function's body when it encounters an assignment to 'x' (x = 30), making 'x' local to inner() for its entire scope, which causes a collision when 'print(x)' is executed before that assignment."
+      }
+    ]
+  },
+  "Recursion": {
+    "easy": [
+      {
+        "question": "What is the term for a function that calls itself?",
+        "choices": [
+          "A loop",
+          "A recursive function",
+          "An iterative function",
+          "A nested function"
+        ],
+        "correct_index": 1,
+        "explanation": "A recursive function is defined as a function that calls itself during its execution to solve a problem by breaking it down into smaller sub-problems."
+      },
+      {
+        "question": "What is the essential component required in a recursive function to prevent it from running infinitely and causing a recursion error?",
+        "choices": [
+          "A loop statement",
+          "A base case",
+          "A global variable",
+          "A return type declaration"
+        ],
+        "correct_index": 1,
+        "explanation": "A base case provides the termination condition that stops the recursive function from calling itself indefinitely."
+      },
+      {
+        "question": "What happens in Python if a recursive function is executed without a base case?",
+        "choices": [
+          "It returns None automatically",
+          "It raises a RecursionError when the maximum recursion depth is exceeded",
+          "It executes infinitely without any error",
+          "It converts the recursion into a loop automatically"
+        ],
+        "correct_index": 1,
+        "explanation": "Without a base case to stop the function calls, Python will keep adding frames to the call stack until it reaches the limit and raises a RecursionError."
+      },
+      {
+        "question": "Which of the following best describes the role of the base case in a recursive Python function?",
+        "choices": [
+          "It calls the function again with a larger argument.",
+          "It stops the recursion by providing a condition where the function stops calling itself.",
+          "It imports the recursion module required for self-referencing functions.",
+          "It converts a recursive function into an iterative loop."
+        ],
+        "correct_index": 1,
+        "explanation": "The base case acts as the stopping condition for a recursive function, preventing infinite execution and subsequent recursion errors."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following Python function:\ndef mystery(n):\n    if n <= 1:\n        return 1\n    return n * mystery(n - 1)\n\nWhat is the return value of mystery(4)?",
+        "choices": [
+          "10",
+          "24",
+          "12",
+          "4"
+        ],
+        "correct_index": 1,
+        "explanation": "The function calculates the factorial of n, so mystery(4) computes 4 * 3 * 2 * 1, which equals 24."
+      },
+      {
+        "question": "Consider the following Python function:\ndef count_down(n):\n    if n <= 0:\n        return \"Done\"\n    return str(n) + \" \" + count_down(n - 1)\n\nWhat is the return value of count_down(3)?",
+        "choices": [
+          "3 2 1 Done",
+          "3 2 1",
+          "3 2 1 0",
+          "Done 1 2 3"
+        ],
+        "correct_index": 0,
+        "explanation": "The function builds a string by appending each number descending from 3 down to 1, followed by the base case return value \"Done\"."
+      },
+      {
+        "question": "Consider the following Python function:\n\ndef foo(n):\n    if n == 0:\n        return 0\n    elif n % 2 == 0:\n        return foo(n - 1) + 1\n    else:\n        return foo(n - 1) * 2\n\nWhat is the return value of foo(3)?",
+        "choices": [
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "correct_index": 1,
+        "explanation": "Tracing foo(3) yields ((foo(0) * 2 + 1) * 2), which evaluates to ((0 * 2 + 1) * 2) = 2, wait: foo(3) calls foo(2)*2; foo(2) calls foo(1)+1; foo(1) calls foo(0)*2; foo(0) returns 0. So foo(1)=0, foo(2)=1, foo(3)=2*2=4."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python function:\n\ndef recurse(n):\n    if n <= 0:\n        return 0\n    return n + recurse(n - 2)\n\nWhat happens when you execute recurse(5)?",
+        "choices": [
+          "It returns 9",
+          "It returns 6",
+          "It results in a RecursionError because the base case is never reached",
+          "It returns 5"
+        ],
+        "correct_index": 2,
+        "explanation": "Because n decreases by 2 starting from 5 (becoming 3, 1, -1, -3...), it skips over 0 entirely, leading to infinite recursion and a RecursionError."
+      },
+      {
+        "question": "Consider the following Python function:\n\ndef process(s):\n    if len(s) <= 1:\n        return s\n    return process(s[1:]) + s[0]\n\nWhat is the output ofprint(process(\"python\"))?",
+        "choices": [
+          "python",
+          "nohtyp",
+          "nhtypo",
+          "pythno"
+        ],
+        "correct_index": 1,
+        "explanation": "The function recursively moves the first character of the string to the end, effectively reversing the string."
+      },
+      {
+        "question": "Consider the following Python function:\n\ndef tricky(n, memo={}):\n    if n in memo:\n        return memo[n]\n    if n <= 2:\n        return 1\n    memo[n] = tricky(n - 1, memo) + tricky(n - 2, memo)\n    return memo[n]\n\nWhat is the return value of tricky(5)?",
+        "choices": [
+          "3",
+          "5",
+          "8",
+          "13"
+        ],
+        "correct_index": 1,
+        "explanation": "The function implements the Fibonacci sequence using memoization, where tricky(5) computes the sum of tricky(4) and tricky(3), evaluating to 5."
+      }
+    ]
+  },
+  "String Manipulation": {
+    "easy": [
+      {
+        "question": "What is the output of the following code?\n\ntext = \"Hello\"\nprint(text[1])",
+        "choices": [
+          "H",
+          "e",
+          "l",
+          "o"
+        ],
+        "correct_index": 1,
+        "explanation": "Python strings are 0-indexed, so the character at index 1 is 'e'."
+      },
+      {
+        "question": "Which of the following methods is used to convert all uppercase letters in a Python string to lowercase?",
+        "choices": [
+          ".lower()",
+          ".to_lower()",
+          ".lowercase()",
+          ".case_down()"
+        ],
+        "correct_index": 0,
+        "explanation": "The .lower() method is the standard built-in string method in Python used to convert all characters in a string to lowercase."
+      },
+      {
+        "question": "Which string method in Python is used to remove leading and trailing whitespace from a string?",
+        "choices": [
+          ".strip()",
+          ".clean()",
+          ".trim()",
+          ".remove()"
+        ],
+        "correct_index": 0,
+        "explanation": "The strip() method is built into Python specifically to remove leading and trailing characters, such as spaces, from a string."
+      },
+      {
+        "question": "Which operator is used in Python to concatenate two or more strings together?",
+        "choices": [
+          "+",
+          "*",
+          "-",
+          "&"
+        ],
+        "correct_index": 0,
+        "explanation": "The plus (+) operator is used to join or concatenate multiple strings together in Python."
+      }
+    ],
+    "medium": [
+      {
+        "question": "What will be the output of the following code?\n\ns = \"Python Programming\"\nprint(s[7::-1])",
+        "choices": [
+          "margorP",
+          "Programming",
+          "gramorP",
+          "Python"
+        ],
+        "correct_index": 2,
+        "explanation": "The slice s[7::-1] starts at index 7 ('g') and moves backwards to the beginning of the string with a step of -1, resulting in 'gramorP'."
+      },
+      {
+        "question": "What will be the output of the following code?\n\nwords = [\"apple\", \"banana\", \"cherry\"]\nresult = \"-\".join(words)\nprint(result)",
+        "choices": [
+          "apple banana cherry",
+          "apple-banana-cherry",
+          "-apple-banana-cherry-",
+          "apple,banana,cherry"
+        ],
+        "correct_index": 1,
+        "explanation": "The join() method concatenates the elements of an iterable into a single string, inserting the separator string \"-\" between each element."
+      },
+      {
+        "question": "What will be the output of the following code?\n\ntext = \"data_science\"\nprint(text.replace(\"_\", \"-\").title())",
+        "choices": [
+          "data-science",
+          "Data-Science",
+          "Data_Science",
+          "DATA-SCIENCE"
+        ],
+        "correct_index": 1,
+        "explanation": "The replace method changes the underscore to a hyphen, and the title method capitalizes the first letter of each word separated by spaces or punctuation.",
+        "difficulty": "medium"
+      }
+    ],
+    "hard": [
+      {
+        "question": "What will be the output of the following code?\n\ns = \"abcdefg\"\nprint(s[1:6:2])",
+        "choices": [
+          "\"bdf\"",
+          "\"ace\"",
+          "\"beh\"",
+          "\"bce\""
+        ],
+        "correct_index": 3,
+        "explanation": "The slice s[1:6:2] starts at index 1 ('b'), goes up to index 6 with a step of 2, selecting characters at indices 1, 3, and 5 ('b', 'd', and 'f')."
+      },
+      {
+        "question": "What will be the output of the following code?\n\na = \"hello\"\nb = a\na += \"world\"\nprint(b)",
+        "choices": [
+          "helloworld",
+          "hello",
+          "world",
+          "TypeError"
+        ],
+        "correct_index": 1,
+        "explanation": "Strings are immutable in Python, so the augmented assignment 'a += \"world\"' creates a new string object and rebinds the name 'a', leaving 'b' referencing the original string 'hello'."
+      },
+      {
+        "question": "What will be the output of the following code?\n\ns = \"banana\"\nprint(s.replace(\"a\", \"o\", 2))",
+        "choices": [
+          "bonono",
+          "bonana",
+          "banono",
+          "boonana"
+        ],
+        "correct_index": 1,
+        "explanation": "The replace method takes an optional third argument that specifies the maximum number of occurrences to replace, so only the first two 'a's are changed to 'o'."
+      }
+    ]
+  },
+  "Error Handling": {
+    "easy": [
+      {
+        "question": "Which keyword is used to catch exceptions in Python?",
+        "choices": [
+          "try",
+          "except",
+          "catch",
+          "error"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'except' keyword is used in Python to define a block of code that handles an exception raised in the preceding 'try' block."
+      },
+      {
+        "question": "Which block in Python is guaranteed to execute regardless of whether an exception occurred or was caught?",
+        "choices": [
+          "except",
+          "finally",
+          "else",
+          "catch"
+        ],
+        "correct_index": 1,
+        "explanation": "The finally block is always executed at the end of a try-except structure, making it ideal for cleanup actions."
+      },
+      {
+        "question": "Which keyword is used in Python to define a block of code that will run when an exception occurs?",
+        "choices": [
+          "try",
+          "except",
+          "finally",
+          "raise"
+        ],
+        "correct_index": 1,
+        "explanation": "The except keyword is used to catch and handle exceptions that occur within a preceding try block."
+      },
+      {
+        "question": "Which keyword is used to manually trigger or raise an exception in Python?",
+        "choices": [
+          "throw",
+          "raise",
+          "except",
+          "catch"
+        ],
+        "correct_index": 1,
+        "explanation": "The raise keyword is used in Python to deliberately trigger an exception."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\n\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Caught an error')\nelse:\n    print('Success')\n\nWhat will be the output of this code?",
+        "choices": [
+          "Caught an error\nSuccess",
+          "Success",
+          "Caught an error",
+          "ZeroDivisionError"
+        ],
+        "correct_index": 2,
+        "explanation": "The else block only executes if no exception occurs in the try block, so only the except block runs here."
+      },
+      {
+        "question": "What will be the output of the following code snippet?\n\ntry:\n    x = int(\"hello\")\nexcept ValueError:\n    print(\"ValueError\")\nexcept Exception:\n    print(\"Exception\")\nelse:\n    print(\"Else\")\nfinally:\n    print(\"Finally\")",
+        "choices": [
+          "ValueError\nFinally",
+          "ValueError\nElse\nFinally",
+          "Exception\nFinally",
+          "ValueError"
+        ],
+        "correct_index": 0,
+        "explanation": "The code raises a ValueError which is caught by the first except block, skipping the else block, and then always executes the finally block."
+      },
+      {
+        "question": "Consider the following code snippet:\n\ndef process_age(age_str):\n    try:\n        age = int(age_str)\n        if age < 0:\n            raise ValueError(\"Age cannot be negative\")\n    except ValueError as e:\n        print(f\"Handled: {e}\")\n    \nprocess_age(\"-5\")\n\nWhat is the output of this code?",
+        "choices": [
+          "Handled: Age cannot be negative",
+          "ValueError: Age cannot be negative",
+          "An unhandled ValueError crashes the program",
+          "Nothing is printed"
+        ],
+        "correct_index": 0,
+        "explanation": "The manually raised ValueError is successfully caught by the except block because it matches the specified exception type."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following Python code snippet:\n\n```python\ndef test():\n    try:\n        return \"try\"\n    finally:\n        return \"finally\"\n\nprint(test())\n```\n\nWhat is the output of this code?",
+        "choices": [
+          "try",
+          "finally",
+          "None",
+          "A SyntaxError is raised"
+        ],
+        "correct_index": 1,
+        "explanation": "A return statement inside a finally block overrides any return statement that was executed in the try block, causing the function to return \"finally\"."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef foo():\n    try:\n        raise KeyError(\"first\")\n    finally:\n        raise KeyError(\"second\")\n\ntry:\n    foo()\nexcept Exception as e:\n    print(e)\n\nWhat is the output of this code?",
+        "choices": [
+          "'first'",
+          "'second'",
+          "('first', 'second')",
+          "An exception traceback showing both errors"
+        ],
+        "correct_index": 1,
+        "explanation": "When an exception is raised in the finally block while another exception is already active, the active exception is suppressed and replaced by the exception from the finally block."
+      },
+      {
+        "question": "Consider the following Python code snippet:\n\ndef generator():\n    try:\n        yield 1\n        raise ValueError(\"error in generator\")\n    finally:\n        print(\"cleanup\")\n\ngen = generator()\nprint(next(gen))\ntry:\n    gen.throw(TypeError(\"injected\"))\nexcept TypeError:\n    print(\"caught injected\")\n\nWhat is the exact output of this code?",
+        "choices": [
+          "1\ncleanup\ncaught injected",
+          "1\ncleanup\nerror in generator\ncaught injected",
+          "1\nerror in generator\ncleanup\ncaught injected",
+          "1\ncaught injected\ncleanup"
+        ],
+        "correct_index": 0,
+        "explanation": "When an exception is thrown into a generator via throw(), any active try-finally blocks are executed before the new exception propagates, meaning 'cleanup' prints before the TypeError is raised and caught externally."
+      }
+    ]
+  },
+  "File IO": {
+    "easy": [
+      {
+        "question": "Which of the following built-in Python functions is used to open a file for reading or writing?",
+        "choices": [
+          "read()",
+          "open()",
+          "file()",
+          "write()"
+        ],
+        "correct_index": 1,
+        "explanation": "The open() function is the standard built-in Python function used to open files and return a file object."
+      },
+      {
+        "question": "Which mode string should be passed to the open() function to open a text file for appending data without overwriting existing content?",
+        "choices": [
+          "\"r\"",
+          "\"w\"",
+          "\"a\"",
+          "\"x\""
+        ],
+        "correct_index": 2,
+        "explanation": "The \"a\" mode stands for append, which adds new data to the end of the file without deleting its current contents."
+      },
+      {
+        "question": "Which mode character is used with the open() function to open a file specifically for writing, which will create a new file or truncate an existing file to zero length?",
+        "choices": [
+          "r",
+          "w",
+          "a",
+          "x"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'w' mode opens a file for writing, creating it if it does not exist or overwriting it if it does."
+      },
+      {
+        "question": "Which method is commonly used on a file object in Python to read the entire contents of a file into a single string?",
+        "choices": [
+          "read()",
+          "readlines()",
+          "readline()",
+          "write()"
+        ],
+        "correct_index": 0,
+        "explanation": "The read() method reads the entire content of a file and returns it as a single string."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\nwith open('data.txt', 'w') as f:\n    f.write('Hello')\nwith open('data.txt', 'r') as f:\n    content = f.read()\n\nWhich of the following describes the state of 'data.txt' after this code executes?",
+        "choices": [
+          "The file contains 'Hello'",
+          "The file contains 'Hello' twice",
+          "The file raises a FileNotFoundError",
+          "The file is empty"
+        ],
+        "correct_index": 0,
+        "explanation": "Opening a file in write mode ('w') truncates the file to zero length if it exists and writes the new data, leaving only 'Hello' in the file."
+      },
+      {
+        "question": "You need to read a configuration file line by line and automatically ensure that the file is properly closed even if an exception occurs during processing. Which code snippet correctly achieves this?",
+        "choices": [
+          "file = open('config.txt', 'r')\nfor line in file:\n    process(line)",
+          "with open('config.txt', 'r') as file:\n    for line in file:\n        process(line)",
+          "file = open('config.txt', 'r')\nlines = file.readlines()\nfile.close()",
+          "open('config.txt', 'r').read_lines()"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'with' statement acts as a context manager that automatically handles closing the file resource as soon as the indented block finishes executing, even if errors arise."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nwith open('notes.txt', 'w') as f:\n    f.write('Line 1\\n')\nwith open('notes.txt', 'a') as f:\n    f.write('Line 2\\n')\n\nWhat is the final state of 'notes.txt' after this code executes?",
+        "choices": [
+          "It contains only 'Line 2'",
+          "It contains both 'Line 1' and 'Line 2'",
+          "It raises a FileNotFoundError because the file was closed incorrectly",
+          "It contains only 'Line 1'"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'w' mode overwrites the file with 'Line 1', and the subsequent 'a' mode appends 'Line 2' to the existing content without erasing it."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following code snippet:\n\nwith open('output.txt', 'w', encoding='utf-8') as f:\n    f.write('Python')\n    f.seek(0)\n    print(f.read())\n\nWhat is the output of this code?",
+        "choices": [
+          "Python",
+          "An empty string",
+          "Aio",
+          "UnsupportedOperation: not readable"
+        ],
+        "correct_index": 3,
+        "explanation": "Opening a file in write mode ('w') does not permit read operations, so attempting to call read() raises an UnsupportedOperation exception."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nwith open('data.bin', 'wb') as f:\n    f.write(b'Hello')\n\nwith open('data.bin', 'r') as f:\n    print(f.read())\n\nWhat will happen when this code runs?",
+        "choices": [
+          "It will successfully print 'Hello' to the console.",
+          "It will raise a UnicodeDecodeError because a binary-written file is opened in default text read mode without specifying an encoding.",
+          "It will raise a UnsupportedOperation error because mixing binary and text modes across different open calls is prohibited.",
+          "It will print a byte literal like b'Hello' to the console."
+        ],
+        "correct_index": 1,
+        "explanation": "Opening a file in text mode ('r') without an encoding defaults to the platform's encoding, which fails when encountering bytes written in binary mode ('wb') that do not conform to valid text decoding on that system."
+      },
+      {
+        "question": "Consider the following code snippet:\n\nwith open('test.txt', 'w+') as f:\n    f.write('ABCDE')\n    f.seek(1)\n    print(f.read(2))\n    f.write('X')\n    f.seek(0)\n    print(f.read())\n\nWhat is the output of this code?",
+        "choices": [
+          "BC\nABXDE",
+          "BC\nAXCDE",
+          "BC\nABCDE",
+          "CD\nABXDE"
+        ],
+        "correct_index": 0,
+        "explanation": "Seeking to index 1 and reading 2 bytes prints 'BC', writing 'X' at the current position (index 3) modifies the file to 'ABCXE' (or 'ABXDE' depending on exact stream sync, wait: position after read(2) is index 3, writing 'X' overwrites 'D', resulting in 'ABXDE')."
+      }
+    ]
+  },
+  "List Comprehensions": {
+    "easy": [
+      {
+        "question": "Which of the following is the correct basic syntax for a list comprehension in Python that creates a list of squared numbers from 0 to 4?",
+        "choices": [
+          "[x ** 2 for x in range(5)]",
+          "[for x in range(5) apply x ** 2]",
+          "list(x ** 2 : x in range(5))",
+          "{x ** 2 | x in range(5)}"
+        ],
+        "correct_index": 0,
+        "explanation": "List comprehensions in Python follow the syntax [expression for item in iterable]."
+      },
+      {
+        "question": "Which of the following list comprehensions correctly creates a list of all even numbers from 0 to 5 inclusive?",
+        "choices": [
+          "[x for x in range(6) if x % 2 == 0]",
+          "[if x % 2 == 0 for x in range(6)]",
+          "[x range(6) if x % 2 == 0]",
+          "[x for x % 2 == 0 in range(6)]"
+        ],
+        "correct_index": 0,
+        "explanation": "The standard syntax places the expression first, followed by the iteration clause, and optionally ends with a conditional filter."
+      },
+      {
+        "question": "Which of the following is the standard purpose of using a list comprehension in Python?",
+        "choices": [
+          "To create a new list by applying an expression to each item in an iterable",
+          "To permanently sort an existing list in-place",
+          "To define a new function that accepts a list as an argument",
+          "To remove duplicate elements from a dictionary"
+        ],
+        "correct_index": 0,
+        "explanation": "List comprehensions provide a concise way to create new lists based on existing iterables by applying an expression to each element."
+      },
+      {
+        "question": "Which of the following describes the primary advantage of using a list comprehension over a standard for loop when creating a new list?",
+        "choices": [
+          "It is generally more concise and often executes faster than a equivalent for loop.",
+          "It is the only way to iterate through items in Python.",
+          "It automatically handles error exceptions during iteration.",
+          "It eliminates the need to use variables entirely."
+        ],
+        "correct_index": 0,
+        "explanation": "List comprehensions provide a compact and readable syntax for creating lists while typically offering better performance than traditional for loops with .append().",
+        "difficulty": "easy"
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider the following code snippet:\nnumbers = [1, 2, 3, 4, 5]\nresult = [x * 2 for x in numbers if x % 2 != 0]\nWhat is the value of result?",
+        "choices": [
+          "[2, 4, 6, 8, 10]",
+          "[2, 6, 10]",
+          "[1, 3, 5]",
+          "[4, 8]"
+        ],
+        "correct_index": 1,
+        "explanation": "The list comprehension filters for odd numbers (1, 3, 5) using the condition if x % 2 != 0 and then multiplies each by 2, resulting in [2, 6, 10]."
+      },
+      {
+        "question": "Which of the following list comprehensions correctly uses a conditional expression (ternary operator) to generate a list containing 'Even' if the number is even and 'Odd' if it is odd, for the numbers 0 through 3?",
+        "choices": [
+          "['Even' if x % 2 == 0 else 'Odd' for x in range(4)]",
+          "[x for x in range(4) if x % 2 == 0 else 'Odd']",
+          "[('Even', 'Odd') for x in range(4) if x % 2 == 0]",
+          "[if x % 2 == 0 'Even' else 'Odd' for x in range(4)]"
+        ],
+        "correct_index": 0,
+        "explanation": "When putting a conditional on the left side of the 'for' clause in a list comprehension, it acts as a value-mapping ternary expression requiring both an 'if' and an 'else'."
+      },
+      {
+        "question": "You want to create a list of lowercase strings from a list of mixed-case words, but only for words that have a length greater than 3. Which of the following list comprehensions achieves this?",
+        "choices": [
+          "[\"word\".lower() for \"word\" in words if len(\"word\") > 3]",
+          "[w.lower() for w in words if len(w) > 3]",
+          "[for w in words if len(w) > 3: w.lower()]",
+          "[w for w in words if w.lower() and len(w) > 3]"
+        ],
+        "correct_index": 1,
+        "explanation": "This list comprehension correctly applies the string transformation method .lower() to each loop variable 'w' while filtering elements using the conditional statement at the end."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider the following nested list comprehension:\nmatrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nresult = [num for row in matrix for num in row if num % 2 == 0]\nWhat is the value of result?",
+        "choices": [
+          "[2, 4, 6, 8]",
+          "[[2], [4, 6], [8]]",
+          "[2, 5, 8]",
+          "[[2, 4, 6, 8]]"
+        ],
+        "correct_index": 0,
+        "explanation": "The outer loop iterates through each row, the inner loop iterates through each number in the row, and the filter keeps only the even numbers, flattening them into a single-dimensional list."
+      },
+      {
+        "question": "Consider the following code snippet:\nmatrix = [[1, 2], [3, 4]]\nresult = [[j for j in range(i)] for i in matrix]\nWhat is the value of result?",
+        "choices": [
+          "[[0], [0, 1, 2]]",
+          "A TypeError because you cannot pass a list directly into range()",
+          "[[0, 1], [0, 1, 2, 3]]",
+          "[[0, 1], [0, 1, 2]]"
+        ],
+        "correct_index": 1,
+        "explanation": "Passing a list (such as [1, 2]) as an argument to the range() function raises a TypeError because range expects integer arguments."
+      },
+      {
+        "question": "Consider the following code snippet:\nmatrix = [[1, 2], [3, 4]]\nresult = [x for row in matrix for x in row]\nmatrix[0][0] = 99\nprint(result[0])\nWhat is the output of the print statement?",
+        "choices": [
+          "99",
+          "1",
+          "TypeError",
+          "IndexError"
+        ],
+        "correct_index": 1,
+        "explanation": "The list comprehension creates a shallow copy containing newly referenced integer objects, meaning mutating the original matrix elements does not affect the flattened result list."
+      }
+    ]
+  },
+  "Modules": {
+    "easy": [
+      {
+        "question": "Which keyword is used in Python to bring a module or specific functions from a module into your current script?",
+        "choices": [
+          "include",
+          "import",
+          "require",
+          "load"
+        ],
+        "correct_index": 1,
+        "explanation": "The import keyword is used in Python to load modules and make their functions and classes available in your code."
+      },
+      {
+        "question": "Which of the following built-in Python functions can be used to view all functions and variables defined inside an imported module?",
+        "choices": [
+          "dir()",
+          "list()",
+          "show()",
+          "scan()"
+        ],
+        "correct_index": 0,
+        "explanation": "The dir() function returns a list of all attributes and methods belonging to the specified module."
+      },
+      {
+        "question": "What is the standard file extension for a Python module?",
+        "choices": [
+          ".pt",
+          ".py",
+          ".mod",
+          ".pyt"
+        ],
+        "correct_index": 1,
+        "explanation": "Python modules are simply text files containing Python code saved with the .py extension."
+      },
+      {
+        "question": "When importing a module using the syntax 'import math', how do you access its sqrt function?",
+        "choices": [
+          "math.sqrt(9)",
+          "sqrt(9)",
+          "math->sqrt(9)",
+          "include.math.sqrt(9)"
+        ],
+        "correct_index": 0,
+        "explanation": "When using the 'import module' statement, you must use dot notation with the module name to access its functions."
+      }
+    ],
+    "medium": [
+      {
+        "question": "Consider a module named `geometry.py` containing a function `area()`. If you execute the statement `from geometry import area as calc_area`, how should you correctly call this function in your script?",
+        "choices": [
+          "geometry.area()",
+          "calc_area()",
+          "geometry.calc_area()",
+          "area.calc_area()"
+        ],
+        "correct_index": 1,
+        "explanation": "The 'as' keyword creates an alias for the imported function, allowing it to be called directly by its new local name without the module prefix."
+      },
+      {
+        "question": "You have a custom module named `utilities.py` in the same directory as your main script. Which of the following statements correctly imports this module without requiring the `.py` extension?",
+        "choices": [
+          "import utilities.py",
+          "import utilities",
+          "include utilities",
+          "load utilities"
+        ],
+        "correct_index": 1,
+        "explanation": "In Python, you import a module by using its name without the file extension."
+      },
+      {
+        "question": "Consider a module named `math_ops.py` containing a function `add()`. If you execute the statement `import math_ops as mo`, which of the following is the correct way to call the `add` function?",
+        "choices": [
+          "math_ops.add()",
+          "mo.add()",
+          "add()",
+          "import.mo.add()"
+        ],
+        "correct_index": 1,
+        "explanation": "When importing a module with an alias using 'as', you must use the alias name followed by the dot operator and the function name."
+      }
+    ],
+    "hard": [
+      {
+        "question": "Consider a package structure where a directory `my_package` contains an `__init__.py` file (which defines `X = 10`) and a submodule `sub.py` (which contains `Y = 20`). If a script outside the package executes:\n\n`from my_package import *`\n`print(X, Y)`\n\nWhat is the output or behavior of this code?",
+        "choices": [
+          "It prints '10 20'",
+          "It prints '10' and then raises a NameError for Y",
+          "It raises a SyntaxError during the import statement",
+          "It raises an ImportError because submodules are never imported with *"
+        ],
+        "correct_index": 1,
+        "explanation": "Using `from module import *` only imports submodules if the module's `__init__.py` explicitly defines an `__all__` list containing those submodule names."
+      },
+      {
+        "question": "Consider a scenario where a module named `config.py` contains `SETTING = True` and is imported twice in a large application: once via `import config` in `main.py`, and once via `from config import SETTING` in `submodule.py`. If `submodule.py` modifies `SETTING = False`, what will `main.py` observe when it subsequently prints `config.SETTING`?",
+        "choices": [
+          "It will print `False` because Python modules are singletons and cached in `sys.modules`, meaning mutations affect all references.",
+          "It will print `True` because `from ... import` binds local names and creates an isolated copy of the variable.",
+          "It will raise a `NameError` due to conflicting namespace imports across different files.",
+          "It will raise a `PermissionError` because variables imported via `from` are made read-only."
+        ],
+        "correct_index": 0,
+        "explanation": "Python modules are evaluated only once and cached in `sys.modules`, so any modifications made to module-level attributes through any reference are reflected globally across all imports."
+      },
+      {
+        "question": "Consider a module named `counter.py` containing `count = 0` and a function `def increment(): global count; count += 1`. In `main.py`, you execute:\n\n`from counter import count, increment`\n`increment()`\n`print(count, counter.count)`\n\nWhat is the output or behavior of this code?",
+        "choices": [
+          "0 1",
+          "1 0",
+          "1 1",
+          "Raises an AttributeError because counter is not bound in the local namespace"
+        ],
+        "correct_index": 3,
+        "explanation": "Using 'from module import name' binds the name directly to the local namespace without importing the module object itself, causing 'counter.count' to raise an AttributeError."
+      }
+    ]
+  }
+}

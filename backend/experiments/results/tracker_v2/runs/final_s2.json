@@ -1,0 +1,101 @@
+{
+  "name": "final_s2",
+  "variant": "global",
+  "data": "orig_extra",
+  "seed": 2,
+  "extra_n": 2000,
+  "train_students": 4000,
+  "best_epoch": 8,
+  "best_val_auc": 0.763633572279409,
+  "epochs_run": 12,
+  "train_minutes": 22.36981027921041,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5703246321678161,
+      "val_auc": 0.7432441021154681
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5433351345062256,
+      "val_auc": 0.758621650301761
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5366084523200989,
+      "val_auc": 0.7621083358086618
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5325961709022522,
+      "val_auc": 0.7634995849528494
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5321329898834228,
+      "val_auc": 0.762216273393964
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.5312254767417908,
+      "val_auc": 0.7626199840831256
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.5303495240211487,
+      "val_auc": 0.7629342090870421
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.5304488911628723,
+      "val_auc": 0.763633572279409
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.5296006569862366,
+      "val_auc": 0.7633448543138069
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5294302027225495,
+      "val_auc": 0.7634196267192679
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5290835289955139,
+      "val_auc": 0.7636281452499805
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.5285410013198852,
+      "val_auc": 0.7634705201952429
+    }
+  ],
+  "val_oracle_auc": 0.804911678714069,
+  "args": {
+    "name": "final_s2",
+    "variant": "global",
+    "data": "orig_extra",
+    "extra_n": 2000,
+    "seed": 2,
+    "epochs": 16,
+    "patience": 4,
+    "bs": 64,
+    "lr": 0.002,
+    "dropout": 0.1,
+    "hidden": 64,
+    "threads": 2
+  },
+  "test": {
+    "orig_test": {
+      "auc": 0.7543013482462559,
+      "oracle_auc": 0.7957240386555483,
+      "students": 250
+    },
+    "fresh_test": {
+      "auc": 0.7622204338366793,
+      "oracle_auc": 0.8050444645905147,
+      "students": 1000
+    }
+  }
+}

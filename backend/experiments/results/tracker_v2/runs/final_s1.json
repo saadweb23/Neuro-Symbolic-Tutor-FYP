@@ -1,0 +1,121 @@
+{
+  "name": "final_s1",
+  "variant": "global",
+  "data": "orig_extra",
+  "seed": 1,
+  "extra_n": 2000,
+  "train_students": 4000,
+  "best_epoch": 12,
+  "best_val_auc": 0.7642553892512738,
+  "epochs_run": 16,
+  "train_minutes": 40.304454720020296,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5682433190345764,
+      "val_auc": 0.7435058658349082
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5436416645050048,
+      "val_auc": 0.756841343447869
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5355026249885559,
+      "val_auc": 0.7625958036520049
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5333773307800292,
+      "val_auc": 0.7632450572726476
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5311251344680786,
+      "val_auc": 0.7633321912451402
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.5303784193992614,
+      "val_auc": 0.7638940696919824
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.5302285981178284,
+      "val_auc": 0.7637114803018731
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.5298208250999451,
+      "val_auc": 0.76398530408671
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.5292809991836548,
+      "val_auc": 0.7639757163347194
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5294528980255127,
+      "val_auc": 0.7639064915593412
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5288909826278686,
+      "val_auc": 0.7638741705840775
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.5285586841106414,
+      "val_auc": 0.7642553892512738
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.5286033086776734,
+      "val_auc": 0.7637954786573625
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.528358377456665,
+      "val_auc": 0.7639202400338936
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.527876070022583,
+      "val_auc": 0.7639769223412591
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.5279583220481873,
+      "val_auc": 0.7639815051661099
+    }
+  ],
+  "val_oracle_auc": 0.804911678714069,
+  "args": {
+    "name": "final_s1",
+    "variant": "global",
+    "data": "orig_extra",
+    "extra_n": 2000,
+    "seed": 1,
+    "epochs": 16,
+    "patience": 4,
+    "bs": 64,
+    "lr": 0.002,
+    "dropout": 0.1,
+    "hidden": 64,
+    "threads": 2
+  },
+  "test": {
+    "orig_test": {
+      "auc": 0.7554732413622798,
+      "oracle_auc": 0.7957240386555483,
+      "students": 250
+    },
+    "fresh_test": {
+      "auc": 0.7629668285678641,
+      "oracle_auc": 0.8050444645905147,
+      "students": 1000
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "noise_orig_original",
+  "variant": "original",
+  "data": "noise_orig",
+  "seed": 0,
+  "extra_n": 0,
+  "train_students": 2000,
+  "best_epoch": 2,
+  "best_val_auc": 0.720640730674474,
+  "epochs_run": 5,
+  "train_minutes": 6.298256882031759,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5992860379219055,
+      "val_auc": 0.7109484757039807
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5553201866149903,
+      "val_auc": 0.720640730674474
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5507754383087158,
+      "val_auc": 0.7197773594061828
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5502546968460083,
+      "val_auc": 0.720421886866861
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.550527621269226,
+      "val_auc": 0.7204862025118383
+    }
+  ],
+  "val_oracle_auc": 0.7970948644490656,
+  "args": {
+    "name": "noise_orig_original",
+    "variant": "original",
+    "data": "noise_orig",
+    "extra_n": 0,
+    "seed": 0,
+    "epochs": 10,
+    "patience": 3,
+    "bs": 64,
+    "lr": 0.002,
+    "dropout": 0.1,
+    "hidden": 64,
+    "threads": 2
+  },
+  "test": {
+    "test": {
+      "auc": 0.7267035115253936,
+      "oracle_auc": 0.7945575922850419,
+      "students": 500
+    }
+  }
+}

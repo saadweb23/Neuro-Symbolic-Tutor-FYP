@@ -1,0 +1,37 @@
+Training on: cpu
+Split sizes -> train: 2000 | val: 250 | test: 250
+[pos_weight] train pass rate: 29.76% -> pos_weight=2.3598
+Epoch 01/25 | LR: 0.002000 | Train BCE/Step: 0.8901 | Val AUC: 0.7331 (cold: 0.5219, steady: 0.7231)
+  -> New best val AUC (0.7331). Saved checkpoint to E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+Epoch 02/25 | LR: 0.001992 | Train BCE/Step: 0.8990 | Val AUC: 0.7278 (cold: 0.5686, steady: 0.7160)
+Epoch 03/25 | LR: 0.001969 | Train BCE/Step: 0.8805 | Val AUC: 0.7324 (cold: 0.5215, steady: 0.7222)
+Epoch 04/25 | LR: 0.001930 | Train BCE/Step: 0.8779 | Val AUC: 0.7347 (cold: 0.5221, steady: 0.7250)
+  -> New best val AUC (0.7347). Saved checkpoint to E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+Epoch 05/25 | LR: 0.001876 | Train BCE/Step: 0.8789 | Val AUC: 0.7297 (cold: 0.4786, steady: 0.7192)
+Epoch 06/25 | LR: 0.001809 | Train BCE/Step: 0.8785 | Val AUC: 0.7315 (cold: 0.4785, steady: 0.7214)
+Epoch 07/25 | LR: 0.001729 | Train BCE/Step: 0.8763 | Val AUC: 0.7334 (cold: 0.5217, steady: 0.7232)
+Epoch 08/25 | LR: 0.001637 | Train BCE/Step: 0.8778 | Val AUC: 0.7322 (cold: 0.4745, steady: 0.7224)
+Epoch 09/25 | LR: 0.001536 | Train BCE/Step: 0.8764 | Val AUC: 0.7315 (cold: 0.4757, steady: 0.7215)
+Epoch 10/25 | LR: 0.001426 | Train BCE/Step: 0.8742 | Val AUC: 0.7283 (cold: 0.4801, steady: 0.7175)
+Epoch 11/25 | LR: 0.001309 | Train BCE/Step: 0.8764 | Val AUC: 0.7307 (cold: 0.4810, steady: 0.7205)
+Epoch 12/25 | LR: 0.001187 | Train BCE/Step: 0.8741 | Val AUC: 0.7304 (cold: 0.4791, steady: 0.7201)
+Epoch 13/25 | LR: 0.001063 | Train BCE/Step: 0.8736 | Val AUC: 0.7295 (cold: 0.4806, steady: 0.7189)
+Epoch 14/25 | LR: 0.000937 | Train BCE/Step: 0.8724 | Val AUC: 0.7300 (cold: 0.4310, steady: 0.7200)
+Epoch 15/25 | LR: 0.000813 | Train BCE/Step: 0.8719 | Val AUC: 0.7304 (cold: 0.4762, steady: 0.7201)
+Epoch 16/25 | LR: 0.000691 | Train BCE/Step: 0.8719 | Val AUC: 0.7299 (cold: 0.4781, steady: 0.7194)
+Epoch 17/25 | LR: 0.000574 | Train BCE/Step: 0.8711 | Val AUC: 0.7297 (cold: 0.4708, steady: 0.7193)
+Epoch 18/25 | LR: 0.000464 | Train BCE/Step: 0.8700 | Val AUC: 0.7297 (cold: 0.4736, steady: 0.7193)
+Epoch 19/25 | LR: 0.000363 | Train BCE/Step: 0.8702 | Val AUC: 0.7299 (cold: 0.4736, steady: 0.7196)
+Epoch 20/25 | LR: 0.000271 | Train BCE/Step: 0.8688 | Val AUC: 0.7293 (cold: 0.4295, steady: 0.7192)
+Epoch 21/25 | LR: 0.000191 | Train BCE/Step: 0.8675 | Val AUC: 0.7286 (cold: 0.4319, steady: 0.7182)
+Epoch 22/25 | LR: 0.000124 | Train BCE/Step: 0.8682 | Val AUC: 0.7292 (cold: 0.4285, steady: 0.7191)
+Epoch 23/25 | LR: 0.000070 | Train BCE/Step: 0.8678 | Val AUC: 0.7292 (cold: 0.4277, steady: 0.7190)
+Epoch 24/25 | LR: 0.000031 | Train BCE/Step: 0.8675 | Val AUC: 0.7291 (cold: 0.4282, steady: 0.7190)
+Epoch 25/25 | LR: 0.000008 | Train BCE/Step: 0.8674 | Val AUC: 0.7291 (cold: 0.4290, steady: 0.7189)
+
+--- Final Test Evaluation (best checkpoint, held-out students) ---
+Overall AUC-ROC:            0.7176 (Target: > 0.75)
+Overall Accuracy:           0.7010
+Overall F1-Score:           0.5534
+Cold-start AUC (steps 1-2): 0.5263
+Steady-state AUC (3-25):    0.7016

@@ -1,0 +1,13 @@
+run r3_v2tracker_scratch: tracker=tracker/dual_gcn_weights_v2.pth imitation=False timesteps=300,000
+reinforcement-learning fine-tuning...
+  [ 30,000 steps] validation efficiency 0.6574 | attainment 0.9189  <- new best, saved
+  [ 60,000 steps] validation efficiency 0.6792 | attainment 0.9268  <- new best, saved
+  [ 90,000 steps] validation efficiency 0.7027 | attainment 0.9275  <- new best, saved
+  [120,000 steps] validation efficiency 0.6673 | attainment 0.8970
+  [150,000 steps] validation efficiency 0.6898 | attainment 0.9164
+  [180,000 steps] validation efficiency 0.7055 | attainment 0.9220  <- new best, saved
+  [210,000 steps] validation efficiency 0.7154 | attainment 0.9293  <- new best, saved
+  [240,000 steps] validation efficiency 0.6939 | attainment 0.9027
+  [270,000 steps] validation efficiency 0.6961 | attainment 0.9083
+  [300,000 steps] validation efficiency 0.6871 | attainment 0.8924
+done in 64.3 min | best validation efficiency 0.7154 -> E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\agent\ppo_v2_runs\r3_v2tracker_scratch\best.zip

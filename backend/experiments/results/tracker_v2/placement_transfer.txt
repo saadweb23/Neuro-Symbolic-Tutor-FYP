@@ -1,0 +1,8 @@
+students 1000 | observed concepts 7 | concepts to infer 18
+Concept prior only (no student info)             pooled AUC 0.5717 | mean within-concept AUC 0.5000
+Original deployed model (graph)                  pooled AUC 0.6855 | mean within-concept AUC 0.6823
+Original design, retrained (graph, no global memory) pooled AUC 0.6872 | mean within-concept AUC 0.6830
+Global memory + graph                            pooled AUC 0.7248 | mean within-concept AUC 0.7284
+Global memory, GRAPH REMOVED                     pooled AUC 0.7332 | mean within-concept AUC 0.7292
+Final model (global memory + graph)              pooled AUC 0.7322 | mean within-concept AUC 0.7329
+Oracle ceiling (knows hidden traits)             pooled AUC 0.7895 | mean within-concept AUC 0.7837

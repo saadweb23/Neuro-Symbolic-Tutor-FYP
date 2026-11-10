@@ -1,0 +1,293 @@
+2026-09-19 11:54:56.673479: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-19 11:55:00.497455: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\Dell\AppData\Local\Programs\Python\Python312\Lib\site-packages\google\auth\transport\grpc.py:44: FutureWarning: grpcio < 1.83.0 does not support Post-Quantum Cryptography (PQC). Support for non-PQC environments is deprecated. In October 2026, google-auth will raise its minimum requirements to enforce grpcio >= 1.83.0. For more details on Google Cloud's post-quantum security migration, visit: https://cloud.google.com/security/resources/post-quantum-cryptography
+  warnings.warn(
+E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\serving\question_generator.py:5: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+INFO:     Started server process [13200]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[startup] Loading PPO policy from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\agent\ppo_tutor.zip ...
+[startup] PPO policy loaded. Tracker weights are loaded lazily per-request via load_or_rebuild_state (cheap: a 25-node GCN forward pass), so they always reflect the latest checkpoint on disk without a server restart.
+INFO:     127.0.0.1:58544 - "GET /docs HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58551 - "GET /students/chunk_test_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58552 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58553 - "POST /students/chunk_test_student/session/start HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58554 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58560 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58561 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58562 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58563 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58564 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58565 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58566 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58567 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58568 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58569 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58570 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58571 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58572 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58573 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58574 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58575 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58576 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58577 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58578 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58579 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58580 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58581 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58582 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58583 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58584 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58585 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58586 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58587 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58588 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58592 - "POST /students/chunk_test_student/session/continue HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58593 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58594 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58595 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58596 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58597 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58598 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58599 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58600 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58601 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58602 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58603 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58604 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58605 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58606 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58607 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58608 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58609 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58610 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58611 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58612 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58613 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58614 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58615 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58616 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58617 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58618 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58619 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58620 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58621 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58622 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58623 - "GET /students/chunk_test_student/session HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58624 - "GET /students/chunk_test_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58625 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58647 - "GET /students/chunk_test_student/session HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58647 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58649 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58650 - "OPTIONS /students/chunk_test_student/session/continue HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58650 - "POST /students/chunk_test_student/session/continue HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58650 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58652 - "OPTIONS /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58652 - "POST /students/chunk_test_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58654 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58656 - "OPTIONS /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58656 - "POST /students/chunk_test_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58656 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58676 - "GET /students/chunk_test_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58677 - "GET /students/chunk_test_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58685 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58686 - "GET /students/chunk_test_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58689 - "POST /students/fresh_flow_student/placement/start HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58693 - "POST /students/fresh_flow_student/placement/submit HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58698 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58699 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58700 - "OPTIONS /students/fresh_flow_student/session/start HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58700 - "POST /students/fresh_flow_student/session/start HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58700 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58702 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58704 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58705 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58709 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58710 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58710 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58709 - "GET /students/fresh_flow_student/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58709 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58710 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58722 - "OPTIONS /students/fresh_flow_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58722 - "POST /students/fresh_flow_student/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58722 - "GET /students/fresh_flow_student/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58723 - "OPTIONS /students/fresh_flow_student/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:58723 - "POST /students/fresh_flow_student/mcq-answer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59674 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59695 - "POST /students/defense_test_1/placement/start HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59696 - "POST /students/defense_test_1/placement/start HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59698 - "OPTIONS /students/defense_test_1/placement/submit HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59698 - "POST /students/defense_test_1/placement/submit HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59699 - "GET /students/defense_test_1/blocks HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59699 - "GET /students/defense_test_1/blocks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59702 - "OPTIONS /students/defense_test_1/session/start HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59702 - "POST /students/defense_test_1/session/start HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59702 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59703 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59705 - "OPTIONS /students/defense_test_1/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59705 - "POST /students/defense_test_1/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59706 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59713 - "OPTIONS /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59713 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59713 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59713 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59713 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59714 - "GET /students/defense_test_1/mastery HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59714 - "GET /students/defense_test_1/mastery HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59717 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59717 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "POST /students/defense_test_1/content-viewed HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59719 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59725 - "POST /students/defense_test_1/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59725 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59727 - "POST /students/defense_test_1/mcq-answer HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59727 - "GET /students/defense_test_1/next HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59727 - "GET /students/defense_test_1/mastery HTTP/1.1" 200 OK
+[TutoringEnv] Loaded pre-trained tracker weights from E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\tracker\dual_gcn_weights.pth
+INFO:     127.0.0.1:59727 - "GET /students/defense_test_1/mastery HTTP/1.1" 200 OK

@@ -1,0 +1,201 @@
+student_id,profile,step,concept,passed,time_taken
+STU_0001,Struggling Learner,1,Syntax,0,105
+STU_0001,Struggling Learner,2,Primitive Data Types,0,107
+STU_0001,Struggling Learner,3,Variables,0,98
+STU_0001,Struggling Learner,4,Lists,0,147
+STU_0001,Struggling Learner,5,Arithmetic Operators,0,100
+STU_0001,Struggling Learner,6,Relational Operators,0,107
+STU_0001,Struggling Learner,7,For Loops,0,149
+STU_0001,Struggling Learner,8,Dictionaries,0,139
+STU_0001,Struggling Learner,9,Function Definition,0,147
+STU_0001,Struggling Learner,10,List Methods,0,99
+STU_0001,Struggling Learner,11,Tuples,0,114
+STU_0001,Struggling Learner,12,String Manipulation,0,113
+STU_0001,Struggling Learner,13,Conditionals,0,103
+STU_0001,Struggling Learner,14,Nested Loops,0,127
+STU_0001,Struggling Learner,15,List Comprehensions,0,120
+STU_0001,Struggling Learner,16,Arguments,0,140
+STU_0001,Struggling Learner,17,Return Values,0,127
+STU_0001,Struggling Learner,18,Variable Scope,0,90
+STU_0001,Struggling Learner,19,Modules,0,125
+STU_0001,Struggling Learner,20,Sets,0,108
+STU_0001,Struggling Learner,21,File IO,0,138
+STU_0001,Struggling Learner,22,While Loops,0,121
+STU_0001,Struggling Learner,23,Recursion,0,104
+STU_0001,Struggling Learner,24,Error Handling,0,140
+STU_0001,Struggling Learner,25,Loop Control,0,112
+STU_0002,Forgetful Learner,1,Syntax,1,70
+STU_0002,Forgetful Learner,2,Primitive Data Types,1,84
+STU_0002,Forgetful Learner,3,Variables,1,90
+STU_0002,Forgetful Learner,4,Lists,1,72
+STU_0002,Forgetful Learner,5,Arithmetic Operators,1,62
+STU_0002,Forgetful Learner,6,Relational Operators,1,89
+STU_0002,Forgetful Learner,7,For Loops,1,83
+STU_0002,Forgetful Learner,8,Dictionaries,1,89
+STU_0002,Forgetful Learner,9,Function Definition,1,66
+STU_0002,Forgetful Learner,10,List Methods,1,67
+STU_0002,Forgetful Learner,11,Tuples,1,62
+STU_0002,Forgetful Learner,12,String Manipulation,1,75
+STU_0002,Forgetful Learner,13,Conditionals,1,68
+STU_0002,Forgetful Learner,14,Nested Loops,1,64
+STU_0002,Forgetful Learner,15,List Comprehensions,1,82
+STU_0002,Forgetful Learner,16,Arguments,0,69
+STU_0002,Forgetful Learner,17,Return Values,0,93
+STU_0002,Forgetful Learner,18,Variable Scope,0,85
+STU_0002,Forgetful Learner,19,Modules,0,88
+STU_0002,Forgetful Learner,20,Sets,1,72
+STU_0002,Forgetful Learner,21,File IO,0,97
+STU_0002,Forgetful Learner,22,While Loops,1,60
+STU_0002,Forgetful Learner,23,Recursion,0,64
+STU_0002,Forgetful Learner,24,Error Handling,0,61
+STU_0002,Forgetful Learner,25,Loop Control,1,63
+STU_0003,Fast Learner,1,Syntax,1,41
+STU_0003,Fast Learner,2,Primitive Data Types,1,53
+STU_0003,Fast Learner,3,Variables,1,46
+STU_0003,Fast Learner,4,Lists,1,54
+STU_0003,Fast Learner,5,Arithmetic Operators,1,52
+STU_0003,Fast Learner,6,Relational Operators,1,31
+STU_0003,Fast Learner,7,For Loops,1,35
+STU_0003,Fast Learner,8,Dictionaries,1,36
+STU_0003,Fast Learner,9,Function Definition,1,34
+STU_0003,Fast Learner,10,List Methods,1,40
+STU_0003,Fast Learner,11,Tuples,1,46
+STU_0003,Fast Learner,12,String Manipulation,1,39
+STU_0003,Fast Learner,13,Conditionals,1,42
+STU_0003,Fast Learner,14,Nested Loops,1,47
+STU_0003,Fast Learner,15,List Comprehensions,1,48
+STU_0003,Fast Learner,16,Arguments,1,33
+STU_0003,Fast Learner,17,Return Values,1,59
+STU_0003,Fast Learner,18,Variable Scope,1,47
+STU_0003,Fast Learner,19,Modules,1,41
+STU_0003,Fast Learner,20,Sets,1,35
+STU_0003,Fast Learner,21,File IO,1,46
+STU_0003,Fast Learner,22,While Loops,1,49
+STU_0003,Fast Learner,23,Recursion,1,38
+STU_0003,Fast Learner,24,Error Handling,1,33
+STU_0003,Fast Learner,25,Loop Control,1,55
+STU_0004,Struggling Learner,1,Syntax,0,140
+STU_0004,Struggling Learner,2,Primitive Data Types,0,128
+STU_0004,Struggling Learner,3,Variables,0,146
+STU_0004,Struggling Learner,4,Lists,0,105
+STU_0004,Struggling Learner,5,Arithmetic Operators,0,113
+STU_0004,Struggling Learner,6,Relational Operators,0,122
+STU_0004,Struggling Learner,7,For Loops,0,101
+STU_0004,Struggling Learner,8,Dictionaries,0,148
+STU_0004,Struggling Learner,9,Function Definition,0,133
+STU_0004,Struggling Learner,10,List Methods,0,145
+STU_0004,Struggling Learner,11,Tuples,0,136
+STU_0004,Struggling Learner,12,String Manipulation,0,139
+STU_0004,Struggling Learner,13,Conditionals,0,149
+STU_0004,Struggling Learner,14,Nested Loops,0,97
+STU_0004,Struggling Learner,15,List Comprehensions,0,128
+STU_0004,Struggling Learner,16,Arguments,0,125
+STU_0004,Struggling Learner,17,Return Values,0,113
+STU_0004,Struggling Learner,18,Variable Scope,0,92
+STU_0004,Struggling Learner,19,Modules,0,106
+STU_0004,Struggling Learner,20,Sets,0,100
+STU_0004,Struggling Learner,21,File IO,0,96
+STU_0004,Struggling Learner,22,While Loops,0,107
+STU_0004,Struggling Learner,23,Recursion,0,118
+STU_0004,Struggling Learner,24,Error Handling,0,134
+STU_0004,Struggling Learner,25,Loop Control,0,107
+STU_0005,Forgetful Learner,1,Syntax,1,78
+STU_0005,Forgetful Learner,2,Primitive Data Types,1,64
+STU_0005,Forgetful Learner,3,Variables,1,88
+STU_0005,Forgetful Learner,4,Lists,1,65
+STU_0005,Forgetful Learner,5,Arithmetic Operators,1,69
+STU_0005,Forgetful Learner,6,Relational Operators,1,73
+STU_0005,Forgetful Learner,7,For Loops,1,67
+STU_0005,Forgetful Learner,8,Dictionaries,1,72
+STU_0005,Forgetful Learner,9,Function Definition,1,83
+STU_0005,Forgetful Learner,10,List Methods,1,70
+STU_0005,Forgetful Learner,11,Tuples,1,62
+STU_0005,Forgetful Learner,12,String Manipulation,1,85
+STU_0005,Forgetful Learner,13,Conditionals,1,79
+STU_0005,Forgetful Learner,14,Nested Loops,1,60
+STU_0005,Forgetful Learner,15,List Comprehensions,0,87
+STU_0005,Forgetful Learner,16,Arguments,0,85
+STU_0005,Forgetful Learner,17,Return Values,0,72
+STU_0005,Forgetful Learner,18,Variable Scope,0,68
+STU_0005,Forgetful Learner,19,Modules,0,74
+STU_0005,Forgetful Learner,20,Sets,1,71
+STU_0005,Forgetful Learner,21,File IO,1,76
+STU_0005,Forgetful Learner,22,While Loops,0,78
+STU_0005,Forgetful Learner,23,Recursion,0,81
+STU_0005,Forgetful Learner,24,Error Handling,0,75
+STU_0005,Forgetful Learner,25,Loop Control,0,77
+STU_0006,Fast Learner,1,Syntax,1,41
+STU_0006,Fast Learner,2,Primitive Data Types,1,53
+STU_0006,Fast Learner,3,Variables,1,45
+STU_0006,Fast Learner,4,Lists,1,40
+STU_0006,Fast Learner,5,Arithmetic Operators,1,35
+STU_0006,Fast Learner,6,Relational Operators,1,54
+STU_0006,Fast Learner,7,For Loops,1,31
+STU_0006,Fast Learner,8,Dictionaries,1,52
+STU_0006,Fast Learner,9,Function Definition,1,43
+STU_0006,Fast Learner,10,List Methods,1,47
+STU_0006,Fast Learner,11,Tuples,1,30
+STU_0006,Fast Learner,12,String Manipulation,1,58
+STU_0006,Fast Learner,13,Conditionals,1,50
+STU_0006,Fast Learner,14,Nested Loops,1,38
+STU_0006,Fast Learner,15,List Comprehensions,1,33
+STU_0006,Fast Learner,16,Arguments,1,30
+STU_0006,Fast Learner,17,Return Values,1,57
+STU_0006,Fast Learner,18,Variable Scope,1,48
+STU_0006,Fast Learner,19,Modules,1,34
+STU_0006,Fast Learner,20,Sets,1,56
+STU_0006,Fast Learner,21,File IO,1,32
+STU_0006,Fast Learner,22,While Loops,1,49
+STU_0006,Fast Learner,23,Recursion,1,37
+STU_0006,Fast Learner,24,Error Handling,1,46
+STU_0006,Fast Learner,25,Loop Control,1,39
+STU_0007,Struggling Learner,1,Syntax,0,128
+STU_0007,Struggling Learner,2,Primitive Data Types,0,105
+STU_0007,Struggling Learner,3,Variables,0,139
+STU_0007,Struggling Learner,4,Lists,0,121
+STU_0007,Struggling Learner,5,Arithmetic Operators,0,98
+STU_0007,Struggling Learner,6,Relational Operators,0,147
+STU_0007,Struggling Learner,7,For Loops,0,109
+STU_0007,Struggling Learner,8,Dictionaries,0,113
+STU_0007,Struggling Learner,9,Function Definition,0,141
+STU_0007,Struggling Learner,10,List Methods,0,134
+STU_0007,Struggling Learner,11,Tuples,0,103
+STU_0007,Struggling Learner,12,String Manipulation,0,116
+STU_0007,Struggling Learner,13,Conditionals,0,143
+STU_0007,Struggling Learner,14,Nested Loops,0,94
+STU_0007,Struggling Learner,15,List Comprehensions,0,120
+STU_0007,Struggling Learner,16,Arguments,0,127
+STU_0007,Struggling Learner,17,Return Values,0,106
+STU_0007,Struggling Learner,18,Variable Scope,0,149
+STU_0007,Struggling Learner,19,Modules,0,118
+STU_0007,Struggling Learner,20,Sets,0,101
+STU_0007,Struggling Learner,21,File IO,0,131
+STU_0007,Struggling Learner,22,While Loops,0,90
+STU_0007,Struggling Learner,23,Recursion,0,111
+STU_0007,Struggling Learner,24,Error Handling,0,124
+STU_0007,Struggling Learner,25,Loop Control,0,136
+STU_0010,Struggling Learner,1,Syntax,0,139
+STU_0010,Struggling Learner,2,Primitive Data Types,0,94
+STU_0010,Struggling Learner,3,Variables,0,128
+STU_0010,Struggling Learner,4,Lists,0,138
+STU_0010,Struggling Learner,5,Arithmetic Operators,0,137
+STU_0010,Struggling Learner,6,Relational Operators,0,105
+STU_0010,Struggling Learner,7,For Loops,0,103
+STU_0010,Struggling Learner,8,Dictionaries,0,140
+STU_0010,Struggling Learner,9,Function Definition,0,110
+STU_0010,Struggling Learner,10,List Methods,0,121
+STU_0010,Struggling Learner,11,Tuples,0,117
+STU_0010,Struggling Learner,12,String Manipulation,0,125
+STU_0010,Struggling Learner,13,Conditionals,0,122
+STU_0010,Struggling Learner,14,Nested Loops,0,139
+STU_0010,Struggling Learner,15,List Comprehensions,0,147
+STU_0010,Struggling Learner,16,Arguments,0,109
+STU_0010,Struggling Learner,17,Return Values,0,144
+STU_0010,Struggling Learner,18,Variable Scope,0,97
+STU_0010,Struggling Learner,19,Modules,0,128
+STU_0010,Struggling Learner,20,Sets,0,109
+STU_0010,Struggling Learner,21,File IO,0,147
+STU_0010,Struggling Learner,22,While Loops,0,130
+STU_0010,Struggling Learner,23,Recursion,0,141
+STU_0010,Struggling Learner,24,Error Handling,0,113
+STU_0010,Struggling Learner,25,Loop Control,0,144

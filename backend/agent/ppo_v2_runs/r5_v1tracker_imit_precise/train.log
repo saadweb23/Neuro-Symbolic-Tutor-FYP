@@ -1,0 +1,96 @@
+run r5_v1tracker_imit_precise: tracker=tracker/dual_gcn_weights_v1.pth imitation=True timesteps=250,000
+collecting sweep-expert demonstrations...
+  collected 28,128 demonstrations from 200 episodes
+imitation pretraining...
+  imitation epoch 1/400 | NLL 2.9887
+  imitation epoch 5/400 | NLL 1.2424
+  imitation epoch 10/400 | NLL 0.5953
+  imitation epoch 15/400 | NLL 0.2672
+  imitation epoch 20/400 | NLL 0.1512
+  imitation epoch 25/400 | NLL 0.0994
+  imitation epoch 30/400 | NLL 0.0719
+  imitation epoch 35/400 | NLL 0.0516
+  imitation epoch 40/400 | NLL 0.0386
+  imitation epoch 45/400 | NLL 0.0268
+  imitation epoch 50/400 | NLL 0.0241
+  imitation epoch 55/400 | NLL 0.0146
+  imitation epoch 60/400 | NLL 0.0116
+  imitation epoch 65/400 | NLL 0.0143
+  imitation epoch 70/400 | NLL 0.0083
+  imitation epoch 75/400 | NLL 0.0082
+  imitation epoch 80/400 | NLL 0.0061
+  imitation epoch 85/400 | NLL 0.0046
+  imitation epoch 90/400 | NLL 0.0042
+  imitation epoch 95/400 | NLL 0.0069
+  imitation epoch 100/400 | NLL 0.0042
+  imitation epoch 105/400 | NLL 0.0027
+  imitation epoch 110/400 | NLL 0.0025
+  imitation epoch 115/400 | NLL 0.0028
+  imitation epoch 120/400 | NLL 0.0020
+  imitation epoch 125/400 | NLL 0.7492
+  imitation epoch 130/400 | NLL 0.0033
+  imitation epoch 135/400 | NLL 0.0020
+  imitation epoch 140/400 | NLL 0.0017
+  imitation epoch 145/400 | NLL 0.0016
+  imitation epoch 150/400 | NLL 0.0014
+  imitation epoch 155/400 | NLL 0.0440
+  imitation epoch 160/400 | NLL 0.0033
+  imitation epoch 165/400 | NLL 0.0022
+  imitation epoch 170/400 | NLL 0.0016
+  imitation epoch 175/400 | NLL 0.0016
+  imitation epoch 180/400 | NLL 0.0029
+  imitation epoch 185/400 | NLL 0.0017
+  imitation epoch 190/400 | NLL 0.0014
+  imitation epoch 195/400 | NLL 0.0013
+  imitation epoch 200/400 | NLL 0.0011
+  imitation epoch 205/400 | NLL 0.0010
+  imitation epoch 210/400 | NLL 0.0012
+  imitation epoch 215/400 | NLL 0.1685
+  imitation epoch 220/400 | NLL 0.0429
+  imitation epoch 225/400 | NLL 0.0235
+  imitation epoch 230/400 | NLL 0.0128
+  imitation epoch 235/400 | NLL 0.0058
+  imitation epoch 240/400 | NLL 0.0052
+  imitation epoch 245/400 | NLL 0.0026
+  imitation epoch 250/400 | NLL 0.0017
+  imitation epoch 255/400 | NLL 0.0014
+  imitation epoch 260/400 | NLL 0.5596
+  imitation epoch 265/400 | NLL 0.0139
+  imitation epoch 270/400 | NLL 0.0056
+  imitation epoch 275/400 | NLL 0.0032
+  imitation epoch 280/400 | NLL 0.0021
+  imitation epoch 285/400 | NLL 0.0016
+  imitation epoch 290/400 | NLL 1.0565
+  imitation epoch 295/400 | NLL 0.0326
+  imitation epoch 300/400 | NLL 0.0181
+  imitation epoch 305/400 | NLL 0.0121
+  imitation epoch 310/400 | NLL 0.0082
+  imitation epoch 315/400 | NLL 0.0067
+  imitation epoch 320/400 | NLL 0.0058
+  imitation epoch 325/400 | NLL 0.0039
+  imitation epoch 330/400 | NLL 0.0029
+  imitation epoch 335/400 | NLL 0.0022
+  imitation epoch 340/400 | NLL 0.0017
+  imitation epoch 345/400 | NLL 0.0031
+  imitation epoch 350/400 | NLL 0.4204
+  imitation epoch 355/400 | NLL 0.0023
+  imitation epoch 360/400 | NLL 0.0017
+  imitation epoch 365/400 | NLL 0.0013
+  imitation epoch 370/400 | NLL 0.0011
+  imitation epoch 375/400 | NLL 0.0010
+  imitation epoch 380/400 | NLL 0.0058
+  imitation epoch 385/400 | NLL 0.0019
+  imitation epoch 390/400 | NLL 0.0012
+  imitation epoch 395/400 | NLL 0.0009
+  imitation epoch 400/400 | NLL 0.0008
+  after imitation only: validation efficiency 0.7834 | attainment 0.9484
+reinforcement-learning fine-tuning...
+  [ 30,000 steps] validation efficiency 0.7834 | attainment 0.9484
+  [ 60,000 steps] validation efficiency 0.7834 | attainment 0.9484
+  [ 90,000 steps] validation efficiency 0.7823 | attainment 0.9484
+  [120,000 steps] validation efficiency 0.7806 | attainment 0.9482
+  [150,000 steps] validation efficiency 0.7799 | attainment 0.9484
+  [180,000 steps] validation efficiency 0.7795 | attainment 0.9468
+  [210,000 steps] validation efficiency 0.7804 | attainment 0.9472
+  [240,000 steps] validation efficiency 0.7796 | attainment 0.9476
+done in 45.2 min | best validation efficiency 0.7834 -> E:\Sohaib Uni Material\FYP\neuro_symbolic_tutor\backend\agent\ppo_v2_runs\r5_v1tracker_imit_precise\best.zip

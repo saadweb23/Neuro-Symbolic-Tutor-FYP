@@ -1,0 +1,347 @@
+<title>Neuro-Symbolic Tutor Progress</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#EEF1EF; --surface:#FFFFFF; --surface-2:#F5F7F6;
+    --ink:#16202A; --ink-muted:#55636E; --border:#D8DEDC;
+    --accent:#146B6B; --accent-fill:#1C8C89; --accent-soft:#E3EFEE;
+    --amber:#9C5F22; --amber-fill:#B8722A; --amber-soft:#F5E9DA;
+    --success:#2F7D4F; --danger:#B33A3A;
+    --shadow: 0 1px 2px rgba(22,32,42,.06), 0 8px 24px -12px rgba(22,32,42,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121A1F; --surface:#1B252B; --surface-2:#212D34;
+      --ink:#E7ECEF; --ink-muted:#9FB0BA; --border:#2A363D;
+      --accent:#5FCEC7; --accent-fill:#2FA39C; --accent-soft:#1B3230;
+      --amber:#E3A968; --amber-fill:#C98A3E; --amber-soft:#2E2418;
+      --success:#4CAF7A; --danger:#E07171;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121A1F; --surface:#1B252B; --surface-2:#212D34;
+    --ink:#E7ECEF; --ink-muted:#9FB0BA; --border:#2A363D;
+    --accent:#5FCEC7; --accent-fill:#2FA39C; --accent-soft:#1B3230;
+    --amber:#E3A968; --amber-fill:#C98A3E; --amber-soft:#2E2418;
+    --success:#4CAF7A; --danger:#E07171;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:16px; line-height:1.55;
+  }
+  .wrap{ max-width:920px; margin:0 auto; padding:56px 24px 96px; }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--ink-muted);
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:clamp(32px,5vw,46px);
+    line-height:1.08; margin:10px 0 6px; text-wrap:balance;
+  }
+  .dek{ color:var(--ink-muted); font-size:17px; max-width:62ch; margin:0 0 8px; }
+  .meta{ color:var(--ink-muted); font-size:13.5px; font-family:'IBM Plex Mono',monospace; }
+
+  header.top{ border-bottom:1px solid var(--border); padding-bottom:28px; margin-bottom:36px; }
+
+  .tiles{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:10px;
+    overflow:hidden; margin:28px 0 8px;
+  }
+  .tile{ background:var(--surface); padding:18px 16px; }
+  .tile .num{
+    font-family:'Fraunces', serif; font-weight:600; font-size:28px; font-variant-numeric:tabular-nums;
+    color:var(--ink);
+  }
+  .tile .num small{ font-size:15px; color:var(--ink-muted); font-family:'IBM Plex Sans',sans-serif; font-weight:500; }
+  .tile .lbl{ font-size:12.5px; color:var(--ink-muted); margin-top:4px; }
+
+  section{ margin-top:56px; }
+  .sec-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px; }
+  .sec-num{
+    font-family:'Fraunces', serif; font-size:15px; color:var(--accent);
+    font-weight:600; letter-spacing:.02em;
+  }
+  h2{ font-family:'Fraunces', serif; font-weight:600; font-size:26px; margin:0; text-wrap:balance; }
+  .sec-intro{ color:var(--ink-muted); max-width:66ch; margin:10px 0 22px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:22px 24px; box-shadow:var(--shadow);
+  }
+  .grid-2{ display:grid; grid-template-columns:1.1fr .9fr; gap:20px; align-items:start; }
+  @media (max-width:760px){ .grid-2{ grid-template-columns:1fr; } .tiles{grid-template-columns:1fr 1fr} }
+
+  table{ width:100%; border-collapse:collapse; font-size:14.5px; }
+  th{
+    text-align:left; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-muted); font-weight:600; padding:8px 10px; border-bottom:1px solid var(--border);
+  }
+  td{ padding:10px 10px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+  tr:last-child td{ border-bottom:none; }
+  td.name{ font-family:'IBM Plex Mono',monospace; font-size:13.5px; }
+  .hl td{ background:var(--accent-soft); font-weight:600; }
+  .tablewrap{ overflow-x:auto; }
+
+  .term{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    line-height:1.65; color:var(--ink); overflow-x:auto; white-space:pre;
+  }
+  .term .dim{ color:var(--ink-muted); }
+  .term .good{ color:var(--success); }
+  .term .warn{ color:var(--amber); }
+
+  .callout{
+    border-left:3px solid var(--amber-fill); background:var(--amber-soft);
+    padding:12px 16px; border-radius:0 8px 8px 0; font-size:14.5px; margin:16px 0;
+  }
+  .callout b{ color:var(--amber); }
+
+  .rec-card{
+    display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start;
+    border:1px solid var(--border); border-radius:10px; padding:16px 18px; background:var(--surface);
+  }
+  .rec-card + .rec-card{ margin-top:12px; }
+  .badge{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em; text-transform:uppercase;
+    padding:5px 9px; border-radius:5px; white-space:nowrap; font-weight:500;
+  }
+  .badge.video{ background:var(--accent-soft); color:var(--accent); }
+  .badge.practice{ background:var(--amber-soft); color:var(--amber); }
+  .badge.escalation{ background:var(--danger); color:#fff; }
+  .rec-title{ font-weight:600; margin:0 0 3px; }
+  .rec-meta{ font-size:13px; color:var(--ink-muted); margin:0 0 6px; }
+  .rec-meta a{ color:var(--accent); text-decoration:none; word-break:break-all; }
+  .rec-meta a:hover{ text-decoration:underline; }
+  .rec-why{ font-size:14px; margin:0; }
+
+  .timeline{ list-style:none; margin:0; padding:0; }
+  .timeline li{
+    display:grid; grid-template-columns:80px 1fr; gap:16px; padding:12px 0;
+    border-bottom:1px solid var(--border); font-size:14.5px;
+  }
+  .timeline li:last-child{ border-bottom:none; }
+  .timeline .step{ font-family:'IBM Plex Mono',monospace; color:var(--ink-muted); font-size:12.5px; padding-top:2px; }
+  .timeline b{ display:block; margin-bottom:2px; }
+  .timeline .fix{ color:var(--ink-muted); }
+
+  ul.plain{ margin:0; padding-left:20px; }
+  ul.plain li{ margin-bottom:6px; }
+
+  footer{ margin-top:64px; padding-top:24px; border-top:1px solid var(--border); color:var(--ink-muted); font-size:13px; }
+
+  svg text{ font-family:'IBM Plex Sans', sans-serif; fill:var(--ink-muted); }
+  svg text.val{ font-family:'IBM Plex Mono', monospace; fill:var(--ink); font-weight:500; }
+  svg text.axis-lbl{ font-size:12px; }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">FYP Progress Review</div>
+    <h1>Neuro-Symbolic Tutor</h1>
+    <p class="dek">Graph-Based RL for Dynamic STEM Remediation — where the four subsystems in the proposal actually stand, with real numbers and real outputs, not projections.</p>
+    <p class="meta">Sohaib Ahmed · 037 | Rizwan Mughal · 038 | Saad ur Rehman · 013</p>
+
+    <div class="tiles">
+      <div class="tile">
+        <div class="num">0.7363</div>
+        <div class="lbl">Dual-GCN test AUC · 92.7% of ceiling</div>
+      </div>
+      <div class="tile">
+        <div class="num">12<small>%</small></div>
+        <div class="lbl">PPO success rate · tied with linear baseline</div>
+      </div>
+      <div class="tile">
+        <div class="num">25<small></small></div>
+        <div class="lbl">Concepts / prerequisite edges in the KG</div>
+      </div>
+      <div class="tile">
+        <div class="num">25<small>+25</small></div>
+        <div class="lbl">Real videos + real practice sources mapped</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="tracker">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Diagnostic Tracker — Dual-GCN</h2></div>
+    <p class="sec-intro">Reads a student's pass/fail/time history and predicts mastery of all 25 concepts, propagated across the prerequisite graph. Proposal target: AUC&nbsp;&gt;&nbsp;0.80.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <svg viewBox="0 0 460 230" width="100%" role="img" aria-label="Achieved AUC versus theoretical ceiling, three splits">
+          <!-- axis -->
+          <line x1="40" y1="10" x2="40" y2="190" stroke="var(--border)" stroke-width="1"/>
+          <line x1="40" y1="190" x2="450" y2="190" stroke="var(--border)" stroke-width="1"/>
+          <text x="34" y="14" text-anchor="end" font-size="11">1.0</text>
+          <text x="34" y="106" text-anchor="end" font-size="11">0.5</text>
+          <text x="34" y="194" text-anchor="end" font-size="11">0</text>
+          <line x1="40" y1="10" x2="450" y2="10" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>
+          <line x1="40" y1="100" x2="450" y2="100" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>
+
+          <!-- group: Overall -->
+          <g>
+            <rect x="80" y="57.5" width="26" height="132.5" rx="3" fill="var(--accent-fill)"/>
+            <rect x="110" y="47" width="26" height="143" rx="3" fill="none" stroke="var(--amber-fill)" stroke-width="2" stroke-dasharray="3 3"/>
+            <text class="val" x="93" y="49.5" text-anchor="middle" font-size="12">0.736</text>
+            <text class="val" x="123" y="39" text-anchor="middle" font-size="12" fill="var(--amber-fill)">0.795</text>
+            <text class="axis-lbl" x="108" y="212" text-anchor="middle">Overall</text>
+          </g>
+          <!-- group: Cold-start -->
+          <g>
+            <rect x="200" y="100" width="26" height="90" rx="3" fill="var(--accent-fill)"/>
+            <rect x="230" y="56.7" width="26" height="133.3" rx="3" fill="none" stroke="var(--amber-fill)" stroke-width="2" stroke-dasharray="3 3"/>
+            <text class="val" x="213" y="92" text-anchor="middle" font-size="12">0.500</text>
+            <text class="val" x="243" y="49" text-anchor="middle" font-size="12" fill="var(--amber-fill)">0.741</text>
+            <text class="axis-lbl" x="228" y="212" text-anchor="middle">Cold-start (1-2)</text>
+          </g>
+          <!-- group: Steady -->
+          <g>
+            <rect x="330" y="60.7" width="26" height="129.3" rx="3" fill="var(--accent-fill)"/>
+            <rect x="360" y="49" width="26" height="141" rx="3" fill="none" stroke="var(--amber-fill)" stroke-width="2" stroke-dasharray="3 3"/>
+            <text class="val" x="343" y="53" text-anchor="middle" font-size="12">0.718</text>
+            <text class="val" x="373" y="41" text-anchor="middle" font-size="12" fill="var(--amber-fill)">0.783</text>
+            <text class="axis-lbl" x="358" y="212" text-anchor="middle">Steady-state (3-25)</text>
+          </g>
+
+          <!-- legend -->
+          <rect x="290" y="8" width="10" height="10" rx="2" fill="var(--accent-fill)"/>
+          <text x="304" y="17" font-size="11">Achieved (test set)</text>
+          <rect x="290" y="24" width="10" height="10" rx="2" fill="none" stroke="var(--amber-fill)" stroke-width="2"/>
+          <text x="304" y="33" font-size="11">Ceiling (Bayes-optimal)</text>
+        </svg>
+      </div>
+
+      <div>
+        <p>The 0.795 ceiling is the maximum AUC any model can reach on this dataset — an oracle that knows each student's true simulated traits still can't exceed it, because the label noise (slip/guess) is baked into the data-generating process itself.</p>
+        <div class="callout"><b>Reading it:</b> 0.7363 sits at 92.7% of that ceiling — the model is close to optimal on this data, not underperforming a fixable target. Cold-start (steps 1-2) is structurally near chance because <span style="font-family:'IBM Plex Mono',monospace">h_t=0</span> for every student until they've answered something.</div>
+      </div>
+    </div>
+
+    <p style="margin-top:20px; color:var(--ink-muted); font-size:13.5px;">Best checkpoint: epoch 5 of 25, selected automatically by validation AUC (val AUC declined afterward — a mild overfit the checkpointing caught).</p>
+    <div class="term">Epoch 01/25 | Val AUC: 0.7087 (cold: 0.5437, steady: 0.6984)
+<span class="dim">...</span>
+Epoch 05/25 | Val AUC: 0.7149 (cold: 0.5168, steady: 0.7063)
+  -&gt; New best val AUC (0.7149). Saved checkpoint.
+<span class="dim">...</span>
+Epoch 25/25 | Val AUC: 0.6942 (cold: 0.5165, steady: 0.6806)
+
+--- Final Test Evaluation (best checkpoint, held-out students) ---
+Overall AUC-ROC:            <span class="good">0.7363</span> (Target: &gt; 0.75)
+Overall Accuracy:           0.7032
+Overall F1-Score:           0.5798
+Cold-start AUC (steps 1-2): 0.4998
+Steady-state AUC (3-25):    0.7183</div>
+  </section>
+
+  <section id="ppo">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Remediation Agent — PPO</h2></div>
+    <p class="sec-intro">Reads the tracker's belief vector and decides which concept to work on next. Benchmarked against a random policy and a fixed linear-curriculum baseline over 100 unseeded episodes each.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <svg viewBox="0 0 400 210" width="100%" role="img" aria-label="Mean final average mastery by policy">
+          <line x1="120" y1="10" x2="120" y2="190" stroke="var(--border)"/>
+          <line x1="205" y1="10" x2="205" y2="190" stroke="var(--border)" stroke-dasharray="2 4"/>
+          <line x1="290" y1="10" x2="290" y2="190" stroke="var(--border)" stroke-dasharray="2 4"/>
+          <text x="120" y="200" text-anchor="middle" font-size="11">0</text>
+          <text x="205" y="200" text-anchor="middle" font-size="11">0.2</text>
+          <text x="290" y="200" text-anchor="middle" font-size="11">0.4</text>
+
+          <text x="20" y="45" font-size="13">random</text>
+          <rect x="120" y="26" width="98.6" height="28" rx="2" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text class="val" x="226" y="45" font-size="12">0.232</text>
+
+          <text x="20" y="105" font-size="13">linear</text>
+          <rect x="120" y="86" width="134.2" height="28" rx="2" fill="var(--surface-2)" stroke="var(--border)"/>
+          <text class="val" x="262" y="105" font-size="12">0.316</text>
+
+          <text x="20" y="165" font-size="13" font-weight="600" fill="var(--ink)">ppo</text>
+          <rect x="120" y="146" width="117.7" height="28" rx="2" fill="var(--accent-fill)"/>
+          <text class="val" x="246" y="165" font-size="12" fill="var(--accent)">0.277</text>
+        </svg>
+        <p style="font-size:12.5px; color:var(--ink-muted); margin-top:4px;">Mean final average mastery per episode (0-1 scale), 100 episodes each.</p>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Policy</th><th>Success</th><th>Steps</th><th>Mastery</th></tr></thead>
+          <tbody>
+            <tr><td class="name">random</td><td>5%</td><td>129.2</td><td>0.232</td></tr>
+            <tr><td class="name">linear_curriculum</td><td>12%</td><td>68.2</td><td>0.316</td></tr>
+            <tr class="hl"><td class="name">ppo</td><td>12%</td><td>107.9</td><td>0.277</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><b>Honest read:</b> PPO ties the naive baseline on success rate but isn't yet more <em>efficient</em> — when it succeeds, it takes longer. The diagnostic capability (below) is real; the efficiency edge over linear sequencing is still a work in progress.</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif; font-size:16px; margin:28px 0 6px;">Debugging journey — three distinct failure modes, found and fixed</h3>
+    <ul class="timeline">
+      <li><span class="step">Run 1</span><div><b>Collapsed to 1 concept</b><span class="fix">Reward gave no penalty for repeating an already-saturated concept — fixed with an explicit saturation-based repeat penalty.</span></div></li>
+      <li><span class="step">Run 2</span><div><b>Exploited an "unlock bonus"</b><span class="fix">A reward meant to encourage progression instead over-rewarded high-fan-out concepts regardless of follow-through — removed in favor of the simpler repeat penalty.</span></div></li>
+      <li><span class="step">Run 3</span><div><b>Misdiagnosed as collapsed</b><span class="fix">Evaluating with <span style="font-family:'IBM Plex Mono',monospace">deterministic=True</span> repeated a mildly-favored action 150 times, looking like collapse when the real policy was still near-uniform. Fixed the evaluation method itself.</span></div></li>
+      <li><span class="step">Run 4</span><div><b>Entropy annealing</b><span class="fix">Decayed the exploration coefficient across training — success rate moved from 9% to 12%, current state.</span></div></li>
+    </ul>
+
+    <div class="term">--- Final Remediation Efficiency Comparison (100 episodes each, unseeded) ---
+            random: success_rate=5.00% | mean_steps_to_mastery=129.2 | mean_final_avg_mastery=0.2319
+ linear_curriculum: success_rate=12.00% | mean_steps_to_mastery=68.2 | mean_final_avg_mastery=0.3158
+<span class="good">               ppo: success_rate=12.00% | mean_steps_to_mastery=107.9 | mean_final_avg_mastery=0.2769</span></div>
+  </section>
+
+  <section id="content">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Content Engine</h2></div>
+    <p class="sec-intro">A rule-based layer (no ML — deliberately, to keep it explainable) that turns PPO's chosen concept into an actual recommendation: video on first exposure, practice problem on retry, a deeper explanation after repeated failure. Every link below is real and was verified before being added.</p>
+
+    <div class="rec-card">
+      <span class="badge video">Video · 1st exposure</span>
+      <div>
+        <p class="rec-title">For Loops</p>
+        <p class="rec-meta">Python Tutorial for Beginners 7: Loops and Iterations — YouTube · <a href="https://www.youtube.com/watch?v=6iF8Xb7Z3wQ" target="_blank" rel="noopener">youtube.com/watch?v=6iF8Xb7Z3wQ</a></p>
+        <p class="rec-why">"You haven't covered For Loops yet — starting with a short video."</p>
+      </div>
+    </div>
+    <div class="rec-card">
+      <span class="badge practice">Practice · reinforcement</span>
+      <div>
+        <p class="rec-title">Lists</p>
+        <p class="rec-meta">PYnative topic exercises · <a href="https://pynative.com/python-list-exercise-with-solutions/" target="_blank" rel="noopener">pynative.com/python-list-exercise-with-solutions</a></p>
+        <p class="rec-why">"Try a fresh problem on Lists you haven't attempted yet."</p>
+      </div>
+    </div>
+    <div class="rec-card">
+      <span class="badge escalation">Escalation · 2nd failure</span>
+      <div>
+        <p class="rec-title">For Loops <span style="color:var(--ink-muted); font-weight:400;">— belief 28%</span></p>
+        <p class="rec-meta">Python official documentation · <a href="https://docs.python.org/3/tutorial/controlflow.html" target="_blank" rel="noopener">docs.python.org/3/tutorial/controlflow.html</a></p>
+        <p class="rec-why">"You've struggled with For Loops more than once (currently ~28% mastery). This often traces back to a weaker foundation in <b>Variables</b>. Time for a deeper look, straight from the official documentation."</p>
+      </div>
+    </div>
+
+    <p style="margin-top:18px; font-size:14px; color:var(--ink-muted);">The third example is the "glass box" mechanism working end to end: the explanation names <em>Variables</em> because it's genuinely For Loops' prerequisite in the knowledge graph, and the tracker's own belief currently rates it weakest among the alternatives — not a canned message.</p>
+  </section>
+
+  <section id="next">
+    <div class="sec-head"><span class="sec-num">04</span><h2>What's next</h2></div>
+    <ul class="plain">
+      <li><b>Backend API</b> — wire placement quiz + PPO + content engine into real endpoints (currently proven via a standalone demo script, not yet served over HTTP).</li>
+      <li><b>Frontend</b> — a static prototype exists; the real quiz UI is next once the API contract is stable.</li>
+      <li><b>PPO efficiency</b> — imitation warm-start from the linear baseline is the strongest untried lever to close the steps-to-mastery gap.</li>
+      <li><b>Evaluation write-up</b> — formalize the ceiling analysis and remediation-efficiency comparison as the Phase 5 deliverable.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Generated from live runs of <span style="font-family:'IBM Plex Mono',monospace">train_tracker.py</span>, <span style="font-family:'IBM Plex Mono',monospace">ppo_trainer.py</span>, and <span style="font-family:'IBM Plex Mono',monospace">demo.py</span> on the working codebase — every number and link on this page came from an actual execution, not a projection.
+  </footer>
+
+</div>

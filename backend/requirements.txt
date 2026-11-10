@@ -1,0 +1,2 @@
+# Single source of truth is the repo-root requirements.txt.
+-r ../requirements.txt
