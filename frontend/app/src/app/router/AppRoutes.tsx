@@ -38,7 +38,7 @@ export const routes: RouteObject[] = [
           { element: <RequirePlacement />, children: [
             { path: ROUTES.dashboard, handle: { title: 'Dashboard' }, lazy: lazyPage(() => import('@/pages/dashboard/DashboardPage'), 'DashboardPage') },
             { path: ROUTES.learn, handle: { title: 'Learning paths' }, lazy: lazyPage(() => import('@/pages/learn/LearningPathsPage'), 'LearningPathsPage') },
-            { path: ROUTES.mastery, handle: { title: 'Concept mastery' }, ...soon('Concept mastery') },
+            { path: ROUTES.mastery, handle: { title: 'Concept mastery' }, lazy: lazyPage(() => import('@/pages/mastery/MasteryPage'), 'MasteryPage') },
             { path: ROUTES.analytics, handle: { title: 'Progress analytics' }, ...soon('Analytics') },
             { path: ROUTES.history, handle: { title: 'Learning history' }, ...soon('History') },
             { path: ROUTES.resources, handle: { title: 'Resource library' }, ...soon('Resources') },
