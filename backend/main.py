@@ -5,7 +5,7 @@ from typing import List
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from stable_baselines3 import PPO
 
 load_dotenv()
@@ -13,13 +13,18 @@ load_dotenv()
 from serving import persistence
 from serving import inference
 from serving.content_engine import (
-    recommend_content, submit_mcq_answer, get_block_progress, attempted_concepts, SESSION_ROUND_CAP_DEFAULT,
+    recommend_content, submit_mcq_answer, log_content_viewed, get_block_progress, attempted_concepts,
+    SESSION_ROUND_CAP_DEFAULT,
 )
 from serving.placement_quiz import (
     generate_placement_questions,
     submit_placement_answers,
     load_or_rebuild_state,
+    placement_completed,
+    PlacementAlreadyCompleted,
 )
+from api.routes import router as insights_router
+from api.schemas import StudentId, TimeTaken
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # ppo_tutor_v2.zip was trained against the v2 tracker; ppo_tutor.zip is the original (pairs with dual_gcn_weights_v1.pth).
@@ -36,9 +41,13 @@ async def lifespan(app: FastAPI):
     global ppo_model
     print(f"[startup] Loading PPO policy from {PPO_CHECKPOINT_PATH} ...")
     ppo_model = PPO.load(PPO_CHECKPOINT_PATH)
-    print("[startup] PPO policy loaded. Tracker weights are loaded lazily per-request "
-          "via load_or_rebuild_state (cheap: a 25-node GCN forward pass), so they always "
-          "reflect the latest checkpoint on disk without a server restart.")
+    app.state.ppo_model = ppo_model
+    app.state.ppo_path = PPO_CHECKPOINT_PATH
+    # The tracker is loaded once per checkpoint file (serving.inference.get_tracker caches it by
+    # path + mtime, so replacing the file on disk is still picked up) and warmed up here so the
+    # first request does not pay for it.
+    inference.warm_up()
+    print("[startup] PPO policy and tracker loaded.")
     yield
 
 
@@ -56,50 +65,55 @@ app.add_middleware(
 
 class PlacementAnswerIn(BaseModel):
     content_id: str
-    selected_index: int
-    time_taken: float
+    selected_index: int = Field(ge=0, le=3)
+    time_taken: TimeTaken
 
 
 class MCQAnswerIn(BaseModel):
     content_id: str
-    selected_index: int
-    time_taken: float
+    selected_index: int = Field(ge=0, le=3)
+    time_taken: TimeTaken
 
 
 class ContentViewedIn(BaseModel):
     concept: str
     content_id: str
-    time_taken: float
+    time_taken: TimeTaken
 
 
 class SessionStartIn(BaseModel):
-    block_index: int
+    # 0..4 -- a negative value used to silently select a different block via Python indexing
+    block_index: int = Field(ge=0, le=4)
 
 
 @app.post("/students/{student_id}/placement/start")
-def placement_start(student_id: str):
+def placement_start(student_id: StudentId):
+    if placement_completed(student_id):
+        raise HTTPException(status_code=409, detail="Placement already completed for this student")
     questions = generate_placement_questions()
     return {"questions": questions}
 
 
 @app.post("/students/{student_id}/placement/submit")
-def placement_submit(student_id: str, answers: List[PlacementAnswerIn]):
+def placement_submit(student_id: StudentId, answers: List[PlacementAnswerIn]):
     try:
         beliefs = submit_placement_answers(student_id, [a.model_dump() for a in answers])
+    except PlacementAlreadyCompleted:
+        raise HTTPException(status_code=409, detail="Placement already completed for this student")
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     return {"beliefs": beliefs}
 
 
 @app.get("/students/{student_id}/blocks")
-def blocks(student_id: str):
+def blocks(student_id: StudentId):
     tracker, edge_index, h_t = load_or_rebuild_state(student_id)
     beliefs = inference.get_mastery_beliefs(tracker, h_t)
     return {"blocks": get_block_progress(beliefs, attempted_concepts(student_id))}
 
 
 @app.get("/students/{student_id}/session")
-def session_status(student_id: str):
+def session_status(student_id: StudentId):
     conn = persistence.init_db()
     session = persistence.get_session(conn, student_id)
     conn.close()
@@ -109,7 +123,7 @@ def session_status(student_id: str):
 
 
 @app.post("/students/{student_id}/session/start")
-def session_start(student_id: str, body: SessionStartIn):
+def session_start(student_id: StudentId, body: SessionStartIn):
     conn = persistence.init_db()
     persistence.ensure_student(conn, student_id)
     persistence.start_session(conn, student_id, body.block_index, round_cap=SESSION_ROUND_CAP_DEFAULT)
@@ -119,7 +133,7 @@ def session_start(student_id: str, body: SessionStartIn):
 
 
 @app.post("/students/{student_id}/session/continue")
-def session_continue(student_id: str):
+def session_continue(student_id: StudentId):
     conn = persistence.init_db()
     persistence.extend_session(conn, student_id, extra_rounds=SESSION_ROUND_CAP_DEFAULT)
     session = persistence.get_session(conn, student_id)
@@ -130,12 +144,12 @@ def session_continue(student_id: str):
 
 
 @app.get("/students/{student_id}/next")
-def next_content(student_id: str):
+def next_content(student_id: StudentId):
     return recommend_content(student_id, ppo_model)
 
 
 @app.post("/students/{student_id}/mcq-answer")
-def mcq_answer(student_id: str, body: MCQAnswerIn):
+def mcq_answer(student_id: StudentId, body: MCQAnswerIn):
     try:
         return submit_mcq_answer(student_id, body.content_id, body.selected_index, body.time_taken)
     except ValueError as exc:
@@ -143,22 +157,14 @@ def mcq_answer(student_id: str, body: MCQAnswerIn):
 
 
 @app.post("/students/{student_id}/content-viewed")
-def content_viewed(student_id: str, body: ContentViewedIn):
-    conn = persistence.init_db()
-    persistence.ensure_student(conn, student_id)
-    # Idempotency guard: a duplicate "mark watched" request for a content_id
-    # already logged (e.g. a double-tap on a slow connection) must not log a
-    # second interaction, or this one viewing gets double-applied to the
-    # tracker's belief update.
-    if persistence.get_interaction_by_content_id(conn, student_id, body.content_id) is None:
-        step_index = persistence.get_next_step_index(conn, student_id)
-        # Video/deep-dive content has no inherent pass/fail -- logged as passed=1
-        # so it still advances the tracker's hidden state as a "covered" event.
-        persistence.log_interaction(
-            conn, student_id, step_index, body.concept, passed=1,
-            time_taken=body.time_taken, source="tutoring", content_id=body.content_id,
-        )
-    conn.close()
+def content_viewed(student_id: StudentId, body: ContentViewedIn):
+    # log_content_viewed validates the concept / content id and is idempotent against
+    # double-taps (see its docstring): a duplicate must not log a second interaction, or this
+    # one viewing would be double-applied to the tracker's belief update.
+    try:
+        log_content_viewed(student_id, body.concept, body.content_id, body.time_taken)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
     tracker, edge_index, h_t = load_or_rebuild_state(student_id)
     belief = inference.get_mastery_beliefs(tracker, h_t)[body.concept]
@@ -166,6 +172,10 @@ def content_viewed(student_id: str, body: ContentViewedIn):
 
 
 @app.get("/students/{student_id}/mastery")
-def mastery(student_id: str):
+def mastery(student_id: StudentId):
     tracker, edge_index, h_t = load_or_rebuild_state(student_id)
     return {"beliefs": inference.get_mastery_beliefs(tracker, h_t)}
+
+
+# Read-only insight endpoints (/meta, /graph, /status, /summary, /history, ...)
+app.include_router(insights_router)

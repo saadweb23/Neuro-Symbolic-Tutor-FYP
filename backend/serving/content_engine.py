@@ -9,7 +9,7 @@ from knowledge_graph.graph_builder import (
 from serving import persistence
 from serving import inference
 from serving import question_generator
-from serving.placement_quiz import load_or_rebuild_state
+from serving.placement_quiz import load_or_rebuild_state, placement_completed
 
 # ---------------------------------------------------------------------------
 # Real content bank for videos and deep-dives. Every URL below was looked up
@@ -164,6 +164,21 @@ def get_block_progress(beliefs, attempts=None):
     return progress
 
 
+def _ppo_probs_within(ppo_model, obs, allowed_indices):
+    """PPO's own action probabilities over all 25 concepts, masked to `allowed_indices` and
+    renormalised. Pure read: used both for sampling (/next) and for the side-effect-free
+    recommendation preview."""
+    device = ppo_model.policy.device
+    obs_tensor = torch.as_tensor(obs, device=device).unsqueeze(0)
+    with torch.no_grad():
+        dist = ppo_model.policy.get_distribution(obs_tensor)
+        probs = dist.distribution.probs[0].clone()
+    mask = torch.zeros_like(probs, dtype=torch.bool)
+    mask[allowed_indices] = True
+    probs = probs * mask
+    return probs / probs.sum()
+
+
 def _ppo_recommend_within(ppo_model, obs, allowed_indices):
     """Samples from PPO's own learned action distribution over all 25
     concepts, masked down to `allowed_indices` (the current session's
@@ -174,15 +189,7 @@ def _ppo_recommend_within(ppo_model, obs, allowed_indices):
     Sampled (not argmax) to match ppo_policy_fn's deterministic=False
     convention elsewhere in this codebase.
     """
-    device = ppo_model.policy.device
-    obs_tensor = torch.as_tensor(obs, device=device).unsqueeze(0)
-    with torch.no_grad():
-        dist = ppo_model.policy.get_distribution(obs_tensor)
-        probs = dist.distribution.probs[0].clone()
-    mask = torch.zeros_like(probs, dtype=torch.bool)
-    mask[allowed_indices] = True
-    probs = probs * mask
-    probs = probs / probs.sum()
+    probs = _ppo_probs_within(ppo_model, obs, allowed_indices)
     return int(torch.multinomial(probs, 1).item())
 
 
@@ -208,10 +215,22 @@ CONTENT_BANK = _build_static_bank()
 
 def select_content_type(concept_history):
     """Pure rule-based decision -- no ML. `concept_history` is this
-    student's past attempts at ONE concept only, oldest first."""
+    student's past attempts at ONE concept only, oldest first.
+
+    Failures are counted only SINCE the student last read this concept's deep-dive. Reading
+    the deep-dive is the remediation for the failures before it; without this reset a
+    concept that had ever reached ESCALATION_THRESHOLD failures returned "escalation" on
+    every later visit (a viewed deep-dive logs as a pass, so it never lowered the count) and
+    the student could never get a practice question on it again."""
     if not concept_history:
         return "video"
-    n_fails = sum(1 for a in concept_history if not a["passed"])
+    n_fails = 0
+    for a in concept_history:
+        cid = a.get("content_id") or ""
+        if cid.endswith("-deepdive"):
+            n_fails = 0
+        elif not a["passed"]:
+            n_fails += 1
     if n_fails >= ESCALATION_THRESHOLD:
         return "escalation"
     return "practice_problem"
@@ -527,9 +546,10 @@ def submit_mcq_answer(student_id, content_id, selected_index, time_taken,
         passed = existing["passed"]
     else:
         passed = question_generator.grade_mcq(question_payload, selected_index)
-        step_index = persistence.get_next_step_index(conn, student_id)
-        persistence.log_interaction(conn, student_id, step_index, concept, passed, time_taken,
-                                     source='tutoring', content_id=content_id)
+        persistence.ensure_student(conn, student_id)
+        persistence.log_interaction_next(conn, student_id, concept, passed, time_taken,
+                                          source='tutoring', content_id=content_id,
+                                          selected_index=selected_index)
     conn.close()
 
     tracker, edge_index, h_t = load_or_rebuild_state(student_id, db_path, tracker_checkpoint_path)
@@ -540,3 +560,135 @@ def submit_mcq_answer(student_id, content_id, selected_index, time_taken,
         "explanation": question_payload["explanation"],
         "updated_belief": inference.get_mastery_beliefs(tracker, h_t)[concept],
     }
+
+
+def log_content_viewed(student_id, concept, content_id, time_taken,
+                       db_path=persistence.DEFAULT_DB_PATH):
+    """Logs that a student viewed a video / deep-dive served by recommend_content().
+
+    Validates that `concept` is real and that `content_id` is that concept's own video or
+    deep-dive id (a client can't invent rows). Idempotent against double-taps:
+    - a video is only ever served once per concept, so a repeat of the same id is a duplicate;
+    - a deep-dive can legitimately be served again later (after further failures), so a repeat
+      only counts as a duplicate while it is still the student's most recent interaction.
+    Returns True when a row was written, False when it was a duplicate."""
+    if concept not in CONCEPT_TO_ID:
+        raise ValueError(f"Unknown concept: {concept}")
+    entry = CONTENT_BANK[concept]
+    valid_ids = {entry["video"]["id"], entry["deep_dive"]["id"]}
+    if content_id not in valid_ids:
+        raise ValueError(f"content_id {content_id!r} is not a video or deep-dive for {concept}")
+
+    conn = persistence.init_db(db_path)
+    persistence.ensure_student(conn, student_id)
+    if content_id.endswith("-video"):
+        duplicate = persistence.get_interaction_by_content_id(conn, student_id, content_id) is not None
+    else:
+        latest = persistence.get_latest_interaction(conn, student_id)
+        duplicate = latest is not None and latest["content_id"] == content_id
+    if not duplicate:
+        # Video/deep-dive content has no inherent pass/fail -- logged as passed=1 so it still
+        # advances the tracker's hidden state as a "covered" event.
+        persistence.log_interaction_next(conn, student_id, concept, 1, time_taken,
+                                          source="tutoring", content_id=content_id)
+    conn.close()
+    return not duplicate
+
+
+def pick_suggested_block(block_progress):
+    """The incomplete block with the lowest average mastery (ties: curriculum order)."""
+    incomplete = [b for b in block_progress if not b["complete"]]
+    pool = incomplete or block_progress
+    return min(pool, key=lambda b: (b["average_mastery"], b["index"]))["index"]
+
+
+def preview_recommendation(student_id, ppo_model, block_index=None, db_path=persistence.DEFAULT_DB_PATH,
+                           tracker_checkpoint_path=inference.DEFAULT_CHECKPOINT, top_k=3):
+    """Side-effect-free look at what the agent is currently inclined to do next.
+
+    Unlike recommend_content() this NEVER increments the session round, generates or stores a
+    question, or clears a session -- it only reads. It returns PPO's own (block-masked)
+    probabilities for the top candidates, not a sample: the real /next samples from this same
+    distribution, so the preview shows the likely next concepts, not a promise of one.
+    """
+    tracker, edge_index, h_t = load_or_rebuild_state(student_id, db_path, tracker_checkpoint_path)
+    beliefs = inference.get_mastery_beliefs(tracker, h_t)
+    attempts = attempted_concepts(student_id, db_path)
+    progress = get_block_progress(beliefs, attempts)
+    avg_mastery = sum(beliefs.values()) / len(beliefs)
+    min_belief = min(beliefs.values())
+
+    conn = persistence.init_db(db_path)
+    session = persistence.get_session(conn, student_id)
+    full_history = persistence.get_interaction_history(conn, student_id)
+    conn.close()
+
+    result = {
+        "state": "ready",
+        "session_active": session is not None,
+        "block_index": None,
+        "block_name": None,
+        "suggested": False,
+        "block": None,
+        "candidates": [],
+    }
+    if (avg_mastery >= MASTERY_THRESHOLD and min_belief >= MIN_CONCEPT_FLOOR
+            and _all_attempted(CONCEPTS, attempts)):
+        result["state"] = "complete"
+        return result
+
+    if block_index is not None:
+        chosen = block_index
+    elif session is not None:
+        chosen = session["block_index"]
+    else:
+        chosen = pick_suggested_block(progress)
+        result["suggested"] = True
+    block = CONCEPT_BLOCKS[chosen]
+    result["block_index"] = chosen
+    result["block_name"] = block["name"]
+    block_info = progress[chosen]
+    result["block"] = {
+        "index": chosen,
+        "name": block["name"],
+        "average_mastery": block_info["average_mastery"],
+        "round_count": session["round_count"] if session and session["block_index"] == chosen else 0,
+        "round_cap": session["round_cap"] if session and session["block_index"] == chosen else SESSION_ROUND_CAP_DEFAULT,
+    }
+
+    if block_info["complete"]:
+        result["state"] = "block_complete"
+        return result
+    if (session is not None and session["block_index"] == chosen
+            and session["round_count"] >= session["round_cap"]):
+        result["state"] = "session_paused"
+        return result
+
+    graph = build_python_dag()
+    indices = [CONCEPT_TO_ID[c] for c in block["concepts"]]
+    obs = _build_observation(beliefs, full_history, graph)
+    probs = _ppo_probs_within(ppo_model, obs, indices).tolist()
+    ranked = sorted(indices, key=lambda i: probs[i], reverse=True)[:top_k]
+
+    for i in ranked:
+        concept = CONCEPTS[i]
+        concept_history = [h for h in full_history if h["concept"] == concept]
+        content_type = select_content_type(concept_history)
+        reused_from = None
+        if content_type in ("video", "escalation"):
+            kind = "video" if content_type == "video" else "deep_dive"
+            reused_from = _already_shown_reuse(concept, kind, full_history)
+            if reused_from is not None:
+                content_type = "practice_problem"
+        difficulty = (question_generator.difficulty_for_belief(beliefs[concept])
+                      if content_type == "practice_problem" else None)
+        result["candidates"].append({
+            "concept": concept,
+            "probability": probs[i],
+            "belief": beliefs[concept],
+            "attempts": attempts.get(concept, 0),
+            "predicted_content_type": content_type,
+            "explanation": build_explanation(concept, content_type, graph, beliefs, difficulty=difficulty,
+                                             attempt_number=len(concept_history), reused_from=reused_from),
+        })
+    return result

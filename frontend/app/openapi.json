@@ -1,0 +1,2598 @@
+{
+  "components": {
+    "schemas": {
+      "AccuracyPoint": {
+        "properties": {
+          "answer_number": {
+            "title": "Answer Number",
+            "type": "integer"
+          },
+          "rolling_accuracy": {
+            "title": "Rolling Accuracy",
+            "type": "number"
+          },
+          "step_index": {
+            "title": "Step Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "step_index",
+          "answer_number",
+          "rolling_accuracy"
+        ],
+        "title": "AccuracyPoint",
+        "type": "object"
+      },
+      "ActivityDay": {
+        "properties": {
+          "answered": {
+            "title": "Answered",
+            "type": "integer"
+          },
+          "answering_seconds": {
+            "title": "Answering Seconds",
+            "type": "number"
+          },
+          "correct": {
+            "title": "Correct",
+            "type": "integer"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "deep_dives": {
+            "title": "Deep Dives",
+            "type": "integer"
+          },
+          "videos": {
+            "title": "Videos",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "answered",
+          "correct",
+          "videos",
+          "deep_dives",
+          "answering_seconds"
+        ],
+        "title": "ActivityDay",
+        "type": "object"
+      },
+      "AnalyticsResponse": {
+        "properties": {
+          "accuracy_trend": {
+            "items": {
+              "$ref": "#/components/schemas/AccuracyPoint"
+            },
+            "title": "Accuracy Trend",
+            "type": "array"
+          },
+          "activity": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityDay"
+            },
+            "title": "Activity",
+            "type": "array"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/BlockPerformance"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "concepts": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptImprovement"
+            },
+            "title": "Concepts",
+            "type": "array"
+          },
+          "content_mix": {
+            "$ref": "#/components/schemas/ContentMix"
+          },
+          "difficulty": {
+            "$ref": "#/components/schemas/DifficultyBreakdown"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "window": {
+            "$ref": "#/components/schemas/AnalyticsWindow"
+          }
+        },
+        "required": [
+          "model_version",
+          "window",
+          "activity",
+          "blocks",
+          "concepts",
+          "content_mix",
+          "difficulty",
+          "accuracy_trend"
+        ],
+        "title": "AnalyticsResponse",
+        "type": "object"
+      },
+      "AnalyticsWindow": {
+        "properties": {
+          "accuracy_window": {
+            "title": "Accuracy Window",
+            "type": "integer"
+          },
+          "days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days"
+          }
+        },
+        "required": [
+          "days",
+          "accuracy_window"
+        ],
+        "title": "AnalyticsWindow",
+        "type": "object"
+      },
+      "BlockPerformance": {
+        "properties": {
+          "accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accuracy"
+          },
+          "answered": {
+            "title": "Answered",
+            "type": "integer"
+          },
+          "correct": {
+            "title": "Correct",
+            "type": "integer"
+          },
+          "current_average": {
+            "title": "Current Average",
+            "type": "number"
+          },
+          "index": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "name",
+          "answered",
+          "correct",
+          "accuracy",
+          "current_average"
+        ],
+        "title": "BlockPerformance",
+        "type": "object"
+      },
+      "ConceptDetail": {
+        "properties": {
+          "accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accuracy"
+          },
+          "attempts": {
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "belief": {
+            "title": "Belief",
+            "type": "number"
+          },
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "correct": {
+            "title": "Correct",
+            "type": "integer"
+          },
+          "dependents": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Dependents",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "last_attempt_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt At"
+          },
+          "prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Prerequisites",
+            "type": "array"
+          },
+          "weakest_prerequisite": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weakest Prerequisite"
+          }
+        },
+        "required": [
+          "concept",
+          "id",
+          "block_index",
+          "belief",
+          "attempts",
+          "correct",
+          "accuracy",
+          "last_attempt_at",
+          "prerequisites",
+          "dependents",
+          "weakest_prerequisite"
+        ],
+        "title": "ConceptDetail",
+        "type": "object"
+      },
+      "ConceptImprovement": {
+        "properties": {
+          "accuracy": {
+            "title": "Accuracy",
+            "type": "number"
+          },
+          "attempts": {
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "current_belief": {
+            "title": "Current Belief",
+            "type": "number"
+          },
+          "delta": {
+            "title": "Delta",
+            "type": "number"
+          },
+          "first_belief": {
+            "title": "First Belief",
+            "type": "number"
+          }
+        },
+        "required": [
+          "concept",
+          "block_index",
+          "attempts",
+          "accuracy",
+          "first_belief",
+          "current_belief",
+          "delta"
+        ],
+        "title": "ConceptImprovement",
+        "type": "object"
+      },
+      "ConceptsResponse": {
+        "properties": {
+          "concepts": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptDetail"
+            },
+            "title": "Concepts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "concepts"
+        ],
+        "title": "ConceptsResponse",
+        "type": "object"
+      },
+      "ContentMix": {
+        "properties": {
+          "deep_dive": {
+            "title": "Deep Dive",
+            "type": "integer"
+          },
+          "placement": {
+            "title": "Placement",
+            "type": "integer"
+          },
+          "practice": {
+            "title": "Practice",
+            "type": "integer"
+          },
+          "video": {
+            "title": "Video",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "practice",
+          "placement",
+          "video",
+          "deep_dive"
+        ],
+        "title": "ContentMix",
+        "type": "object"
+      },
+      "ContentViewedIn": {
+        "properties": {
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "content_id": {
+            "title": "Content Id",
+            "type": "string"
+          },
+          "time_taken": {
+            "title": "Time Taken",
+            "type": "number"
+          }
+        },
+        "required": [
+          "concept",
+          "content_id",
+          "time_taken"
+        ],
+        "title": "ContentViewedIn",
+        "type": "object"
+      },
+      "DifficultyBreakdown": {
+        "properties": {
+          "easy": {
+            "$ref": "#/components/schemas/DifficultyBucket"
+          },
+          "hard": {
+            "$ref": "#/components/schemas/DifficultyBucket"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/DifficultyBucket"
+          },
+          "placement": {
+            "$ref": "#/components/schemas/DifficultyBucket"
+          }
+        },
+        "required": [
+          "placement",
+          "easy",
+          "medium",
+          "hard"
+        ],
+        "title": "DifficultyBreakdown",
+        "type": "object"
+      },
+      "DifficultyBucket": {
+        "properties": {
+          "answered": {
+            "title": "Answered",
+            "type": "integer"
+          },
+          "correct": {
+            "title": "Correct",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "answered",
+          "correct"
+        ],
+        "title": "DifficultyBucket",
+        "type": "object"
+      },
+      "DifficultyCutoffs": {
+        "properties": {
+          "easy_below": {
+            "title": "Easy Below",
+            "type": "number"
+          },
+          "medium_below": {
+            "title": "Medium Below",
+            "type": "number"
+          }
+        },
+        "required": [
+          "easy_below",
+          "medium_below"
+        ],
+        "title": "DifficultyCutoffs",
+        "type": "object"
+      },
+      "GraphBlock": {
+        "properties": {
+          "concepts": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Concepts",
+            "type": "array"
+          },
+          "index": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "name",
+          "concepts"
+        ],
+        "title": "GraphBlock",
+        "type": "object"
+      },
+      "GraphEdge": {
+        "properties": {
+          "source": {
+            "title": "Source",
+            "type": "integer"
+          },
+          "target": {
+            "title": "Target",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source",
+          "target"
+        ],
+        "title": "GraphEdge",
+        "type": "object"
+      },
+      "GraphNode": {
+        "properties": {
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "depth": {
+            "title": "Depth",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "concept",
+          "block_index",
+          "depth"
+        ],
+        "title": "GraphNode",
+        "type": "object"
+      },
+      "GraphResponse": {
+        "properties": {
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/GraphBlock"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "edges": {
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/GraphNode"
+            },
+            "title": "Nodes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "nodes",
+          "edges",
+          "blocks"
+        ],
+        "title": "GraphResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HistoryItem": {
+        "properties": {
+          "at": {
+            "title": "At",
+            "type": "string"
+          },
+          "belief_after": {
+            "title": "Belief After",
+            "type": "number"
+          },
+          "belief_before": {
+            "title": "Belief Before",
+            "type": "number"
+          },
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "choices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Choices"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "content_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Id"
+          },
+          "content_type": {
+            "enum": [
+              "placement",
+              "practice",
+              "video",
+              "deep_dive"
+            ],
+            "title": "Content Type",
+            "type": "string"
+          },
+          "correct_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correct Index"
+          },
+          "difficulty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Difficulty"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "passed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Passed"
+          },
+          "question_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Question Text"
+          },
+          "selected_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Index"
+          },
+          "step_index": {
+            "title": "Step Index",
+            "type": "integer"
+          },
+          "time_taken": {
+            "title": "Time Taken",
+            "type": "number"
+          }
+        },
+        "required": [
+          "step_index",
+          "at",
+          "concept",
+          "block_index",
+          "content_type",
+          "content_id",
+          "passed",
+          "time_taken",
+          "difficulty",
+          "question_text",
+          "choices",
+          "correct_index",
+          "explanation",
+          "selected_index",
+          "belief_before",
+          "belief_after"
+        ],
+        "title": "HistoryItem",
+        "type": "object"
+      },
+      "HistoryResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor",
+          "total"
+        ],
+        "title": "HistoryResponse",
+        "type": "object"
+      },
+      "MCQAnswerIn": {
+        "properties": {
+          "content_id": {
+            "title": "Content Id",
+            "type": "string"
+          },
+          "selected_index": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Selected Index",
+            "type": "integer"
+          },
+          "time_taken": {
+            "title": "Time Taken",
+            "type": "number"
+          }
+        },
+        "required": [
+          "content_id",
+          "selected_index",
+          "time_taken"
+        ],
+        "title": "MCQAnswerIn",
+        "type": "object"
+      },
+      "MetaConfig": {
+        "properties": {
+          "block_count": {
+            "title": "Block Count",
+            "type": "integer"
+          },
+          "concept_count": {
+            "title": "Concept Count",
+            "type": "integer"
+          },
+          "concept_floor": {
+            "title": "Concept Floor",
+            "type": "number"
+          },
+          "difficulty_cutoffs": {
+            "$ref": "#/components/schemas/DifficultyCutoffs"
+          },
+          "escalation_threshold": {
+            "title": "Escalation Threshold",
+            "type": "integer"
+          },
+          "mastery_threshold": {
+            "title": "Mastery Threshold",
+            "type": "number"
+          },
+          "placement_concepts": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Placement Concepts",
+            "type": "array"
+          },
+          "session_round_cap": {
+            "title": "Session Round Cap",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mastery_threshold",
+          "concept_floor",
+          "session_round_cap",
+          "escalation_threshold",
+          "difficulty_cutoffs",
+          "placement_concepts",
+          "concept_count",
+          "block_count"
+        ],
+        "title": "MetaConfig",
+        "type": "object"
+      },
+      "MetaModels": {
+        "properties": {
+          "ppo": {
+            "title": "Ppo",
+            "type": "string"
+          },
+          "tracker": {
+            "title": "Tracker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tracker",
+          "ppo"
+        ],
+        "title": "MetaModels",
+        "type": "object"
+      },
+      "MetaResponse": {
+        "properties": {
+          "config": {
+            "$ref": "#/components/schemas/MetaConfig"
+          },
+          "models": {
+            "$ref": "#/components/schemas/MetaModels"
+          },
+          "server_time": {
+            "title": "Server Time",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "server_time",
+          "models",
+          "config"
+        ],
+        "title": "MetaResponse",
+        "type": "object"
+      },
+      "PlacementAnswerIn": {
+        "properties": {
+          "content_id": {
+            "title": "Content Id",
+            "type": "string"
+          },
+          "selected_index": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Selected Index",
+            "type": "integer"
+          },
+          "time_taken": {
+            "title": "Time Taken",
+            "type": "number"
+          }
+        },
+        "required": [
+          "content_id",
+          "selected_index",
+          "time_taken"
+        ],
+        "title": "PlacementAnswerIn",
+        "type": "object"
+      },
+      "RecommendationBlock": {
+        "properties": {
+          "average_mastery": {
+            "title": "Average Mastery",
+            "type": "number"
+          },
+          "index": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "round_cap": {
+            "title": "Round Cap",
+            "type": "integer"
+          },
+          "round_count": {
+            "title": "Round Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "index",
+          "name",
+          "average_mastery",
+          "round_count",
+          "round_cap"
+        ],
+        "title": "RecommendationBlock",
+        "type": "object"
+      },
+      "RecommendationCandidate": {
+        "properties": {
+          "attempts": {
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "belief": {
+            "title": "Belief",
+            "type": "number"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "predicted_content_type": {
+            "enum": [
+              "video",
+              "practice_problem",
+              "escalation"
+            ],
+            "title": "Predicted Content Type",
+            "type": "string"
+          },
+          "probability": {
+            "title": "Probability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "concept",
+          "probability",
+          "belief",
+          "attempts",
+          "predicted_content_type",
+          "explanation"
+        ],
+        "title": "RecommendationCandidate",
+        "type": "object"
+      },
+      "RecommendationResponse": {
+        "properties": {
+          "block": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecommendationBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "block_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Block Index"
+          },
+          "block_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Block Name"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationCandidate"
+            },
+            "title": "Candidates",
+            "type": "array"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "session_active": {
+            "title": "Session Active",
+            "type": "boolean"
+          },
+          "state": {
+            "enum": [
+              "ready",
+              "block_complete",
+              "session_paused",
+              "complete"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "suggested": {
+            "title": "Suggested",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state",
+          "session_active",
+          "block_index",
+          "block_name",
+          "suggested",
+          "block",
+          "candidates",
+          "note"
+        ],
+        "title": "RecommendationResponse",
+        "type": "object"
+      },
+      "ResourceItem": {
+        "properties": {
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "deep_dive": {
+            "$ref": "#/components/schemas/ResourceLink"
+          },
+          "shares_deep_dive_with": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Shares Deep Dive With",
+            "type": "array"
+          },
+          "shares_video_with": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Shares Video With",
+            "type": "array"
+          },
+          "video": {
+            "$ref": "#/components/schemas/ResourceLink"
+          }
+        },
+        "required": [
+          "concept",
+          "block_index",
+          "video",
+          "deep_dive",
+          "shares_video_with",
+          "shares_deep_dive_with"
+        ],
+        "title": "ResourceItem",
+        "type": "object"
+      },
+      "ResourceLink": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "seen": {
+            "title": "Seen",
+            "type": "boolean"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url",
+          "source",
+          "seen"
+        ],
+        "title": "ResourceLink",
+        "type": "object"
+      },
+      "ResourcesResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ResourceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ResourcesResponse",
+        "type": "object"
+      },
+      "SessionInfo": {
+        "properties": {
+          "block_index": {
+            "title": "Block Index",
+            "type": "integer"
+          },
+          "round_cap": {
+            "title": "Round Cap",
+            "type": "integer"
+          },
+          "round_count": {
+            "title": "Round Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "block_index",
+          "round_count",
+          "round_cap"
+        ],
+        "title": "SessionInfo",
+        "type": "object"
+      },
+      "SessionStartIn": {
+        "properties": {
+          "block_index": {
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Block Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "block_index"
+        ],
+        "title": "SessionStartIn",
+        "type": "object"
+      },
+      "StatusCounts": {
+        "properties": {
+          "answered_questions": {
+            "title": "Answered Questions",
+            "type": "integer"
+          },
+          "interactions": {
+            "title": "Interactions",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "interactions",
+          "answered_questions"
+        ],
+        "title": "StatusCounts",
+        "type": "object"
+      },
+      "StatusResponse": {
+        "properties": {
+          "counts": {
+            "$ref": "#/components/schemas/StatusCounts"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "exists": {
+            "title": "Exists",
+            "type": "boolean"
+          },
+          "has_active_session": {
+            "title": "Has Active Session",
+            "type": "boolean"
+          },
+          "last_active_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Active At"
+          },
+          "placement_completed": {
+            "title": "Placement Completed",
+            "type": "boolean"
+          },
+          "placement_completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placement Completed At"
+          },
+          "session": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SessionInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "student_id": {
+            "title": "Student Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "student_id",
+          "exists",
+          "placement_completed",
+          "placement_completed_at",
+          "has_active_session",
+          "session",
+          "counts",
+          "created_at",
+          "last_active_at"
+        ],
+        "title": "StatusResponse",
+        "type": "object"
+      },
+      "SummaryResponse": {
+        "properties": {
+          "accuracy": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accuracy"
+          },
+          "active_days": {
+            "title": "Active Days",
+            "type": "integer"
+          },
+          "answered_questions": {
+            "title": "Answered Questions",
+            "type": "integer"
+          },
+          "answering_time_seconds": {
+            "title": "Answering Time Seconds",
+            "type": "number"
+          },
+          "concepts_attempted": {
+            "title": "Concepts Attempted",
+            "type": "integer"
+          },
+          "concepts_total": {
+            "title": "Concepts Total",
+            "type": "integer"
+          },
+          "correct_answers": {
+            "title": "Correct Answers",
+            "type": "integer"
+          },
+          "current_streak_days": {
+            "title": "Current Streak Days",
+            "type": "integer"
+          },
+          "deep_dives_read": {
+            "title": "Deep Dives Read",
+            "type": "integer"
+          },
+          "first_activity_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Activity At"
+          },
+          "last_activity_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Activity At"
+          },
+          "longest_streak_days": {
+            "title": "Longest Streak Days",
+            "type": "integer"
+          },
+          "practice_questions": {
+            "title": "Practice Questions",
+            "type": "integer"
+          },
+          "videos_viewed": {
+            "title": "Videos Viewed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "answered_questions",
+          "correct_answers",
+          "accuracy",
+          "practice_questions",
+          "videos_viewed",
+          "deep_dives_read",
+          "concepts_attempted",
+          "concepts_total",
+          "answering_time_seconds",
+          "active_days",
+          "current_streak_days",
+          "longest_streak_days",
+          "first_activity_at",
+          "last_activity_at"
+        ],
+        "title": "SummaryResponse",
+        "type": "object"
+      },
+      "TrajectoryInitial": {
+        "properties": {
+          "average": {
+            "title": "Average",
+            "type": "number"
+          },
+          "blocks": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Blocks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "average",
+          "blocks"
+        ],
+        "title": "TrajectoryInitial",
+        "type": "object"
+      },
+      "TrajectoryResponse": {
+        "properties": {
+          "initial": {
+            "$ref": "#/components/schemas/TrajectoryInitial"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/TrajectoryStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "model_version",
+          "initial",
+          "steps"
+        ],
+        "title": "TrajectoryResponse",
+        "type": "object"
+      },
+      "TrajectoryStep": {
+        "properties": {
+          "at": {
+            "title": "At",
+            "type": "string"
+          },
+          "average": {
+            "title": "Average",
+            "type": "number"
+          },
+          "beliefs": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beliefs"
+          },
+          "blocks": {
+            "items": {
+              "type": "number"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "concept": {
+            "title": "Concept",
+            "type": "string"
+          },
+          "content_type": {
+            "enum": [
+              "placement",
+              "practice",
+              "video",
+              "deep_dive"
+            ],
+            "title": "Content Type",
+            "type": "string"
+          },
+          "passed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Passed"
+          },
+          "step_index": {
+            "title": "Step Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "step_index",
+          "at",
+          "concept",
+          "content_type",
+          "passed",
+          "average",
+          "blocks"
+        ],
+        "title": "TrajectoryStep",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Neuro-Symbolic Tutor API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/graph": {
+      "get": {
+        "operationId": "graph_graph_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GraphResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Graph",
+        "tags": [
+          "curriculum"
+        ]
+      }
+    },
+    "/meta": {
+      "get": {
+        "description": "Server readiness plus the thresholds the UI must display (never hardcode them there).",
+        "operationId": "meta_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/students/{student_id}/analytics": {
+      "get": {
+        "operationId": "analytics_students__student_id__analytics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tz",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Tz"
+            }
+          },
+          {
+            "in": "query",
+            "name": "days",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 3650,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Days"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Analytics",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/blocks": {
+      "get": {
+        "operationId": "blocks_students__student_id__blocks_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Blocks"
+      }
+    },
+    "/students/{student_id}/concepts": {
+      "get": {
+        "operationId": "concepts_students__student_id__concepts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConceptsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Concepts",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/content-viewed": {
+      "post": {
+        "operationId": "content_viewed_students__student_id__content_viewed_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentViewedIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Content Viewed"
+      }
+    },
+    "/students/{student_id}/history": {
+      "get": {
+        "operationId": "history_students__student_id__history_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 25,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "concept",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Concept"
+            }
+          },
+          {
+            "in": "query",
+            "name": "block",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 4,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Block"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "placement",
+                    "practice",
+                    "video",
+                    "deep_dive"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "passed",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Result"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "History",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/mastery": {
+      "get": {
+        "operationId": "mastery_students__student_id__mastery_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mastery"
+      }
+    },
+    "/students/{student_id}/mastery/trajectory": {
+      "get": {
+        "operationId": "trajectory_students__student_id__mastery_trajectory_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "comma-separated concept names",
+            "in": "query",
+            "name": "concepts",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "comma-separated concept names",
+              "title": "Concepts"
+            }
+          },
+          {
+            "in": "query",
+            "name": "detail",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Detail",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrajectoryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Trajectory",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/mcq-answer": {
+      "post": {
+        "operationId": "mcq_answer_students__student_id__mcq_answer_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCQAnswerIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mcq Answer"
+      }
+    },
+    "/students/{student_id}/next": {
+      "get": {
+        "operationId": "next_content_students__student_id__next_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Next Content"
+      }
+    },
+    "/students/{student_id}/placement/start": {
+      "post": {
+        "operationId": "placement_start_students__student_id__placement_start_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Placement Start"
+      }
+    },
+    "/students/{student_id}/placement/submit": {
+      "post": {
+        "operationId": "placement_submit_students__student_id__placement_submit_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/PlacementAnswerIn"
+                },
+                "title": "Answers",
+                "type": "array"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Placement Submit"
+      }
+    },
+    "/students/{student_id}/recommendation": {
+      "get": {
+        "description": "Side-effect-free preview of the agent's current inclination. Never consumes a round.",
+        "operationId": "recommendation_students__student_id__recommendation_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "block_index",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 4,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Block Index"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Recommendation",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/resources": {
+      "get": {
+        "operationId": "resources_students__student_id__resources_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resources",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/session": {
+      "get": {
+        "operationId": "session_status_students__student_id__session_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Session Status"
+      }
+    },
+    "/students/{student_id}/session/continue": {
+      "post": {
+        "operationId": "session_continue_students__student_id__session_continue_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Session Continue"
+      }
+    },
+    "/students/{student_id}/session/start": {
+      "post": {
+        "operationId": "session_start_students__student_id__session_start_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionStartIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Session Start"
+      }
+    },
+    "/students/{student_id}/status": {
+      "get": {
+        "description": "Unknown ids return 200 with exists=false (not 404) so onboarding can branch on it.",
+        "operationId": "status_students__student_id__status_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Status",
+        "tags": [
+          "students"
+        ]
+      }
+    },
+    "/students/{student_id}/summary": {
+      "get": {
+        "operationId": "summary_students__student_id__summary_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[^\\x00-\\x1f/\\\\]+$",
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "IANA time zone for day bucketing",
+            "in": "query",
+            "name": "tz",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "IANA time zone for day bucketing",
+              "title": "Tz"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Summary",
+        "tags": [
+          "students"
+        ]
+      }
+    }
+  }
+}

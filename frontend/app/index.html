@@ -4,11 +4,58 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="description" content="NeuroTutor: an adaptive Python tutor that explains why you are stuck, not just that you are." />
     <title>NeuroTutor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/styles/cube.css" />
+    <script>
+      // Pre-paint theme: avoids a flash of the wrong theme. Mirrors src/app/providers/ThemeProvider.
+      (function () {
+        try {
+          var pref = localStorage.getItem('neurotutor_theme') || 'system';
+          var dark = pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          if (dark) root.classList.add('dark');
+          if (localStorage.getItem('neurotutor_reduce_motion') === 'true') root.classList.add('reduce-motion');
+          // Same-tab reload: keep the splash hidden unless boot turns out to be slow (BootGate decides).
+          if (sessionStorage.getItem('nt_booted')) root.classList.add('nt-quick');
+          root.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      /* Instant boot splash: pure CSS, painted before any JavaScript runs. The React BootGate
+         takes it over (same cube, same position) and removes it. */
+      html { background: #F7F8FB; }
+      html.dark { background: #0B1020; }
+      #nt-splash { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 28px; padding-bottom: 8px; background: #F7F8FB; color: #0F1426; font-family: system-ui, sans-serif; }
+      html.dark #nt-splash { background: #0B1020; color: #E8ECF8; }
+      #nt-splash .nt-splash-name { font-size: 22px; font-weight: 650; letter-spacing: -0.01em; }
+      #nt-splash .nt-splash-name span { color: #4F46E5; }
+      html.dark #nt-splash .nt-splash-name span { color: #818CF8; }
+      #nt-splash .nt-splash-slot { height: 44px; }
+      html.nt-quick #nt-splash { visibility: hidden; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div id="nt-splash" aria-hidden="true">
+      <div class="nt-cube-wrap" style="--s: 96px; margin-bottom: 30px">
+        <div class="nt-glow"></div>
+        <div class="nt-scene">
+          <div class="nt-tilt"><div class="nt-cube">
+            <i class="nt-face f1"></i><i class="nt-face f2"></i><i class="nt-face f3"></i>
+            <i class="nt-face f4"></i><i class="nt-face f5"></i><i class="nt-face f6"></i>
+            <div class="nt-core"><i class="nt-face f1"></i><i class="nt-face f2"></i><i class="nt-face f3"></i>
+              <i class="nt-face f4"></i><i class="nt-face f5"></i><i class="nt-face f6"></i></div>
+          </div></div>
+        </div>
+        <div class="nt-shadow"></div>
+      </div>
+      <div class="nt-splash-name">Neuro<span>Tutor</span></div>
+      <div class="nt-splash-slot"></div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
