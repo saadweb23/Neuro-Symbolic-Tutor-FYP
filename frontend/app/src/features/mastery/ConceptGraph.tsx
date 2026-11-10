@@ -90,8 +90,8 @@ export function ConceptGraph({ graph, concepts, selected, visible, onSelect }: P
                 onMouseEnter={() => setHover(n.id)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}>
                 <rect width={NODE_W} height={NODE_H} rx={10} className="fill-surface" stroke={selected === n.concept ? 'var(--primary)' : STROKE[tier]} strokeWidth={selected === n.concept ? 3 : 1.6} strokeDasharray={tier === 'developing' ? '5 3' : undefined} />
                 <circle cx={NODE_W - 12} cy={12} r={4} fill={BLOCK_COLORS[n.blockIndex]} />
-                <text x={12} y={21} className="fill-text text-[12px] font-semibold">{n.concept}</text>
-                <text x={12} y={38} className="fill-muted text-[11px]">{pct(belief)} · {S.label}</text>
+                <text aria-hidden x={12} y={21} className="fill-text text-[12px] font-semibold">{n.concept}</text>
+                <text aria-hidden x={12} y={38} className="fill-muted text-[11px]">{pct(belief)} · {S.label}</text>
               </g>
             )
           })}

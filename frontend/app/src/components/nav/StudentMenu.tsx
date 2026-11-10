@@ -11,10 +11,10 @@ export function StudentMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label={`Student menu for ${studentId}`}
+        aria-label={`${studentId}, student menu`}
         className="flex h-10 items-center gap-2 rounded-md pl-1.5 pr-2 transition-colors hover:bg-raised"
       >
-        <span className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold uppercase text-on-primary">
+        <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold uppercase text-on-primary">
           {studentId.slice(0, 1)}
         </span>
         <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">{studentId}</span>

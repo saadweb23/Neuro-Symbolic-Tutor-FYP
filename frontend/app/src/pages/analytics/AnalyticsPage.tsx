@@ -110,7 +110,7 @@ function Progression({ id }: { id: string }) {
                 <div className="mb-3 flex flex-wrap items-center gap-2">
                   {series.map((s) => (
                     <button key={s.key} aria-pressed={!!shown[s.key]} onClick={() => setShown((p) => ({ ...p, [s.key]: !p[s.key] }))}
-                      className={cn('inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium', shown[s.key] ? 'border-border-strong bg-surface text-text' : 'border-border text-muted opacity-70')}>
+                      className={cn('inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium', shown[s.key] ? 'border-border-strong bg-surface text-text' : 'border-border text-muted')}>
                       <span className="h-0.5 w-4 rounded" style={{ background: s.color }} aria-hidden />{s.label}
                     </button>
                   ))}
@@ -241,7 +241,7 @@ function ConceptImprovement({ a }: { a: Analytics }) {
       <CardHeader title="Concept improvement" description="Estimated mastery just before your first answer on a concept versus now." />
       <CardBody>
         {rows.length === 0 ? <EmptyState compact title="No concept data yet" /> : (
-          <ul className="max-h-80 space-y-3 overflow-auto pr-1">
+          <ul tabIndex={0} aria-label="Concept improvement list (scrollable)" className="max-h-80 space-y-3 overflow-auto pr-1">
             {rows.map((c) => {
               const d = Math.round(c.delta * 100)
               return (

@@ -20,7 +20,7 @@ export function ChartCard({ title, description, chart, table, summary }: { title
       />
       <CardBody>
         {summary && <p className="sr-only">{summary}</p>}
-        {asTable ? <div className="max-h-72 overflow-auto">{table}</div> : chart}
+        {asTable ? <div tabIndex={0} role="region" aria-label={`${title} data table`} className="max-h-72 overflow-auto">{table}</div> : chart}
       </CardBody>
     </Card>
   )

@@ -42,7 +42,7 @@ export function ConceptTile({ concept, belief, attempts, selected, dimmed, onCli
     onClick && 'hover:shadow-raised',
   )
   return onClick ? (
-    <button type="button" onClick={onClick} className={cls} aria-label={`${concept}: ${pct(belief)}, ${s.label}`} aria-pressed={selected}>
+    <button type="button" onClick={onClick} className={cls} aria-pressed={selected}>
       {body}
     </button>
   ) : (

@@ -172,6 +172,7 @@ export function NeedsAttentionCard() {
       <CardBody>
         <QueryBoundary query={mastery}>
           {(m) => (
+            <>
             <ul className="space-y-4">
               {weakestConcepts(m, 3).map(([concept, belief]) => {
                 const block = graph.data?.blocks.find((b) => b.concepts.includes(concept))
@@ -187,8 +188,9 @@ export function NeedsAttentionCard() {
                   </li>
                 )
               })}
-              <Link to={ROUTES.mastery} className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">See all concepts <ArrowRight className="size-3.5" aria-hidden /></Link>
             </ul>
+            <Link to={ROUTES.mastery} className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">See all concepts <ArrowRight className="size-3.5" aria-hidden /></Link>
+            </>
           )}
         </QueryBoundary>
       </CardBody>

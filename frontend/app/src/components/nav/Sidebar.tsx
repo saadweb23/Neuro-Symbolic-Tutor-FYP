@@ -37,7 +37,7 @@ function Item({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
 function Group({ title, items, collapsed }: { title?: string; items: NavItem[]; collapsed: boolean }) {
   return (
     <div className="space-y-1">
-      {title && !collapsed && <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted/80">{title}</p>}
+      {title && !collapsed && <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted">{title}</p>}
       {items.map((i) => (
         <Item key={i.to} item={i} collapsed={collapsed} />
       ))}

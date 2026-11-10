@@ -38,19 +38,19 @@ function setup(route = '/mastery') {
 describe('MasteryPage', () => {
   it('shows every concept from the API and filters by search, keeping state in the URL', async () => {
     setup()
-    expect(await screen.findByRole('button', { name: /Syntax: 80%/ })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /: \d+%/ })).toHaveLength(4)
+    expect(await screen.findByRole('button', { name: /Syntax\s+80%/ })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /\d+%/ })).toHaveLength(4)
     await userEvent.type(screen.getByLabelText('Search concepts'), 'tup')
-    expect(screen.getAllByRole('button', { name: /: \d+%/ })).toHaveLength(1)
+    expect(screen.getAllByRole('button', { name: /\d+%/ })).toHaveLength(1)
     expect(screen.getByTestId('url')).toHaveTextContent('q=tup')
   })
 
   it('filters by tier using the backend cut-offs and by block from the URL', async () => {
     setup('/mastery?block=2')
-    await screen.findByRole('button', { name: /Lists: 50%/ })
-    expect(screen.queryByRole('button', { name: /Syntax/ })).toBeNull()
+    await screen.findByRole('button', { name: /Lists\s+50%/ })
+    expect(screen.queryByRole('button', { name: /Syntax\s+\d+%/ })).toBeNull()
     await userEvent.click(within(screen.getByRole('group', { name: 'Filters' })).getByRole('button', { name: /Developing/ }))
-    expect(screen.getAllByRole('button', { name: /: \d+%/ })).toHaveLength(2) // Lists 50%, Tuples 60%
+    expect(screen.getAllByRole('button', { name: /\d+%/ })).toHaveLength(2) // Lists 50%, Tuples 60%
   })
 
   it('opens the detail panel with prerequisites for a selected concept', async () => {
