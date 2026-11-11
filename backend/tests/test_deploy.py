@@ -1,4 +1,5 @@
 """Production-readiness behaviour: health, CORS, error hygiene, concurrency, storage parity."""
+import uuid
 import threading
 
 import pytest
@@ -60,7 +61,7 @@ def test_responses_carry_basic_security_headers(client):
 
 def test_concurrent_writers_never_collide_on_step_index(db):
     """Many overlapping requests for ONE student must each get a distinct step_index."""
-    sid = "concurrency-student"
+    sid = f"concurrency-{uuid.uuid4().hex[:8]}"   # unique: a PostgreSQL test database persists between runs
     persistence.ensure_student(db, sid)
     n = 12
     steps, errors = [], []
