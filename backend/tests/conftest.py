@@ -9,6 +9,7 @@ _TMP = tempfile.mkdtemp(prefix="neurotutor-tests-")
 os.environ["TUTOR_DB_PATH"] = os.path.join(_TMP, "test.db")
 os.environ["USE_QUESTION_BANK"] = "true"
 os.environ.pop("MOCK_LLM", None)
+os.environ["AUTH_RATE_SCALE"] = "1000"   # the suite signs up many users; dedicated tests restore real limits
 
 BACKEND = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND)
@@ -18,10 +19,16 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 
 @pytest.fixture(scope="session")
-def client():
+def _app():
     from main import app
-    with TestClient(app) as c:   # runs the lifespan: loads PPO + warms the tracker
-        yield c
+    with TestClient(app):   # runs the lifespan once: loads PPO + warms the tracker
+        yield app
+
+
+@pytest.fixture()
+def client(_app):
+    """A fresh client (own cookie jar) per test, so a test only ever holds its own sign-in."""
+    return TestClient(_app)
 
 
 @pytest.fixture()
@@ -35,11 +42,19 @@ def db():
 _counter = [0]
 
 
-@pytest.fixture()
-def sid():
-    """A fresh student id per test, so tests don't depend on each other's data."""
+def signup(client, name="Test Student", email=None, password="correct-horse-9"):
+    """Creates an account through the real endpoint; the client keeps the session cookie."""
     _counter[0] += 1
-    return f"test-student-{_counter[0]}"
+    email = email or f"student{_counter[0]}-{os.getpid()}@example.com"
+    resp = client.post("/auth/signup", json={"name": name, "email": email, "password": password})
+    assert resp.status_code == 201, resp.text
+    return resp.json()
+
+
+@pytest.fixture()
+def sid(client):
+    """The student id of a freshly signed-up account; `client` is signed in as its owner."""
+    return signup(client)["student_id"]
 
 
 def placed_student(client, db, student_id, pass_all=True):

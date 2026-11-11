@@ -1,10 +1,12 @@
 import logging
 import os
+import re
+from urllib.parse import urlsplit
 from contextlib import asynccontextmanager
 from typing import List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -34,6 +36,10 @@ from serving.placement_quiz import (
 )
 from api.routes import router as insights_router
 from api.schemas import StudentId, TimeTaken
+from api.deps import authorize_student
+from api.auth_routes import router as auth_router
+
+AUTHZ = Depends(authorize_student)
 
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO").upper(), format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("neurotutor.api")
@@ -78,13 +84,36 @@ def _cors_origins():
 
 
 CORS_ORIGINS = _cors_origins()
+_PRODUCTION = os.environ.get("NEURO_ENV", "development").lower() == "production"
+# Cookies need credentialed CORS, which forbids "*": in development any localhost / LAN-address origin
+# is allowed (the Vite dev server on a laptop or a phone); in production only CORS_ORIGINS.
+_DEV_ORIGIN_RE = r"^https?://(localhost|127\.0\.0\.1|\[::1\]|\d{1,3}(\.\d{1,3}){3})(:\d+)?$"
+_ORIGIN_REGEX = os.environ.get("CORS_ORIGIN_REGEX") or (None if _PRODUCTION else _DEV_ORIGIN_RE)
+_EXPLICIT_ORIGINS = [o for o in CORS_ORIGINS if o != "*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
-    allow_origin_regex=os.environ.get("CORS_ORIGIN_REGEX") or None,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_origins=_EXPLICIT_ORIGINS,
+    allow_origin_regex=_ORIGIN_REGEX,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
+_ORIGIN_RE = re.compile(_ORIGIN_REGEX) if _ORIGIN_REGEX else None
+
+
+@app.middleware("http")
+async def csrf_origin_check(request: Request, call_next):
+    """Cookie-authenticated, state-changing requests must come from this site or an allowed origin.
+    (Requests without an Origin header, such as curl or tests, carry no ambient browser cookies.)"""
+    if request.method not in ("GET", "HEAD", "OPTIONS"):
+        origin = request.headers.get("origin")
+        if origin:
+            origin = origin.rstrip("/")
+            same_host = urlsplit(origin).netloc == request.headers.get("host", "")
+            allowed = same_host or origin in _EXPLICIT_ORIGINS or bool(_ORIGIN_RE and _ORIGIN_RE.match(origin))
+            if not allowed:
+                return JSONResponse(status_code=403, content={"detail": "Cross-site request blocked."})
+    return await call_next(request)
 
 
 @app.middleware("http")
@@ -92,6 +121,8 @@ async def security_headers(request: Request, call_next):
     response = await call_next(request)
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("Referrer-Policy", "no-referrer")
+    if request.url.path.startswith(("/auth", "/students")):
+        response.headers.setdefault("Cache-Control", "no-store")
     return response
 
 
@@ -168,7 +199,7 @@ class SessionStartIn(BaseModel):
     block_index: int = Field(ge=0, le=4)
 
 
-@app.post("/students/{student_id}/placement/start")
+@app.post("/students/{student_id}/placement/start", dependencies=[AUTHZ])
 def placement_start(student_id: StudentId):
     if placement_completed(student_id):
         raise HTTPException(status_code=409, detail="Placement already completed for this student")
@@ -176,7 +207,7 @@ def placement_start(student_id: StudentId):
     return {"questions": questions}
 
 
-@app.post("/students/{student_id}/placement/submit")
+@app.post("/students/{student_id}/placement/submit", dependencies=[AUTHZ])
 def placement_submit(student_id: StudentId, answers: List[PlacementAnswerIn]):
     try:
         beliefs = submit_placement_answers(student_id, [a.model_dump() for a in answers])
@@ -187,14 +218,14 @@ def placement_submit(student_id: StudentId, answers: List[PlacementAnswerIn]):
     return {"beliefs": beliefs}
 
 
-@app.get("/students/{student_id}/blocks")
+@app.get("/students/{student_id}/blocks", dependencies=[AUTHZ])
 def blocks(student_id: StudentId):
     tracker, edge_index, h_t = load_or_rebuild_state(student_id)
     beliefs = inference.get_mastery_beliefs(tracker, h_t)
     return {"blocks": get_block_progress(beliefs, attempted_concepts(student_id))}
 
 
-@app.get("/students/{student_id}/session")
+@app.get("/students/{student_id}/session", dependencies=[AUTHZ])
 def session_status(student_id: StudentId):
     conn = persistence.init_db()
     session = persistence.get_session(conn, student_id)
@@ -204,7 +235,7 @@ def session_status(student_id: StudentId):
     return {"active": True, **session}
 
 
-@app.post("/students/{student_id}/session/start")
+@app.post("/students/{student_id}/session/start", dependencies=[AUTHZ])
 def session_start(student_id: StudentId, body: SessionStartIn):
     conn = persistence.init_db()
     persistence.ensure_student(conn, student_id)
@@ -214,7 +245,7 @@ def session_start(student_id: StudentId, body: SessionStartIn):
     return {"active": True, **session}
 
 
-@app.post("/students/{student_id}/session/continue")
+@app.post("/students/{student_id}/session/continue", dependencies=[AUTHZ])
 def session_continue(student_id: StudentId):
     conn = persistence.init_db()
     persistence.extend_session(conn, student_id, extra_rounds=SESSION_ROUND_CAP_DEFAULT)
@@ -225,12 +256,12 @@ def session_continue(student_id: StudentId):
     return {"active": True, **session}
 
 
-@app.get("/students/{student_id}/next")
+@app.get("/students/{student_id}/next", dependencies=[AUTHZ])
 def next_content(student_id: StudentId):
     return recommend_content(student_id, ppo_model)
 
 
-@app.post("/students/{student_id}/mcq-answer")
+@app.post("/students/{student_id}/mcq-answer", dependencies=[AUTHZ])
 def mcq_answer(student_id: StudentId, body: MCQAnswerIn):
     try:
         return submit_mcq_answer(student_id, body.content_id, body.selected_index, body.time_taken)
@@ -238,7 +269,7 @@ def mcq_answer(student_id: StudentId, body: MCQAnswerIn):
         raise HTTPException(status_code=400, detail=str(exc))
 
 
-@app.post("/students/{student_id}/content-viewed")
+@app.post("/students/{student_id}/content-viewed", dependencies=[AUTHZ])
 def content_viewed(student_id: StudentId, body: ContentViewedIn):
     # log_content_viewed validates the concept / content id and is idempotent against
     # double-taps (see its docstring): a duplicate must not log a second interaction, or this
@@ -253,13 +284,14 @@ def content_viewed(student_id: StudentId, body: ContentViewedIn):
     return {"concept": body.concept, "updated_belief": belief}
 
 
-@app.get("/students/{student_id}/mastery")
+@app.get("/students/{student_id}/mastery", dependencies=[AUTHZ])
 def mastery(student_id: StudentId):
     tracker, edge_index, h_t = load_or_rebuild_state(student_id)
     return {"beliefs": inference.get_mastery_beliefs(tracker, h_t)}
 
 
 # Read-only insight endpoints (/meta, /graph, /status, /summary, /history, ...)
+app.include_router(auth_router)
 app.include_router(insights_router)
 
 
@@ -269,7 +301,7 @@ app.include_router(insights_router)
 if _SERVE_SITE:
     from fastapi.responses import FileResponse
 
-    _API_PREFIXES = ("students/", "docs", "redoc", "openapi.json", "meta", "graph", "health")
+    _API_PREFIXES = ("students/", "auth/", "docs", "redoc", "openapi.json", "meta", "graph", "health")
 
     @app.get("/{full_path:path}", include_in_schema=False)
     def site(full_path: str):

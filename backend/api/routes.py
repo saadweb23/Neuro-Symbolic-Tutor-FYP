@@ -5,15 +5,17 @@ import os
 from datetime import datetime, timezone
 from typing import List, Literal, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from api import schemas
 from api.schemas import StudentId
+from api.deps import authorize_student
 from knowledge_graph.graph_builder import CONCEPTS
 from serving import catalog, content_engine, inference, insights, persistence, question_generator
 from serving.placement_quiz import PLACEMENT_CONCEPTS, load_or_rebuild_state
 
 router = APIRouter()
+AUTHZ = Depends(authorize_student)
 
 
 @router.get("/meta", response_model=schemas.MetaResponse, tags=["meta"])
@@ -47,13 +49,13 @@ def graph():
     return catalog.graph_payload()
 
 
-@router.get("/students/{student_id}/status", response_model=schemas.StatusResponse, tags=["students"])
+@router.get("/students/{student_id}/status", dependencies=[AUTHZ], response_model=schemas.StatusResponse, tags=["students"])
 def status(student_id: StudentId):
     """Unknown ids return 200 with exists=false (not 404) so onboarding can branch on it."""
     return insights.student_status(student_id)
 
 
-@router.get("/students/{student_id}/summary", response_model=schemas.SummaryResponse, tags=["students"])
+@router.get("/students/{student_id}/summary", dependencies=[AUTHZ], response_model=schemas.SummaryResponse, tags=["students"])
 def summary(student_id: StudentId, tz: Optional[str] = Query(None, description="IANA time zone for day bucketing")):
     try:
         return insights.student_summary(student_id, tz)
@@ -61,7 +63,7 @@ def summary(student_id: StudentId, tz: Optional[str] = Query(None, description="
         raise HTTPException(status_code=422, detail=str(exc))
 
 
-@router.get("/students/{student_id}/history", response_model=schemas.HistoryResponse, tags=["students"])
+@router.get("/students/{student_id}/history", dependencies=[AUTHZ], response_model=schemas.HistoryResponse, tags=["students"])
 def history(
     student_id: StudentId,
     limit: int = Query(25, ge=1, le=100),
@@ -77,7 +79,7 @@ def history(
                                     content_type=type, result=result)
 
 
-@router.get("/students/{student_id}/mastery/trajectory", response_model=schemas.TrajectoryResponse,
+@router.get("/students/{student_id}/mastery/trajectory", dependencies=[AUTHZ], response_model=schemas.TrajectoryResponse,
             response_model_exclude_unset=True, tags=["students"])
 def trajectory(
     student_id: StudentId,
@@ -91,14 +93,14 @@ def trajectory(
         raise HTTPException(status_code=422, detail=str(exc))
 
 
-@router.get("/students/{student_id}/concepts", response_model=schemas.ConceptsResponse, tags=["students"])
+@router.get("/students/{student_id}/concepts", dependencies=[AUTHZ], response_model=schemas.ConceptsResponse, tags=["students"])
 def concepts(student_id: StudentId):
     tracker, _edge_index, h_t = load_or_rebuild_state(student_id)
     beliefs = inference.get_mastery_beliefs(tracker, h_t)
     return {"concepts": insights.student_concepts(student_id, beliefs)}
 
 
-@router.get("/students/{student_id}/resources", response_model=schemas.ResourcesResponse, tags=["students"])
+@router.get("/students/{student_id}/resources", dependencies=[AUTHZ], response_model=schemas.ResourcesResponse, tags=["students"])
 def resources(student_id: StudentId):
     conn = persistence.init_db()
     seen = {r["content_id"] for r in persistence.get_interaction_rows(conn, student_id) if r.get("content_id")}
@@ -106,7 +108,7 @@ def resources(student_id: StudentId):
     return {"items": catalog.resource_items(seen)}
 
 
-@router.get("/students/{student_id}/recommendation", response_model=schemas.RecommendationResponse,
+@router.get("/students/{student_id}/recommendation", dependencies=[AUTHZ], response_model=schemas.RecommendationResponse,
             tags=["students"])
 def recommendation(request: Request, student_id: StudentId,
                    block_index: Optional[int] = Query(None, ge=0, le=4)):
@@ -117,7 +119,7 @@ def recommendation(request: Request, student_id: StudentId,
     return result
 
 
-@router.get("/students/{student_id}/analytics", response_model=schemas.AnalyticsResponse, tags=["students"])
+@router.get("/students/{student_id}/analytics", dependencies=[AUTHZ], response_model=schemas.AnalyticsResponse, tags=["students"])
 def analytics(student_id: StudentId, tz: Optional[str] = None, days: Optional[int] = Query(None, ge=1, le=3650)):
     try:
         return insights.student_analytics(student_id, tz_name=tz, days=days)

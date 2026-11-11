@@ -37,15 +37,16 @@ def test_graph_matches_knowledge_graph(client):
 
 
 # ---------------------------------------------------------------- validation
-def test_student_id_validation(client):
+def test_student_id_validation(client, sid):
     assert client.get("/students/" + "x" * 65 + "/status").status_code == 422
-    assert client.get("/students/" + "x" * 64 + "/status").status_code == 200
+    assert client.get(f"/students/{sid}/status").status_code == 200
 
 
-def test_ids_are_case_sensitive(client, db):
-    placed_student(client, db, "CaseSens")
-    assert client.get("/students/CaseSens/status").json()["placement_completed"] is True
-    assert client.get("/students/casesens/status").json()["exists"] is False
+def test_ids_are_case_sensitive(client, db, sid):
+    placed_student(client, db, sid)
+    assert client.get(f"/students/{sid}/status").json()["placement_completed"] is True
+    # a differently-cased id is a different student, which this account does not own
+    assert client.get(f"/students/{sid.upper()}/status").status_code == 403
 
 
 def test_session_start_rejects_out_of_range_block(client, sid):
@@ -57,8 +58,10 @@ def test_session_start_rejects_out_of_range_block(client, sid):
 # ---------------------------------------------------------------- status / placement
 def test_status_does_not_create_students(client, db, sid):
     s = client.get(f"/students/{sid}/status").json()
-    assert s["exists"] is False and s["placement_completed"] is False and s["session"] is None
-    assert db.execute("SELECT 1 FROM students WHERE student_id = ?", (sid,)).fetchone() is None
+    assert s["placement_completed"] is False and s["session"] is None
+    # reading status must not write: no interactions or mastery cache appear
+    assert db.execute("SELECT COUNT(*) AS n FROM interactions WHERE student_id = ?", (sid,)).fetchone()["n"] == 0
+    assert db.execute("SELECT 1 FROM mastery_state WHERE student_id = ?", (sid,)).fetchone() is None
 
 
 def test_placement_flow_and_resubmit_guard(client, db, sid):

@@ -172,6 +172,30 @@ _PG_SCHEMA = [
         updated_at TEXT NOT NULL DEFAULT {_NOW}
     )""",
     "CREATE INDEX IF NOT EXISTS idx_interactions_student_content ON interactions (student_id, content_id)",
+    """CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        email TEXT NOT NULL UNIQUE,
+        display_name TEXT NOT NULL,
+        password_hash TEXT NOT NULL,
+        student_id TEXT NOT NULL UNIQUE REFERENCES students(student_id),
+        created_at TEXT NOT NULL,
+        last_login_at TEXT
+    )""",
+    """CREATE TABLE IF NOT EXISTS auth_sessions (
+        token_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        user_agent TEXT
+    )""",
+    """CREATE TABLE IF NOT EXISTS password_resets (
+        token_hash TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL,
+        used_at TEXT
+    )""",
+    "CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions (user_id)",
 ]
 
 
@@ -265,6 +289,35 @@ def init_db(db_path=DEFAULT_DB_PATH):
             round_count INTEGER NOT NULL DEFAULT 0,
             round_cap INTEGER NOT NULL,
             updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        );
+
+        -- Accounts (see serving/accounts.py). Passwords are stored only as salted scrypt hashes and
+        -- session / reset tokens only as SHA-256 digests, so a leaked database reveals neither.
+        CREATE TABLE IF NOT EXISTS users (
+            id TEXT PRIMARY KEY,
+            email TEXT NOT NULL UNIQUE,
+            display_name TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
+            student_id TEXT NOT NULL UNIQUE REFERENCES students(student_id),
+            created_at TEXT NOT NULL,
+            last_login_at TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS auth_sessions (
+            token_hash TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            created_at TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            user_agent TEXT
+        );
+        CREATE INDEX IF NOT EXISTS idx_auth_sessions_user ON auth_sessions (user_id);
+
+        CREATE TABLE IF NOT EXISTS password_resets (
+            token_hash TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            created_at TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            used_at TEXT
         );
     """)
     conn.commit()
@@ -570,3 +623,15 @@ def get_asked_question_texts(conn, student_id, concept):
         (student_id, concept)
     ).fetchall()
     return [json.loads(row["question_json"])["question"] for row in rows]
+
+
+# Every table keyed by student_id, children first. Later phases append their tables here so that
+# deleting an account removes all of a student's data.
+STUDENT_TABLES = ["interactions", "mastery_state", "belief_snapshots", "sessions"]
+
+
+def delete_student_data(conn, student_id):
+    """Removes every record of one student (the caller commits). Used by account deletion."""
+    for table in STUDENT_TABLES:
+        conn.execute(f"DELETE FROM {table} WHERE student_id = ?", (student_id,))
+    conn.execute("DELETE FROM students WHERE student_id = ?", (student_id,))

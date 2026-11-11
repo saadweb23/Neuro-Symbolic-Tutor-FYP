@@ -31,9 +31,12 @@ def test_cors_origins_come_from_the_environment(monkeypatch):
 def test_cors_preflight_is_answered_for_the_configured_origin_only(client, monkeypatch):
     import main
     # the app under test was started with the development default ("*"); verify the middleware wiring
-    r = client.options("/students/x/status", headers={"Origin": "https://app.vercel.app", "Access-Control-Request-Method": "GET"})
+    r = client.options("/students/x/status", headers={"Origin": "http://localhost:5173", "Access-Control-Request-Method": "GET"})
     assert r.status_code == 200
-    assert r.headers["access-control-allow-origin"] in ("*", "https://app.vercel.app")
+    assert r.headers["access-control-allow-origin"] == "http://localhost:5173"   # credentialed CORS echoes, never "*"
+    assert r.headers["access-control-allow-credentials"] == "true"
+    r = client.options("/students/x/status", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "GET"})
+    assert "access-control-allow-origin" not in r.headers
     assert main.CORS_ORIGINS in (["*"], main._cors_origins())
 
 
@@ -82,9 +85,8 @@ def test_concurrent_writers_never_collide_on_step_index(db):
     assert [r["step_index"] for r in rows] == list(range(n))
 
 
-def test_snapshot_compaction_keeps_only_the_newest_hidden_state(client, db):
+def test_snapshot_compaction_keeps_only_the_newest_hidden_state(client, db, sid):
     from tests.conftest import placed_student
-    sid = "compaction-student"
     placed_student(client, db, sid)
     client.get(f"/students/{sid}/mastery/trajectory")  # builds snapshots for all 7 placement steps
     rows = db.execute("SELECT step_index, length(h_t_blob) AS n FROM belief_snapshots WHERE student_id = ? ORDER BY step_index", (sid,)).fetchall()
