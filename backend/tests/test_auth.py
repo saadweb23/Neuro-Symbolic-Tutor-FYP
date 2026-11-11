@@ -187,3 +187,21 @@ def test_cross_site_state_changing_requests_are_blocked(client):
 def test_auth_responses_are_not_cacheable(client):
     signup(client, email="cache@example.com")
     assert client.get("/auth/me").headers["cache-control"] == "no-store"
+
+
+def test_builtin_admin_account_logs_in_and_owns_its_student(client, db):
+    accounts.seed_admin()
+    accounts.seed_admin()   # idempotent
+    assert db.execute("SELECT COUNT(*) AS n FROM users WHERE email = 'admin'").fetchone()["n"] == 1
+    stored = db.execute("SELECT password_hash FROM users WHERE email = 'admin'").fetchone()["password_hash"]
+    assert "admin123" not in stored and stored.startswith("scrypt$")
+    r = client.post("/auth/login", json={"username": "admin", "password": "admin123"})
+    assert r.status_code == 200 and r.json()["student_id"] == "admin"
+    assert client.get("/students/admin/status").status_code == 200
+    assert _fresh(client).post("/auth/login", json={"username": "admin", "password": "wrong"}).status_code == 401
+
+
+def test_self_signup_can_be_turned_off(client, monkeypatch):
+    monkeypatch.setenv("AUTH_ALLOW_SIGNUP", "0")
+    r = client.post("/auth/signup", json={"name": "X", "email": "x@example.com", "password": "correct-horse-9"})
+    assert r.status_code == 403

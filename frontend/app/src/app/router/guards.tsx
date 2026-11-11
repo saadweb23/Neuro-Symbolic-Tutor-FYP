@@ -9,10 +9,18 @@ import { useStudentContext } from '../providers/StudentProvider'
 
 /** Any page that needs a student id: without one, go to onboarding. */
 export function RequireStudent() {
-  const { studentId } = useStudentContext()
+  const { studentId, loading } = useStudentContext()
   const location = useLocation()
-  if (!studentId) return <Navigate to={ROUTES.start} replace state={{ from: location.pathname }} />
+  if (loading) return <GuardSkeleton />
+  if (!studentId) return <Navigate to={ROUTES.login} replace state={{ from: location.pathname }} />
   return <Outlet />
+}
+
+/** "/" : signed-in users go to the app, everyone else to the sign-in form. */
+export function RootRedirect() {
+  const { studentId, loading } = useStudentContext()
+  if (loading) return <GuardSkeleton />
+  return <Navigate to={studentId ? ROUTES.dashboard : ROUTES.login} replace />
 }
 
 function GuardSkeleton() {

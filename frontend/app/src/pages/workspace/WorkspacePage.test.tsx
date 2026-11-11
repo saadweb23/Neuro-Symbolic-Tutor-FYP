@@ -4,9 +4,8 @@ import { http, HttpResponse } from 'msw'
 import { StrictMode } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { STORAGE_KEYS } from '@/constants/storage'
 import { server } from '@/test/server'
-import { renderWithProviders } from '@/test/utils'
+import { renderWithProviders, signInAs } from '@/test/utils'
 import { WorkspacePage } from './WorkspacePage'
 
 const B = 'http://localhost:8000/students/sam'
@@ -18,7 +17,7 @@ const practice = {
 }
 
 function setup(opts: { sessionActive?: boolean; stored?: boolean } = {}) {
-  localStorage.setItem(STORAGE_KEYS.currentStudent, 'sam')
+  signInAs('sam')
   if (opts.stored) sessionStorage.setItem('nt_step_sam', JSON.stringify(practice))
   const calls = { next: 0, answers: [] as unknown[] }
   server.use(

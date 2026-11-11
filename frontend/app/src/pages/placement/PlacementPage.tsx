@@ -39,7 +39,7 @@ function readSaved(id: string): Saved | null {
 
 export function PlacementPage() {
   const id = useStudentId()
-  const { clearStudent } = useStudentContext()
+  const { signOut } = useStudentContext()
   const navigate = useNavigate()
   const qc = useQueryClient()
   const status = useStatus(id)
@@ -125,10 +125,10 @@ export function PlacementPage() {
           <Wordmark className="text-base" />
           <span className="ml-2 hidden text-sm text-muted sm:inline">Placement quiz</span>
           <button
-            onClick={() => { clearStudent(); navigate(ROUTES.start) }}
+            onClick={() => { void signOut().then(() => navigate(ROUTES.login, { replace: true })) }}
             className="ml-auto text-sm text-muted underline-offset-2 hover:text-text hover:underline"
           >
-            Switch student
+            Sign out
           </button>
         </div>
       </header>

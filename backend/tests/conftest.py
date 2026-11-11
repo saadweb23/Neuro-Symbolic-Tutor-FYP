@@ -9,6 +9,7 @@ _TMP = tempfile.mkdtemp(prefix="neurotutor-tests-")
 os.environ["TUTOR_DB_PATH"] = os.path.join(_TMP, "test.db")
 os.environ["USE_QUESTION_BANK"] = "true"
 os.environ.pop("MOCK_LLM", None)
+os.environ["AUTH_ALLOW_SIGNUP"] = "1"   # production default is off; the suite creates users through the endpoint
 os.environ["AUTH_RATE_SCALE"] = "1000"   # the suite signs up many users; dedicated tests restore real limits
 
 BACKEND = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

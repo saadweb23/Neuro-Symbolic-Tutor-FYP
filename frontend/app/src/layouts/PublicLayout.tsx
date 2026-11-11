@@ -10,7 +10,7 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-bg/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 md:px-6">
-        <Link to={ROUTES.landing} className="group flex items-center gap-2.5" aria-label="NeuroTutor home">
+        <Link to={ROUTES.root} className="group flex items-center gap-2.5" aria-label="NeuroTutor home">
           <BrandMark size={26} />
           <Wordmark />
         </Link>
@@ -21,7 +21,7 @@ export function PublicHeader() {
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          <LinkButton to={ROUTES.start} size="sm">Start learning</LinkButton>
+          <LinkButton to={ROUTES.start} size="sm">Sign in</LinkButton>
         </div>
       </div>
     </header>
@@ -38,7 +38,7 @@ export function PublicFooter() {
         </div>
         <nav aria-label="Footer" className="flex gap-5">
           <Link to={ROUTES.help} className="hover:text-text">Help</Link>
-          <Link to={ROUTES.start} className="hover:text-text">Get started</Link>
+          <Link to={ROUTES.start} className="hover:text-text">Sign in</Link>
           <a href="https://github.com/saadweb23/Neuro-Symbolic-Tutor-FYP" className="hover:text-text" target="_blank" rel="noreferrer">Source code</a>
         </nav>
       </div>

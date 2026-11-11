@@ -57,7 +57,7 @@ export function SettingsPage() {
 function SettingsContent({ id }: { id: string }) {
   const navigate = useNavigate()
   const toast = useToast()
-  const { clearStudent } = useStudentContext()
+  const { user, signOut } = useStudentContext()
   const prefs = usePreferences()
   const status = useStatus(id)
   const summary = useSummary(id)
@@ -101,9 +101,10 @@ function SettingsContent({ id }: { id: string }) {
 
         <TabsContent value="profile" className="grid gap-6 lg:grid-cols-2">
           <Card>
-            <CardHeader title="Your profile" description="Identity is the student ID alone. There is no password." />
+            <CardHeader title="Your profile" description="Your account on this server." />
             <CardBody>
               <dl>
+                <Row label="Username" value={user?.email ?? '–'} />
                 <Row label="Student ID" value={<span className="inline-flex items-center gap-2"><code className="rounded bg-raised px-2 py-0.5 font-mono text-[13px]">{id}</code><button onClick={() => void copy()} aria-label="Copy student ID" className="rounded p-1 text-muted hover:bg-raised hover:text-text">{copied ? <Check className="size-4 text-good" /> : <Copy className="size-4" />}</button></span>} />
                 <QueryBoundary query={status}>
                   {(s) => (
@@ -115,7 +116,7 @@ function SettingsContent({ id }: { id: string }) {
                   )}
                 </QueryBoundary>
               </dl>
-              <Button variant="secondary" className="mt-4" icon={<LogOut className="size-4" />} onClick={() => setConfirm(true)}>Switch student</Button>
+              <Button variant="secondary" className="mt-4" icon={<LogOut className="size-4" />} onClick={() => setConfirm(true)}>Sign out</Button>
             </CardBody>
           </Card>
           <Card>
@@ -164,15 +165,15 @@ function SettingsContent({ id }: { id: string }) {
             <CardHeader title="Your data" />
             <CardBody className="space-y-4 text-sm">
               <p>NeuroTutor stores your student ID and a record of every answer and lesson on the server it runs on. Your mastery estimates are recomputed from that record.</p>
-              <p className="rounded-lg bg-mid-soft p-3 text-mid">There is no password: anyone who knows your student ID can open your records on this server. Do not use a real name or private information as your ID.</p>
+              <p className="rounded-lg bg-mid-soft p-3 text-mid">Your records are tied to your account: only you, signed in, can read them through the API.</p>
               <Button variant="secondary" loading={exporting} onClick={() => void exportCsv()} icon={<Download className="size-4" />}>Export my history (CSV)</Button>
             </CardBody>
           </Card>
         </TabsContent>
       </Tabs>
 
-      <ConfirmationDialog open={confirm} onOpenChange={setConfirm} title="Switch student?" description={`This signs ${id} out on this device. Their progress stays saved on the server and you can come back with the same ID.`}
-        confirmLabel="Switch student" onConfirm={() => { navigate(ROUTES.start); clearStudent() }} />
+      <ConfirmationDialog open={confirm} onOpenChange={setConfirm} title="Sign out?" description="Your progress stays saved on the server. Sign in again to continue."
+        confirmLabel="Sign out" onConfirm={() => { void signOut().then(() => navigate(ROUTES.login, { replace: true })) }} />
     </div>
   )
 }

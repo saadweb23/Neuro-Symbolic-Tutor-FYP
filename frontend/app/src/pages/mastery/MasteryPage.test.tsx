@@ -3,9 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { STORAGE_KEYS } from '@/constants/storage'
 import { server } from '@/test/server'
-import { renderWithProviders } from '@/test/utils'
+import { renderWithProviders, signInAs } from '@/test/utils'
 import { MasteryPage } from './MasteryPage'
 
 const B = 'http://localhost:8000'
@@ -26,7 +25,7 @@ function Where() {
 }
 
 function setup(route = '/mastery') {
-  localStorage.setItem(STORAGE_KEYS.currentStudent, 'sam')
+  signInAs('sam')
   server.use(
     http.get(`${B}/students/sam/concepts`, () => HttpResponse.json({ concepts })),
     http.get(`${B}/students/sam/resources`, () => HttpResponse.json({ items: [] })),

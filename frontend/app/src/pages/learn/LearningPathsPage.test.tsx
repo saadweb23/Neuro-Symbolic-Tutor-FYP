@@ -3,9 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { Route, Routes } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { STORAGE_KEYS } from '@/constants/storage'
 import { server } from '@/test/server'
-import { renderWithProviders } from '@/test/utils'
+import { renderWithProviders, signInAs } from '@/test/utils'
 import { LearningPathsPage } from './LearningPathsPage'
 
 const B = 'http://localhost:8000/students/sam'
@@ -15,7 +14,7 @@ const blocks = names.map((name, index) => ({
 }))
 
 function setup(activeBlock: number | null) {
-  localStorage.setItem(STORAGE_KEYS.currentStudent, 'sam')
+  signInAs('sam')
   const posts: unknown[] = []
   server.use(
     http.get(`${B}/blocks`, () => HttpResponse.json({ blocks })),

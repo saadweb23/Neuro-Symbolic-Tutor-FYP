@@ -16,11 +16,11 @@ async function scan(page: Page, label: string) {
 for (const scheme of ['light', 'dark'] as const) {
   test(`no serious accessibility violations (${scheme})`, async ({ page }) => {
     await page.emulateMedia({ colorScheme: scheme })
-    await page.goto('/')
+    await page.goto('/about')
     await page.getByRole('heading', { level: 1 }).waitFor()
     await scan(page, `landing/${scheme}`)
-    await page.goto('/start')
-    await scan(page, `start/${scheme}`)
+    await page.goto('/login')
+    await scan(page, `login/${scheme}`)
     await page.goto('/help')
     await scan(page, `help-public/${scheme}`)
 

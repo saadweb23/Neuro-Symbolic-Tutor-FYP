@@ -31,7 +31,8 @@ class SignupIn(BaseModel):
 
 
 class LoginIn(BaseModel):
-    email: str = Field(max_length=320)
+    username: Optional[str] = Field(default=None, max_length=320)
+    email: Optional[str] = Field(default=None, max_length=320)   # alias accepted for API clients
     password: str = Field(max_length=1000)
     remember: bool = False
 
@@ -101,6 +102,8 @@ def _raise(exc: AuthError):
 
 @router.post("/signup", response_model=UserOut, status_code=201)
 def signup(body: SignupIn, request: Request, response: Response):
+    if os.environ.get("AUTH_ALLOW_SIGNUP", "0") != "1":
+        raise HTTPException(status_code=403, detail="Self-service sign-up is turned off on this server.")
     try:
         accounts.throttle("signup", _client_ip(request), 10, 3600)
         user = accounts.create_user(body.name, body.email, body.password)
@@ -113,11 +116,12 @@ def signup(body: SignupIn, request: Request, response: Response):
 
 @router.post("/login", response_model=UserOut)
 def login(body: LoginIn, request: Request, response: Response):
-    ip, email_key = _client_ip(request), (body.email or "").strip().lower()
+    identifier = body.username or body.email or ""
+    ip, email_key = _client_ip(request), identifier.strip().lower()
     try:
         accounts.throttle("login-ip", ip, 40, 900)
         accounts.throttle("login-email", email_key, 8, 900)   # slows guessing one account from many IPs
-        user = accounts.authenticate(body.email, body.password)
+        user = accounts.authenticate(identifier, body.password)
     except AuthError as exc:
         _raise(exc)
     accounts.limiter.reset(f"login-email:{email_key}")

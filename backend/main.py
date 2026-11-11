@@ -21,7 +21,7 @@ else:
     def _load_ppo(path):
         return PPO.load(path)
 
-from serving import persistence
+from serving import accounts, persistence
 from serving import inference
 from serving.content_engine import (
     recommend_content, submit_mcq_answer, log_content_viewed, get_block_progress, attempted_concepts,
@@ -65,6 +65,7 @@ async def lifespan(app: FastAPI):
     # path + mtime, so replacing the file on disk is still picked up) and warmed up here so the
     # first request does not pay for it.
     inference.warm_up()
+    accounts.seed_admin()
     print("[startup] PPO policy and tracker loaded.")
     log.info("storage backend: %s | CORS origins: %s", persistence.describe_backend(), CORS_ORIGINS or "none (cross-origin browser requests blocked)")
     yield

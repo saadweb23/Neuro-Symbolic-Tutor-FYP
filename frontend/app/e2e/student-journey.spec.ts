@@ -1,19 +1,20 @@
 import { expect, test } from '@playwright/test'
 import { advanceToPractice, API, placeStudent, session, trackErrors, trackNext, uniqueId } from './helpers'
 
-test('a new student: landing -> placement -> learning session -> progress pages', async ({ page, request }) => {
-  const id = uniqueId('journey')
+test('a new student: landing -> placement -> learning session -> progress pages', async ({ page }) => {
+  const request = page.request
+  const label = uniqueId('journey')
   const errors = trackErrors(page)
   const nextCalls = trackNext(page)
 
-  // landing + onboarding
-  await page.goto('/')
+  // landing + sign-in page
+  await page.goto('/about')
   await expect(page.getByRole('heading', { level: 1 })).toContainText(/why you.re stuck/i)
-  await page.getByRole('banner').getByRole('link', { name: /start learning/i }).click()
-  await page.waitForURL('**/start')
+  await page.getByRole('banner').getByRole('link', { name: /sign in/i }).click()
+  await page.waitForURL('**/login')
 
   // placement (real quiz through the UI)
-  await placeStudent(page, id)
+  const id = await placeStudent(page, label)
   const status = await (await request.get(`${API}/students/${id}/status`)).json()
   expect(status).toMatchObject({ exists: true, placement_completed: true, has_active_session: false })
 

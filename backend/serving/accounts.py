@@ -111,6 +111,19 @@ def normalize_email(email: str) -> str:
     return email
 
 
+_USERNAME_RE = re.compile(r"^[a-z0-9._\-]{1,64}$")
+
+
+def normalize_identifier(value: str) -> str:
+    """Sign-in identifier: an email address, or a plain username (e.g. the seeded administrator)."""
+    value = (value or "").strip().lower()
+    if "@" in value:
+        return normalize_email(value)
+    if not _USERNAME_RE.match(value):
+        raise AuthError("Enter your username.", 422)
+    return value
+
+
 def clean_name(name: str) -> str:
     name = re.sub(r"\s+", " ", (name or "").strip())
     if not 1 <= len(name) <= 60 or re.search(r"[\x00-\x1f<>]", name):
@@ -203,18 +216,18 @@ def create_user(name, email, password):
 
 def authenticate(email, password):
     try:
-        email = normalize_email(email)
+        email = normalize_identifier(email)
     except AuthError:
         _dummy_verify(password)
-        raise AuthError("Incorrect email or password.", 401)
+        raise AuthError("Incorrect username or password.", 401)
     conn = persistence.init_db()
     try:
         row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
         if row is None:
             _dummy_verify(password)
-            raise AuthError("Incorrect email or password.", 401)
+            raise AuthError("Incorrect username or password.", 401)
         if not verify_password(password, row["password_hash"]):
-            raise AuthError("Incorrect email or password.", 401)
+            raise AuthError("Incorrect username or password.", 401)
         conn.execute("UPDATE users SET last_login_at = ? WHERE id = ?", (_fmt(_now()), row["id"]))
         conn.commit()
         return _user_dict(row)
@@ -391,3 +404,28 @@ def send_reset_email(user, link):
         if os.environ.get("SMTP_USER"):
             smtp.login(os.environ["SMTP_USER"], os.environ.get("SMTP_PASSWORD", ""))
         smtp.send_message(msg)
+
+
+def seed_admin():
+    """Ensures the built-in administrator account exists (username `admin`, password `admin123` unless
+    ADMIN_USERNAME / ADMIN_PASSWORD override them). Only the hash is stored. Never overwrites an existing
+    account, so changing the password later sticks. AUTH_SEED_ADMIN=0 turns this off."""
+    if os.environ.get("AUTH_SEED_ADMIN", "1") == "0":
+        return
+    username = (os.environ.get("ADMIN_USERNAME") or "admin").strip().lower()
+    password = os.environ.get("ADMIN_PASSWORD") or "admin123"
+    conn = persistence.init_db()
+    try:
+        if conn.execute("SELECT 1 FROM users WHERE email = ?", (username,)).fetchone():
+            return
+        student_id = "admin" if username == "admin" else "u" + secrets.token_hex(8)
+        persistence.ensure_student(conn, student_id)
+        now = _fmt(_now())
+        conn.execute(
+            "INSERT INTO users (id, email, display_name, password_hash, student_id, created_at, last_login_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, NULL) ON CONFLICT DO NOTHING",
+            (secrets.token_hex(12), username, "Administrator", hash_password(password), student_id, now))
+        conn.commit()
+        log.warning("created the built-in '%s' account; change its password (ADMIN_PASSWORD) before exposing the app", username)
+    finally:
+        conn.close()

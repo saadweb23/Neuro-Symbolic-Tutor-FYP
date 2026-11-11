@@ -1,49 +1,52 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { safeStorage, STORAGE_KEYS } from '@/constants/storage'
+import { logout, useMe, type AuthUser } from '@/api/auth'
+import { keys } from '@/api/queries/keys'
 
 interface StudentCtx {
-  /** The signed-in student id (identity is the id alone; there is no password). */
+  /** The signed-in account (from the server session), or null when signed out. */
+  user: AuthUser | null
+  /** The signed-in student's id: always the account's own student id. */
   studentId: string | null
-  recentIds: string[]
-  setStudent: (id: string) => void
-  /** "Switch student": forgets the id on this device and drops every cached response. Server data is untouched. */
-  clearStudent: () => void
+  /** True until the first GET /auth/me answers. */
+  loading: boolean
+  /** Records a successful sign-in so guards and pages react immediately. */
+  setUser: (user: AuthUser) => void
+  /** Signs out on the server (revokes the session), then drops every cached response. */
+  signOut: () => Promise<void>
 }
 
 const Ctx = createContext<StudentCtx | null>(null)
 
-function readRecents(): string[] {
-  try {
-    const raw = JSON.parse(safeStorage.get(STORAGE_KEYS.recentStudents) ?? '[]') as unknown
-    return Array.isArray(raw) ? raw.filter((x): x is string => typeof x === 'string').slice(0, 5) : []
-  } catch {
-    return []
-  }
-}
-
 export function StudentProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient()
-  const [studentId, setId] = useState<string | null>(() => safeStorage.get(STORAGE_KEYS.currentStudent))
-  const [recentIds, setRecents] = useState<string[]>(readRecents)
+  const me = useMe()
+  const user = me.data ?? null
 
-  const setStudent = useCallback((id: string) => {
-    safeStorage.set(STORAGE_KEYS.currentStudent, id)
-    setId(id)
-    setRecents((prev) => {
-      const next = [id, ...prev.filter((x) => x !== id)].slice(0, 5)
-      safeStorage.set(STORAGE_KEYS.recentStudents, JSON.stringify(next))
-      return next
-    })
-  }, [])
-
-  const clearStudent = useCallback(() => {
-    safeStorage.remove(STORAGE_KEYS.currentStudent)
-    setId(null)
-    qc.clear()
+  const setUser = useCallback((u: AuthUser) => {
+    qc.removeQueries({ predicate: (q) => q.queryKey[0] === 'student' })
+    qc.setQueryData(keys.me, u)
   }, [qc])
 
-  const value = useMemo(() => ({ studentId, recentIds, setStudent, clearStudent }), [studentId, recentIds, setStudent, clearStudent])
+  const signOut = useCallback(async () => {
+    try {
+      await logout()
+    } finally {
+      qc.clear()
+      qc.setQueryData(keys.me, null)
+    }
+  }, [qc])
+
+  useEffect(() => {
+    const onExpired = () => qc.setQueryData(keys.me, null)   // guards then send the visitor to /login
+    window.addEventListener('neurotutor:unauthorized', onExpired)
+    return () => window.removeEventListener('neurotutor:unauthorized', onExpired)
+  }, [qc])
+
+  const value = useMemo(
+    () => ({ user, studentId: user?.student_id ?? null, loading: me.isPending, setUser, signOut }),
+    [user, me.isPending, setUser, signOut],
+  )
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }
 

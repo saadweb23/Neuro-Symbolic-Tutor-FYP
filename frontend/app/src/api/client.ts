@@ -51,6 +51,7 @@ export async function request<T>(
       headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
       body: body !== undefined ? JSON.stringify(body) : undefined,
       signal,
+      credentials: 'include',
     })
   } catch (err) {
     if ((err as { name?: string }).name === 'AbortError') throw err
@@ -62,6 +63,8 @@ export async function request<T>(
   }
 
   if (!res.ok) {
+    // A 401 on a data route means the session ended (expired / signed out elsewhere): tell the app once.
+    if (res.status === 401 && !path.startsWith('/auth/')) window.dispatchEvent(new Event('neurotutor:unauthorized'))
     let detail: unknown
     try {
       detail = ((await res.json()) as { detail?: unknown }).detail

@@ -3,6 +3,7 @@
 export const keys = {
   meta: ['meta'] as const,
   graph: ['graph'] as const,
+  me: ['auth', 'me'] as const,
   student: (id: string) => ['student', id] as const,
   status: (id: string) => ['student', id, 'status'] as const,
   summary: (id: string, tz: string) => ['student', id, 'summary', tz] as const,

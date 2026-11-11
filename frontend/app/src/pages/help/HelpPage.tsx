@@ -19,7 +19,7 @@ const FAQ = (cfg: ReturnType<typeof useMetaConfig>): [string, string][] => [
   ['Why is my block not marked complete although the average is above the target?', `A block is complete only when its average is at least ${pct(cfg.mastery_threshold)}, every concept in it is at least ${pct(cfg.concept_floor)}, and you have actually answered a question on every concept. Watching a video does not count as an answer.`],
   ['Does reloading the page use up a round?', 'No. The step you are on is restored. Only asking for a new step uses a round.'],
   ['Can I retake the placement quiz?', 'Not currently. Your starting estimate is kept so your later progress is never reset.'],
-  ['Who can see my progress?', 'Anyone who knows your student ID on the same server. There are no passwords, so avoid personal information in your ID.'],
+  ['Who can see my progress?', 'Only you, once signed in. Every request to your learning data is checked against your account on the server.'],
 ]
 
 export function HelpPage() {
@@ -39,7 +39,7 @@ export function HelpPage() {
         <div className="space-y-10">
           <Section id="start" title="Getting started">
             <ol className="list-decimal space-y-1.5 pl-5">
-              <li>Enter a name or student ID on the start page.</li>
+              <li>Sign in with your username and password.</li>
               <li>New students answer a {cfg.placement_concepts.length}-question placement quiz that sets a starting estimate.</li>
               <li>Choose a focus area (a block of 5 concepts). A session lasts up to {cfg.session_round_cap} rounds; you can always extend it.</li>
               <li>In each round you get a video, a practice question or a documentation page, with a reason for why it was chosen.</li>

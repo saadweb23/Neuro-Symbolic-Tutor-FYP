@@ -5,25 +5,25 @@ import { ROUTES } from '@/constants/routes'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/DropdownMenu'
 
 export function StudentMenu() {
-  const { studentId, clearStudent } = useStudentContext()
+  const { user, studentId, signOut } = useStudentContext()
   const navigate = useNavigate()
-  if (!studentId) return null
+  if (!studentId || !user) return null
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className="flex h-10 items-center gap-2 rounded-md pl-1.5 pr-2 transition-colors hover:bg-raised"
       >
         <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold uppercase text-on-primary">
-          {studentId.slice(0, 1)}
+          {user.name.slice(0, 1)}
         </span>
         <span className="sr-only">Student menu: </span>
-        <span className="sr-only sm:hidden">{studentId}</span>
-        <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">{studentId}</span>
+        <span className="sr-only sm:hidden">{user.name}</span>
+        <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">{user.name}</span>
         <ChevronDown className="size-4 text-muted" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Signed in as</DropdownMenuLabel>
-        <p className="truncate px-3 pb-2 text-sm font-medium">{studentId}</p>
+        <p className="truncate px-3 pb-2 text-sm font-medium">{user.name}</p>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => navigate(ROUTES.settings)}>
           <Settings className="size-4" aria-hidden /> Profile &amp; settings
@@ -34,11 +34,10 @@ export function StudentMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={() => {
-            clearStudent()
-            navigate(ROUTES.start)
+            void signOut().then(() => navigate(ROUTES.login, { replace: true }))
           }}
         >
-          <LogOut className="size-4" aria-hidden /> Switch student
+          <LogOut className="size-4" aria-hidden /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

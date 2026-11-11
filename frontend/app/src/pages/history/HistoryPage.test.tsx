@@ -3,9 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { Route, Routes } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { STORAGE_KEYS } from '@/constants/storage'
 import { server } from '@/test/server'
-import { renderWithProviders } from '@/test/utils'
+import { renderWithProviders, signInAs } from '@/test/utils'
 import { HistoryPage } from './HistoryPage'
 
 const B = 'http://localhost:8000'
@@ -16,7 +15,7 @@ const item = (step: number, over = {}) => ({
 })
 
 function setup(pages: Record<string, object>) {
-  localStorage.setItem(STORAGE_KEYS.currentStudent, 'sam')
+  signInAs('sam')
   const urls: string[] = []
   server.use(
     http.get(`${B}/graph`, () => HttpResponse.json({ nodes: [{ id: 0, concept: 'Lists', block_index: 2, depth: 0 }], edges: [], blocks: [{ index: 2, name: 'Data Structures', concepts: ['Lists'] }] })),

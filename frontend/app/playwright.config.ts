@@ -34,7 +34,7 @@ export default defineConfig({
       timeout: 240_000,
       reuseExistingServer: !!process.env.E2E_REUSE,
       // E2E_DATABASE_URL runs the whole suite against PostgreSQL instead of the throwaway SQLite file
-      env: { TUTOR_DB_PATH: DB, USE_QUESTION_BANK: 'true', PYTHONWARNINGS: 'ignore', ...(process.env.E2E_DATABASE_URL ? { DATABASE_URL: process.env.E2E_DATABASE_URL } : {}) },
+      env: { TUTOR_DB_PATH: DB, AUTH_ALLOW_SIGNUP: '1', AUTH_RATE_SCALE: '1000', USE_QUESTION_BANK: 'true', PYTHONWARNINGS: 'ignore', ...(process.env.E2E_DATABASE_URL ? { DATABASE_URL: process.env.E2E_DATABASE_URL } : {}) },
     },
     {
       command: 'npm run dev -- --port 5173 --host 127.0.0.1',

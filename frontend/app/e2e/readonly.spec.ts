@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test'
 import { API, placeStudent, session, trackErrors, trackNext, uniqueId } from './helpers'
 
-test('dashboard, analytics and every read-only page never call /next or change the session', async ({ page, request }) => {
-  const id = uniqueId('readonly')
-  await placeStudent(page, id)
+test('dashboard, analytics and every read-only page never call /next or change the session', async ({ page }) => {
+  const request = page.request
+  const id = await placeStudent(page, uniqueId('readonly'))
   expect((await request.post(`${API}/students/${id}/session/start`, { data: { block_index: 1 } })).ok()).toBe(true)
 
   const errors = trackErrors(page)
@@ -22,10 +22,12 @@ test('dashboard, analytics and every read-only page never call /next or change t
   expect(errors, errors.join('\n')).toEqual([])
 })
 
-test('unknown ids see empty data, never an error, and are not created by reading', async ({ request }) => {
-  const id = uniqueId('ghost')
-  for (const p of ['status', 'summary', 'history', 'mastery/trajectory', 'analytics', 'concepts', 'resources', 'recommendation']) {
-    expect((await request.get(`${API}/students/${id}/${p}`)).status(), p).toBe(200)
-  }
-  expect((await (await request.get(`${API}/students/${id}/status`)).json()).exists).toBe(false)
+test('the API refuses signed-out and cross-account access, and reading never creates data', async ({ page, playwright }) => {
+  const anon = await playwright.request.newContext()
+  const id = await placeStudent(page, uniqueId('owner'))
+  expect((await anon.get(`${API}/students/${id}/status`)).status()).toBe(401)
+  const other = await playwright.request.newContext()
+  expect((await other.post(`${API}/auth/signup`, { data: { name: 'Other', email: `${uniqueId('other')}@example.com`, password: 'e2e-password-1' } })).status()).toBe(201)
+  expect((await other.get(`${API}/students/${id}/mastery`)).status()).toBe(403)
+  expect((await page.request.get(`${API}/students/${id}/mastery`)).status()).toBe(200)
 })

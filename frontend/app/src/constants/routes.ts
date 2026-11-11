@@ -1,6 +1,8 @@
 export const ROUTES = {
-  landing: '/',
-  start: '/start',
+  root: '/',
+  landing: '/about',
+  login: '/login',
+  start: '/login',
   placement: '/placement',
   placementResults: '/placement/results',
   dashboard: '/dashboard',

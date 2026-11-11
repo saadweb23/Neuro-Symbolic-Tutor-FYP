@@ -21,11 +21,14 @@ export function trackErrors(page: Page) {
   return errors
 }
 
-/** Sign in from onboarding and complete the real 7-question placement quiz through the UI. */
-export async function placeStudent(page: Page, id: string) {
-  await page.goto('/start')
-  await page.getByLabel('Your name or student ID').fill(id)
-  await page.getByRole('button', { name: /continue/i }).click()
+/** Creates an account through the API (the e2e backend enables sign-up), which signs this browser in,
+ *  then completes the real 7-question placement quiz through the UI. Returns the student id; use
+ *  `page.request` for further API calls, since it shares the browser's session cookie. */
+export async function placeStudent(page: Page, label: string): Promise<string> {
+  const res = await page.request.post(`${API}/auth/signup`, { data: { name: label, email: `${label}@example.com`, password: 'e2e-password-1' } })
+  expect(res.status(), await res.text()).toBe(201)
+  const studentId = ((await res.json()) as { student_id: string }).student_id
+  await page.goto('/')
   await page.waitForURL('**/placement')
   await expect(page.getByText('Question 1 of 7')).toBeVisible()
   for (let i = 0; i < 7; i++) {
@@ -34,6 +37,7 @@ export async function placeStudent(page: Page, id: string) {
   }
   await page.waitForURL('**/placement/results')
   await expect(page.getByRole('heading', { name: /your starting point/i })).toBeVisible()
+  return studentId
 }
 
 export const session = async (request: APIRequestContext, id: string) =>

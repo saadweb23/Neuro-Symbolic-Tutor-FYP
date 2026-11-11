@@ -6,7 +6,7 @@ import { AppShell } from '@/layouts/AppShell'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { SkeletonCard } from '@/components/ui/Skeleton'
-import { AdaptiveLayout, RequirePlacement, RequireStudent } from './guards'
+import { AdaptiveLayout, RequirePlacement, RequireStudent, RootRedirect } from './guards'
 
 /** Route-level code splitting: each page module is fetched on first visit. */
 export const lazyPage =
@@ -14,11 +14,12 @@ export const lazyPage =
   async () => ({ Component: (await load())[name] })
 
 export const routes: RouteObject[] = [
+  { path: ROUTES.root, element: <RootRedirect /> },
   {
     element: <PublicLayout />,
     children: [
       { path: ROUTES.landing, handle: { title: 'NeuroTutor' }, lazy: lazyPage(() => import('@/pages/landing/LandingPage'), 'LandingPage') },
-      { path: ROUTES.start, handle: { title: 'Get started' }, lazy: lazyPage(() => import('@/pages/onboarding/OnboardingPage'), 'OnboardingPage') },
+      { path: ROUTES.login, handle: { title: 'Sign in' }, lazy: lazyPage(() => import('@/pages/login/LoginPage'), 'LoginPage') },
     ],
   },
   {
