@@ -28,7 +28,7 @@ export async function placeStudent(page: Page, label: string): Promise<string> {
   const res = await page.request.post(`${API}/auth/signup`, { data: { name: label, email: `${label}@example.com`, password: 'e2e-password-1' } })
   expect(res.status(), await res.text()).toBe(201)
   const studentId = ((await res.json()) as { student_id: string }).student_id
-  await page.goto('/')
+  await page.goto('/placement')
   await page.waitForURL('**/placement')
   await expect(page.getByText('Question 1 of 7')).toBeVisible()
   for (let i = 0; i < 7; i++) {

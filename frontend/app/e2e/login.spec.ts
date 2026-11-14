@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
 import { API, trackErrors } from './helpers'
 
-test('signed-out visitors land on the sign-in form and cannot open app pages', async ({ page }) => {
+test('the site opens on the welcome page; its call to action leads to sign-in, and app pages stay protected', async ({ page }) => {
   await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Neuro Symbolic Tutor')
+  await page.getByRole('button', { name: 'Take Placement Quiz' }).click()
   await page.waitForURL('**/login')
   await expect(page.getByRole('heading', { name: /sign in to neurotutor/i })).toBeVisible()
   for (const path of ['/dashboard', '/analytics', '/settings']) {
@@ -41,4 +43,15 @@ test('the built-in administrator signs in with the form, stays signed in on relo
   await page.goto('/dashboard')
   await page.waitForURL('**/login')
   expect(errors.filter((e) => !/401|403/.test(e)), errors.join('\n')).toEqual([])
+})
+
+test('after signing in from the welcome call to action, a new student lands on the placement quiz', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Take Placement Quiz' }).click()
+  await page.waitForURL('**/login')
+  await page.getByLabel('Username').fill('admin')
+  await page.getByLabel('Password', { exact: true }).fill('admin123')
+  await page.getByRole('button', { name: 'Sign in' }).click()
+  await page.waitForURL('**/placement')
+  await expect(page.getByText('Question 1 of 7')).toBeVisible()
 })

@@ -1,4 +1,4 @@
-import { LayoutGrid, List, Network, Search } from 'lucide-react'
+import { Gauge, LayoutGrid, List, Network, Search } from 'lucide-react'
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useConcepts, useGraph } from '@/api/queries/hooks'
@@ -18,15 +18,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { useStudentId } from '@/app/providers/StudentProvider'
 import { ConceptDetailPanel } from '@/features/mastery/ConceptDetailPanel'
 import { ConceptGraph } from '@/features/mastery/ConceptGraph'
+import { LevelsView } from '@/features/mastery/LevelsView'
 import { applyFilters, SORT_LABELS, type SortKey } from '@/features/mastery/filters'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/cn'
 import { formatDate } from '@/lib/format'
 import { BLOCK_COLORS, TIER_STYLES, pct, type Tier } from '@/lib/tiers'
 
-type View = 'map' | 'graph' | 'list'
+type View = 'levels' | 'map' | 'graph' | 'list'
 const TIERS: Tier[] = ['mastered', 'developing', 'weak']
-const isView = (v: string | null): v is View => v === 'map' || v === 'graph' || v === 'list'
+const isView = (v: string | null): v is View => v === 'levels' || v === 'map' || v === 'graph' || v === 'list'
 const isSort = (v: string | null): v is SortKey => v !== null && v in SORT_LABELS
 const isTier = (v: string | null): v is Tier => v === 'mastered' || v === 'developing' || v === 'weak'
 
@@ -40,7 +41,7 @@ export function MasteryPage() {
 
   // All view state lives in the URL, so a filtered view can be shared or reopened.
   const viewParam = params.get('view')
-  const view: View = isView(viewParam) ? viewParam : 'map'
+  const view: View = isView(viewParam) ? viewParam : 'levels'
   const blockParam = params.get('block')
   const block = blockParam !== null && /^[0-4]$/.test(blockParam) ? Number(blockParam) : null
   const tierParam = params.get('tier')
@@ -76,9 +77,10 @@ export function MasteryPage() {
       {concepts.isError && <ErrorState error={concepts.error} onRetry={() => void concepts.refetch()} />}
 
       {all && (
-        <Tabs value={view} onValueChange={(v) => set({ view: v === 'map' ? null : v })}>
+        <Tabs value={view} onValueChange={(v) => set({ view: v === 'levels' ? null : v })}>
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <TabsList aria-label="View">
+              <TabsTrigger value="levels"><Gauge className="mr-1.5 inline size-4" aria-hidden />Levels</TabsTrigger>
               <TabsTrigger value="map"><LayoutGrid className="mr-1.5 inline size-4" aria-hidden />Map</TabsTrigger>
               <TabsTrigger value="graph"><Network className="mr-1.5 inline size-4" aria-hidden />Graph</TabsTrigger>
               <TabsTrigger value="list"><List className="mr-1.5 inline size-4" aria-hidden />List</TabsTrigger>
@@ -111,10 +113,16 @@ export function MasteryPage() {
 
           <div className={cn('grid gap-6', selectedDetail && wide && 'lg:grid-cols-[1fr_340px]')}>
             <div className="min-w-0">
-              {filtered.length === 0 && view !== 'graph' ? (
+              {filtered.length === 0 && view !== 'graph' && view !== 'levels' ? (
                 <Card><EmptyState title="No concepts match" description="Try clearing a filter or the search box." action={<Button variant="secondary" size="sm" onClick={() => setParams({ view }, { replace: true })}>Clear filters</Button>} /></Card>
               ) : (
                 <>
+                  <TabsContent value="levels">
+                    {graph.data && <LevelsView concepts={filtered} all={all} blocks={graph.data.blocks} tierFor={tierFor} onSelect={pick} />}
+                    {graph.isPending && <SkeletonCard lines={8} />}
+                    {graph.isError && <ErrorState error={graph.error} onRetry={() => void graph.refetch()} />}
+                  </TabsContent>
+
                   <TabsContent value="map" className="space-y-6">
                     {(graph.data?.blocks ?? []).map((b) => {
                       const items = filtered.filter((c) => c.block_index === b.index)

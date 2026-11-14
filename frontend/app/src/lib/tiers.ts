@@ -21,9 +21,9 @@ interface TierStyle {
 }
 
 export const TIER_STYLES: Record<Tier, TierStyle> = {
-  mastered: { label: 'Mastered', icon: CheckCircle2, text: 'text-good', soft: 'bg-good-soft', solid: 'bg-good', border: 'border-good/40' },
-  developing: { label: 'Developing', icon: CircleDashed, text: 'text-mid', soft: 'bg-mid-soft', solid: 'bg-mid', border: 'border-mid/50 border-dashed' },
-  weak: { label: 'Needs work', icon: AlertCircle, text: 'text-bad', soft: 'bg-bad-soft', solid: 'bg-bad', border: 'border-bad/40' },
+  mastered: { label: 'Strong', icon: CheckCircle2, text: 'text-good', soft: 'bg-good-soft', solid: 'bg-good', border: 'border-good/40' },
+  developing: { label: 'Intermediate', icon: CircleDashed, text: 'text-mid', soft: 'bg-mid-soft', solid: 'bg-mid', border: 'border-mid/50 border-dashed' },
+  weak: { label: 'Weak', icon: AlertCircle, text: 'text-bad', soft: 'bg-bad-soft', solid: 'bg-bad', border: 'border-bad/40' },
 }
 
 export const pct = (v: number) => `${Math.round(v * 100)}%`

@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/Button'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { useLearningAction } from '@/features/dashboard/useLearningAction'
 import { relativeTime } from '@/lib/format'
-import { BlocksOverview, CurrentSessionCard, DistributionCard, InsightsCard, KpiStrip, NeedsAttentionCard, RecentActivityCard, RecommendedNextCard } from './DashboardCards'
+import { BlocksOverview, RecommendedNextCard } from './DashboardCards'
+import { ActivityTimelineCard, AiInsightsCard, BlockComparisonCard, ConsistencyCard, ContinueLearningCard, LearningOverview, MasteryDonutCard, ProgressOverTimeCard, WeeklyActivityCard } from './DashboardSections'
 
 function Greeting() {
   const id = useStudentId()
@@ -31,23 +32,34 @@ function Greeting() {
 
 export function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Dashboard" />
       <Reveal><Greeting /></Reveal>
-      <KpiStrip />
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Reveal className="space-y-6 lg:col-span-2" delay={0.05}>
-          <CurrentSessionCard />
-          <RecommendedNextCard />
-        </Reveal>
-        <Reveal delay={0.12} className="h-full"><NeedsAttentionCard /></Reveal>
+      <LearningOverview />
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Reveal><ContinueLearningCard /></Reveal>
+        <Reveal delay={0.08}><AiInsightsCard /></Reveal>
       </div>
+
+      <section aria-labelledby="performance-h" className="space-y-4">
+        <h3 id="performance-h" className="text-base font-semibold">Learning performance</h3>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <Reveal className="lg:col-span-2"><ProgressOverTimeCard /></Reveal>
+          <Reveal delay={0.08}><MasteryDonutCard /></Reveal>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Reveal><WeeklyActivityCard /></Reveal>
+          <Reveal delay={0.08}><BlockComparisonCard /></Reveal>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-5">
+          <Reveal className="lg:col-span-3"><ConsistencyCard /></Reveal>
+          <Reveal className="lg:col-span-2" delay={0.08}><ActivityTimelineCard /></Reveal>
+        </div>
+      </section>
+
       <Reveal><BlocksOverview /></Reveal>
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Reveal className="lg:col-span-1"><DistributionCard /></Reveal>
-        <Reveal className="lg:col-span-2" delay={0.08}><RecentActivityCard /></Reveal>
-      </div>
-      <Reveal><InsightsCard /></Reveal>
+      <Reveal><RecommendedNextCard /></Reveal>
     </div>
   )
 }

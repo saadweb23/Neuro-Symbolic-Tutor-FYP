@@ -16,13 +16,6 @@ export function RequireStudent() {
   return <Outlet />
 }
 
-/** "/" : signed-in users go to the app, everyone else to the sign-in form. */
-export function RootRedirect() {
-  const { studentId, loading } = useStudentContext()
-  if (loading) return <GuardSkeleton />
-  return <Navigate to={studentId ? ROUTES.dashboard : ROUTES.login} replace />
-}
-
 function GuardSkeleton() {
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-6">

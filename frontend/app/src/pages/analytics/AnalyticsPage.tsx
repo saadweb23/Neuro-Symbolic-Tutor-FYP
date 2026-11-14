@@ -19,11 +19,11 @@ import { formatDate } from '@/lib/format'
 import { BLOCK_COLORS, pct } from '@/lib/tiers'
 import type { Analytics } from '@/api/types'
 import { useChartMotion } from '@/hooks/useChartMotion'
+import { Reveal } from '@/components/ui/Reveal'
+import { AXIS, GRID, TIP } from '@/lib/chartTheme'
+import { ConsistencyHeatmap, MasteryDistribution, StrengthRadar, TimeSpent } from './AnalyticsExtras'
 
 const RANGES = [{ label: 'All time', days: null }, { label: '30 days', days: 30 }, { label: '7 days', days: 7 }] as const
-const AXIS = { fontSize: 12, fill: 'var(--muted)' }
-const GRID = { stroke: 'var(--border)', strokeDasharray: '3 3' }
-const TIP = { contentStyle: { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 12 }, labelStyle: { color: 'var(--muted)' } }
 const MIN_POINTS = 3
 
 export function AnalyticsPage() {
@@ -73,16 +73,24 @@ function AnalyticsBody({ a, summaryData, id }: { a: Analytics; summaryData: Retu
         <Card><CardHeader title="Highlights" /><CardBody><ul className="grid gap-2.5 sm:grid-cols-2">{insights.map((i) => <li key={i.id} className="rounded-lg bg-raised/60 p-3 text-sm">{i.text}</li>)}</ul></CardBody></Card>
       )}
 
-      <Progression id={id} />
+      <Reveal><Progression id={id} /></Reveal>
       <div className="grid gap-6 lg:grid-cols-2">
-        <BlockPerformance a={a} />
-        <AccuracyTrend a={a} />
-        <ActivityChart a={a} />
-        <ContentMix a={a} />
+        <Reveal><MasteryDistribution /></Reveal>
+        <Reveal delay={0.08}><StrengthRadar a={a} /></Reveal>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <ConceptImprovement a={a} />
-        <Difficulty a={a} />
+        <Reveal><BlockPerformance a={a} /></Reveal>
+        <Reveal delay={0.08}><AccuracyTrend a={a} /></Reveal>
+        <Reveal><ActivityChart a={a} /></Reveal>
+        <Reveal delay={0.08}><TimeSpent a={a} /></Reveal>
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Reveal><ConsistencyHeatmap a={a} /></Reveal>
+        <Reveal delay={0.08}><ContentMix a={a} /></Reveal>
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Reveal><ConceptImprovement a={a} /></Reveal>
+        <Reveal delay={0.08}><Difficulty a={a} /></Reveal>
       </div>
     </>
   )
@@ -174,7 +182,7 @@ function AccuracyTrend({ a }: { a: Analytics }) {
   const motion = useChartMotion()
   const data = a.accuracy_trend.map((t) => ({ n: t.answer_number, acc: t.rolling_accuracy * 100 }))
   return (
-    <ChartCard title="Accuracy trend" description={`Share of your last ${a.window.accuracy_window} answers that were correct.`}
+    <ChartCard title="Quiz performance trend" description={`Share of your last ${a.window.accuracy_window} answers that were correct.`}
       summary={data.length ? `Rolling accuracy ended at ${Math.round(data[data.length - 1]!.acc)} percent.` : undefined}
       chart={data.length < 2 ? <EmptyState compact title="Not enough data yet" description={`Appears after ${a.window.accuracy_window + 1} answered questions.`} /> : (
         <div className="h-64" role="img" aria-label="Line chart of rolling answer accuracy">

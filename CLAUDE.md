@@ -22,7 +22,7 @@ Neuro-symbolic Python tutor (university FYP). Tracks a student's mastery of 25 P
 - Warnings at backend startup (TensorFlow/oneDNN, `google.generativeai` deprecation) are harmless.
 
 ## Frontend / backend contract
-Frontend and backend are developed separately; the HTTP API is the contract, so agree before changing request or response shapes. Student ids are case-sensitive, 1-64 chars, no `/`. Routes under `/students/{id}`:
+Frontend and backend are developed separately; the HTTP API is the contract, so agree before changing request or response shapes. Student ids are case-sensitive, 1-64 chars, no `/`. Routes: `/` welcome page (CTA -> placement quiz, via `/login` when signed out), `/about` marketing page, `/login`. Routes under `/students/{id}`:
 - Learning (write): `POST placement/start`, `POST placement/submit` (409 once placement exists), `POST session/start` (`block_index` 0-4), `POST session/continue`, `GET next` (**the only route that consumes a round**), `POST mcq-answer`, `POST content-viewed`.
 - Read-only: `GET blocks`, `session`, `mastery`, `status`, `summary`, `history`, `mastery/trajectory`, `concepts`, `resources`, `recommendation` (preview), `analytics`; global `GET /meta` (readiness + the thresholds the UI shows) and `GET /graph`.
 - Read-only endpoints must never call `ensure_student`, write interactions, generate a question or increment a round. `/next`'s response shape (`content_engine.recommend_content`) is typed by hand in `frontend/app/src/api/types/next.ts`: keep them in sync.
@@ -45,7 +45,7 @@ Frontend and backend are developed separately; the HTTP API is the contract, so 
 - `GET next` increments the session round counter on every call. The frontend calls it only from the Learning Workspace and restores the current step from `sessionStorage` on reload, so reloads in the app do not use up rounds (calling the API directly still does).
 - The tracker is loaded once per checkpoint file (`inference.get_tracker`, cached by path + mtime, warmed at startup).
 - Several concepts share one video/doc URL in `VIDEO_BANK` / `DEEP_DIVE_BANK`; `_already_shown_reuse` skips repeats by serving a practice question instead.
-- "New vs returning student" is decided by the server (`GET /status`: placement done? active session?), not localStorage. There is no authentication: anyone who knows an ID can read that student's data.
+- "New vs returning student" is decided by the server (`GET /status`: placement done? active session?), not localStorage. Sign-in is required: accounts live in `users` (scrypt hashes; sessions are HttpOnly cookies, stored as SHA-256 digests) and every `/students/{id}` route returns 401 signed out / 403 for another account's id (`api/deps.py`, `serving/accounts.py`). A built-in `admin` / `admin123` account is created at startup (override with `ADMIN_USERNAME` / `ADMIN_PASSWORD`, disable with `AUTH_SEED_ADMIN=0`); change it before exposing the app. Self-service sign-up is off unless `AUTH_ALLOW_SIGNUP=1`.
 - `backend/.env`: `MOCK_LLM=true` returns placeholder questions; `USE_QUESTION_BANK=true` serves the pre-generated bank. Keep it true unless you have a Gemini key and want live generation.
 - PPO does not reliably beat the simple linear-curriculum baseline (see `PROJECT_REPORT.md`); don't claim otherwise in docs or slides.
 - To reach the app from a phone, use the PC's current LAN IP on port 5173 (it changes between networks); Windows Firewall must allow ports 8000 and 5173.

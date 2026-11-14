@@ -24,7 +24,7 @@ function Where() {
   return <output data-testid="url">{l.search}</output>
 }
 
-function setup(route = '/mastery') {
+function setup(route = '/mastery?view=map') {
   signInAs('sam')
   server.use(
     http.get(`${B}/students/sam/concepts`, () => HttpResponse.json({ concepts })),
@@ -45,15 +45,15 @@ describe('MasteryPage', () => {
   })
 
   it('filters by tier using the backend cut-offs and by block from the URL', async () => {
-    setup('/mastery?block=2')
+    setup('/mastery?view=map&block=2')
     await screen.findByRole('button', { name: /Lists\s+50%/ })
     expect(screen.queryByRole('button', { name: /Syntax\s+\d+%/ })).toBeNull()
-    await userEvent.click(within(screen.getByRole('group', { name: 'Filters' })).getByRole('button', { name: /Developing/ }))
+    await userEvent.click(within(screen.getByRole('group', { name: 'Filters' })).getByRole('button', { name: /Intermediate/ }))
     expect(screen.getAllByRole('button', { name: /\d+%/ })).toHaveLength(2) // Lists 50%, Tuples 60%
   })
 
   it('opens the detail panel with prerequisites for a selected concept', async () => {
-    setup('/mastery?concept=Variables')
+    setup('/mastery?view=map&concept=Variables')
     const panel = await screen.findByRole('complementary', { name: /concept details/i }).catch(() => null)
     // below the lg breakpoint (jsdom) the details open as a dialog instead of a side panel
     const dialog = panel ?? (await screen.findByRole('dialog'))

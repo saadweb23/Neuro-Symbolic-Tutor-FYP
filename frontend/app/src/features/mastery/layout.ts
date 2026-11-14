@@ -2,6 +2,7 @@ import type { Graph } from '@/api/types'
 
 export const NODE_W = 156
 export const NODE_H = 50
+// layoutGraph accepts other node sizes (the learning roadmap uses wider nodes)
 const COL_GAP = 84
 const ROW_GAP = 18
 const PAD = 24
@@ -21,6 +22,8 @@ export interface LaidOutEdge {
   path: string
 }
 export interface GraphLayout {
+  nodeW: number
+  nodeH: number
   nodes: LaidOutNode[]
   edges: LaidOutEdge[]
   width: number
@@ -29,7 +32,9 @@ export interface GraphLayout {
 
 /** Layered DAG layout: one column per depth (longest path from a root, supplied by the API), rows
  *  ordered to reduce edge crossings (two barycentre sweeps), so prerequisites read left to right. */
-export function layoutGraph(graph: Pick<Graph, 'nodes' | 'edges'>): GraphLayout {
+export function layoutGraph(graph: Pick<Graph, 'nodes' | 'edges'>, dims: { w: number; h: number } = { w: NODE_W, h: NODE_H }): GraphLayout {
+  const NODE_W = dims.w
+  const NODE_H = dims.h
   const maxDepth = Math.max(0, ...graph.nodes.map((n) => n.depth))
   const layers: number[][] = Array.from({ length: maxDepth + 1 }, () => [])
   const byId = new Map(graph.nodes.map((n) => [n.id, n]))
@@ -79,7 +84,7 @@ export function layoutGraph(graph: Pick<Graph, 'nodes' | 'edges'>): GraphLayout 
     const dx = Math.max(32, (x2 - x1) / 2)
     return { source: e.source, target: e.target, path: `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}` }
   })
-  return { nodes, edges, width: PAD * 2 + (maxDepth + 1) * NODE_W + maxDepth * COL_GAP, height }
+  return { nodeW: NODE_W, nodeH: NODE_H, nodes, edges, width: PAD * 2 + (maxDepth + 1) * NODE_W + maxDepth * COL_GAP, height }
 }
 
 /** Every concept reachable by following edges backwards (prerequisites) or forwards (dependents). */

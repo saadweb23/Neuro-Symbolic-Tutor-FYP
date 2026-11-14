@@ -1,4 +1,5 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { PageTransition } from '@/components/motion/PageTransition'
 import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { ThemeToggle } from '@/components/nav/ThemeToggle'
 import { LinkButton } from '@/components/ui/Button'
@@ -50,12 +51,15 @@ export function PublicFooter() {
 export function PublicLayout() {
   useDocumentTitle()
   useSpotlight()
+  const { pathname } = useLocation()
   return (
     <div className="flex min-h-svh flex-col bg-bg">
       <SkipLink />
       <PublicHeader />
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
-        <Outlet />
+        <PageTransition routeKey={pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
       <PublicFooter />
     </div>

@@ -34,7 +34,7 @@ export function LoginPage() {
   const [touched, setTouched] = useState(false)
 
   // Already signed in: skip the form.
-  if (!loading && studentId && !busy) return <Navigate to={ROUTES.root} replace />
+  if (!loading && studentId && !busy) return <Navigate to={ROUTES.dashboard} replace />
 
   const missing = touched && (!username.trim() || !password)
 

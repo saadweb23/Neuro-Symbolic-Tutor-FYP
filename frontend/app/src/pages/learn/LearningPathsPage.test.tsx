@@ -20,6 +20,9 @@ function setup(activeBlock: number | null) {
     http.get(`${B}/blocks`, () => HttpResponse.json({ blocks })),
     http.get(`${B}/mastery`, () => HttpResponse.json({ beliefs: {} })),
     http.get(`${B}/concepts`, () => HttpResponse.json({ concepts: [] })),
+    http.get('http://localhost:8000/graph', () => HttpResponse.json({ nodes: [], edges: [], blocks: [] })),
+    http.get(`${B}/summary`, () => HttpResponse.json({ answered_questions: 0, correct_answers: 0, accuracy: null, practice_questions: 0, videos_viewed: 0, deep_dives_read: 0, concepts_attempted: 0, concepts_total: 25, answering_time_seconds: 0, active_days: 0, current_streak_days: 0, longest_streak_days: 0, first_activity_at: null, last_activity_at: null })),
+    http.get(`${B}/status`, () => HttpResponse.json({ student_id: 'sam', exists: true, placement_completed: true, placement_completed_at: null, has_active_session: false, session: null, counts: { interactions: 0, answered_questions: 0 }, created_at: null, last_active_at: null })),
     http.get(`${B}/session`, () => HttpResponse.json(activeBlock === null ? { active: false } : { active: true, block_index: activeBlock, round_count: 4, round_cap: 15 })),
     http.get(`${B}/recommendation`, () => HttpResponse.json({ state: 'ready', session_active: false, block_index: 3, block_name: 'Modularity', suggested: true, block: null, candidates: [], note: '' })),
     http.post(`${B}/session/start`, async ({ request }) => {

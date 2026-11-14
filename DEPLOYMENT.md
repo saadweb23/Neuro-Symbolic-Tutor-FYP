@@ -35,7 +35,7 @@ free **Cloudflare quick tunnel**:
 * **The link works only while that window is open** and the PC is on and online. A quick-tunnel URL is random and changes on each
   start; for a stable link use a Cloudflare *named* tunnel (needs a free Cloudflare account and a domain) or an ngrok free static domain.
 * The PC runs the **unmodified research stack** (no `NEURO_LITE`), so no memory limit applies.
-* Nothing is exposed except through the tunnel: the server listens on `127.0.0.1` only. There is no authentication; a student ID is a label.
+* Nothing is exposed except through the tunnel: the server listens on `127.0.0.1` only. Access needs a sign-in: change the built-in `admin` password (`ADMIN_PASSWORD`) before sharing the link.
 * If you later add a card to Render (the free plan costs $0), `render.yaml` + the lite mode below deploy the API there; Vercel works the same way for the site (`vercel.json`).
 
 ## Memory: why `NEURO_LITE=1`
@@ -127,7 +127,7 @@ calls. To prove persistence, restart the service (Render → *Manual Deploy → 
   monthly compute allowance and ~0.5 GB storage per project. Each student uses well under a megabyte, and the API compacts its
   derived caches. `GET /health` never touches the database, so uptime pings do not consume Neon compute.
 * **Vercel Hobby** is for non-commercial use, with monthly bandwidth/build limits.
-* **No authentication.** A student ID is a label, not a credential: anyone who knows an ID can read that student's data.
+* **Authentication.** Every student route requires a signed-in account (HttpOnly session cookie). The built-in `admin` / `admin123` account is created on first start: set `ADMIN_PASSWORD` (or `AUTH_SEED_ADMIN=0`) before exposing the service. Behind a proxy that terminates TLS, set `TRUST_PROXY=1` so rate limits see the real client address.
   Do not use real names or private information as IDs.
 * **YouTube** lessons are embedded from youtube-nocookie.com and need the visitor's network to reach YouTube.
 

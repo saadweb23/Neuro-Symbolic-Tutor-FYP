@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { PageTransition } from '@/components/motion/PageTransition'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useSpotlight } from '@/hooks/useSpotlight'
 import { SkipLink } from './AppShell'
@@ -8,11 +9,14 @@ import { SkipLink } from './AppShell'
 export function FocusLayout() {
   useDocumentTitle()
   useSpotlight()
+  const { pathname } = useLocation()
   return (
     <div className="min-h-svh bg-bg">
       <SkipLink />
       <main id="main" tabIndex={-1} className="outline-none">
-        <Outlet />
+        <PageTransition routeKey={pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
     </div>
   )

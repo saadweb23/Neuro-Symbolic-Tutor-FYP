@@ -11,6 +11,8 @@ import { QueryBoundary } from '@/components/feedback/QueryBoundary'
 import { Button, LinkButton } from '@/components/ui/Button'
 import { ConfirmationDialog } from '@/components/ui/Dialog'
 import { PageHeader } from '@/components/ui/PageHeader'
+import { Reveal } from '@/components/ui/Reveal'
+import { FocusAreasHeading, JourneyExtras, JourneyOverview, RoadmapSection } from './Journey'
 import { ROUTES } from '@/constants/routes'
 
 export function LearningPathsPage() {
@@ -46,6 +48,11 @@ export function LearningPathsPage() {
     <div>
       <PageHeader title="Learning paths" description={`Each focus area is a self-contained session: 5 concepts, up to ${cfg.session_round_cap} rounds. Pick the one that needs the most work, or whichever you'd like to practise. The agent chooses the concept inside it.`} />
       {start.isError && <ErrorState compact className="mb-4" error={start.error} />}
+      <div className="mb-8 space-y-8">
+        <Reveal><JourneyOverview /></Reveal>
+        <Reveal><RoadmapSection /></Reveal>
+      </div>
+      <FocusAreasHeading />
       <QueryBoundary query={blocks} lines={5}>
         {(bs) => (
           <div className="grid gap-5 lg:grid-cols-2">
@@ -55,8 +62,8 @@ export function LearningPathsPage() {
               const status = blockStatus(b, { attempted, active })
               const suggested = rec.data?.suggested === true && rec.data.block_index === b.index
               return (
+                <div key={b.index} id={`block-${b.index}`} className="scroll-mt-24">
                 <BlockCard
-                  key={b.index}
                   block={b}
                   status={status}
                   active={active}
@@ -75,11 +82,14 @@ export function LearningPathsPage() {
                     )
                   }
                 />
+                </div>
               )
             })}
           </div>
         )}
       </QueryBoundary>
+
+      <div className="mt-10"><Reveal><JourneyExtras /></Reveal></div>
 
       <ConfirmationDialog
         open={pending !== null}
