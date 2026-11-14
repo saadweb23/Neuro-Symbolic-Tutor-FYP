@@ -30,7 +30,7 @@ test('the mark pulses by default while the app is booting', async ({ page }) => 
 })
 
 test('the full boot screen shows once per tab session, and the skip link works', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/about')   // the sign-in page autofocuses its first field, so check the skip link on a page that does not
   await page.getByRole('heading', { level: 1 }).waitFor()
   expect(await page.evaluate(() => sessionStorage.getItem('nt_booted'))).toBe('1')
   await page.keyboard.press('Tab')

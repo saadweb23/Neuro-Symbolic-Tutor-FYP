@@ -66,5 +66,7 @@ test('a new student: landing -> placement -> learning session -> progress pages'
   expect(nextCalls.length).toBe(callsBefore)
   expect((await session(request, id)).round_count).toBe(before)
 
-  expect(errors, errors.join('\n')).toEqual([])
+  // GET /auth/me answers 401 while signed out (the landing and sign-in pages): that is the expected "no session" probe
+  const unexpected = errors.filter((e) => !/\/auth\/me|status of 401/.test(e))
+  expect(unexpected, unexpected.join('\n')).toEqual([])
 })

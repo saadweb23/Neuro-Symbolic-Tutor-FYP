@@ -14,7 +14,7 @@ test('signed-out visitors land on the sign-in form and cannot open app pages', a
 test('wrong credentials are rejected with a clear message', async ({ page }) => {
   await page.goto('/login')
   await page.getByLabel('Username').fill('admin')
-  await page.getByLabel('Password').fill('not-the-password')
+  await page.getByLabel('Password', { exact: true }).fill('not-the-password')
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('alert')).toContainText(/incorrect username or password/i)
   await expect(page).toHaveURL(/\/login/)
@@ -24,7 +24,7 @@ test('the built-in administrator signs in with the form, stays signed in on relo
   const errors = trackErrors(page)
   await page.goto('/login')
   await page.getByLabel('Username').fill('admin')
-  await page.getByLabel('Password').fill('admin123')
+  await page.getByLabel('Password', { exact: true }).fill('admin123')
   await page.getByRole('button', { name: 'Sign in' }).click()
   await page.waitForURL(/\/(placement|dashboard)/)
   expect((await page.context().cookies()).find((c) => c.name === 'nt_session')?.httpOnly).toBe(true)
