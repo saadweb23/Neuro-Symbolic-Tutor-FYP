@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
 @import '@fontsource-variable/jetbrains-mono';
 
 /* Class-based dark mode (the pre-paint script in index.html and ThemeProvider toggle `.dark`). */
@@ -31,6 +32,10 @@
   --bad: #be123c;
   --bad-soft: #ffe4e6;
   --ring: #4f46e5;
+  --glow: 79 70 229;            /* rgb triplet of the brand glow (cursor spotlight, focus halos) */
+  --grad-brand: linear-gradient(135deg, #6366f1 0%, #4f46e5 45%, #7c3aed 100%);
+  --grad-soft: linear-gradient(135deg, rgb(99 102 241 / 0.10), rgb(124 58 237 / 0.06) 60%, rgb(13 148 136 / 0.06));
+  --glass: rgb(255 255 255 / 0.72);
   --shadow-1: 0 1px 2px rgb(15 20 38 / 0.06), 0 1px 1px rgb(15 20 38 / 0.04);
   --shadow-2: 0 4px 14px rgb(15 20 38 / 0.08), 0 1px 3px rgb(15 20 38 / 0.06);
   --shadow-3: 0 18px 48px rgb(15 20 38 / 0.16), 0 4px 12px rgb(15 20 38 / 0.08);
@@ -62,6 +67,10 @@
   --bad: #fb7185;
   --bad-soft: #3b1220;
   --ring: #a5b4fc;
+  --glow: 129 140 248;
+  --grad-brand: linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #a78bfa 100%);
+  --grad-soft: linear-gradient(135deg, rgb(129 140 248 / 0.16), rgb(167 139 250 / 0.08) 60%, rgb(45 212 191 / 0.07));
+  --glass: rgb(18 24 48 / 0.72);
   --shadow-1: 0 0 0 1px rgb(255 255 255 / 0.03);
   --shadow-2: 0 6px 20px rgb(0 0 0 / 0.35);
   --shadow-3: 0 22px 60px rgb(0 0 0 / 0.55);
@@ -97,6 +106,7 @@
   --color-block-2: var(--block-2);
   --color-block-3: var(--block-3);
   --color-block-4: var(--block-4);
+  --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', system-ui, sans-serif;
   --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius-sm: 6px;
@@ -123,7 +133,7 @@
   }
   #root { min-height: 100svh; }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
-  h1, h2, h3 { letter-spacing: -0.015em; line-height: 1.2; }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.2; }
   ::selection { background: var(--primary-soft); color: var(--text); }
   button, [role='button'], a, summary { -webkit-tap-highlight-color: transparent; }
 }
@@ -163,3 +173,98 @@ html.reduce-motion *, html.reduce-motion *::before, html.reduce-motion *::after 
   background: var(--primary); color: var(--on-primary); font-weight: 600; transition: top 0.15s;
 }
 .skip-link:focus { top: 8px; }
+
+
+/* =====================================================================  premium motion layer
+ * Everything below animates transform / opacity only (compositor-friendly). Pointer effects are
+ * fine-pointer only; the OS and in-app reduced-motion switches neutralise them (rules above). */
+
+/* --- cards: elevation + cursor spotlight (one delegated listener sets --mx/--my; see useSpotlight) */
+.nt-card {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.nt-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgb(var(--glow) / 0.10), transparent 65%);
+  transition: opacity 0.3s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nt-card[data-spotlight]:hover { border-color: rgb(var(--glow) / 0.35); }
+  .nt-card[data-spotlight]:hover::before { opacity: 1; }
+  .nt-lift:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+}
+
+/* --- buttons: press feedback, gradient primary with a soft glow */
+.nt-btn { transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
+.nt-btn:not(:disabled):active { transform: scale(0.97); }
+.nt-btn-primary { background-image: var(--grad-brand); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 18px -6px rgb(var(--glow) / 0.55); }
+@media (hover: hover) and (pointer: fine) {
+  .nt-btn-primary:not(:disabled):hover { box-shadow: 0 2px 4px rgb(0 0 0 / 0.12), 0 10px 26px -6px rgb(var(--glow) / 0.7); transform: translateY(-1px); }
+  .nt-btn-primary:not(:disabled):active { transform: scale(0.97); }
+}
+
+/* --- inputs: animated focus halo */
+.nt-input { transition: border-color 0.2s ease, box-shadow 0.25s ease; }
+.nt-input:focus { box-shadow: 0 0 0 4px rgb(var(--glow) / 0.14); }
+
+/* --- glass surfaces (header, floating bars): modest blur only */
+.nt-glass { background: var(--glass); backdrop-filter: blur(10px) saturate(1.4); -webkit-backdrop-filter: blur(10px) saturate(1.4); }
+
+/* --- gradient text + animated border */
+.nt-gradient-text { background: var(--grad-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@property --nt-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.nt-border-glow { position: relative; }
+.nt-border-glow::after {
+  content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: conic-gradient(from var(--nt-angle), transparent 0 60%, rgb(var(--glow) / 0.9) 80%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: nt-spin-angle 5s linear infinite;
+}
+@keyframes nt-spin-angle { to { --nt-angle: 360deg; } }
+
+/* --- overlays: Radix data-state driven enter / exit */
+@keyframes nt-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nt-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes nt-pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes nt-pop-out { from { opacity: 1; transform: translate(-50%, -50%) scale(1); } to { opacity: 0; transform: translate(-50%, -48%) scale(0.97); } }
+@keyframes nt-sheet-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes nt-menu-in { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes nt-menu-out { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.97); } }
+.nt-overlay[data-state='open'] { animation: nt-fade-in 0.2s ease-out; }
+.nt-overlay[data-state='closed'] { animation: nt-fade-out 0.15s ease-in forwards; }
+.nt-dialog[data-state='open'] { animation: nt-pop-in 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+.nt-dialog[data-state='closed'] { animation: nt-pop-out 0.16s ease-in forwards; }
+.nt-menu[data-state='open'] { animation: nt-menu-in 0.16s cubic-bezier(0.22, 1, 0.36, 1); transform-origin: var(--radix-dropdown-menu-content-transform-origin); }
+.nt-menu[data-state='closed'] { animation: nt-menu-out 0.1s ease-in forwards; }
+@keyframes nt-sheet-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(24px); } }
+@media (max-width: 767px) {
+  .nt-dialog-sheet[data-state='open'] { animation: nt-sheet-in 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
+  .nt-dialog-sheet[data-state='closed'] { animation: nt-sheet-out 0.18s ease-in forwards; }
+}
+.nt-tip[data-state='delayed-open'], .nt-tip[data-state='instant-open'] { animation: nt-fade-in 0.14s ease-out; }
+
+/* --- form validation + selection feedback */
+@keyframes nt-shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+.nt-shake { animation: nt-shake 0.38s ease; }
+@keyframes nt-pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+.nt-pop { animation: nt-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes nt-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.nt-float { animation: nt-float 5s ease-in-out infinite; }
+
+/* --- nav: icon micro-interaction */
+@media (hover: hover) and (pointer: fine) {
+  .nt-nav-item:hover .nt-nav-icon { transform: translateY(-1px) scale(1.12); }
+}
+.nt-nav-icon { transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* --- scroll progress (driven by motion's scroll value; here only the static look) */
+.nt-scroll-progress { background: var(--grad-brand); transform-origin: 0 50%; }
+
+/* touch / small screens: drop the heaviest effects */
+@media (hover: none), (pointer: coarse) {
+  .nt-card::before { display: none; }
+  .nt-border-glow::after { animation: none; }
+}
+
+.nt-fade { animation: nt-fade-in 0.45s ease-out; }

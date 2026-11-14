@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/lib/cn'
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 export function ProgressBar({ value, target, className, barClassName, label }: Props) {
   const v = Math.min(1, Math.max(0, value))
+  const reduce = useReducedMotion()
   return (
     <div
       role="progressbar"
@@ -19,7 +21,14 @@ export function ProgressBar({ value, target, className, barClassName, label }: P
       aria-valuenow={Math.round(v * 100)}
       className={cn('relative h-2 w-full overflow-hidden rounded-full bg-raised', className)}
     >
-      <div className={cn('h-full rounded-full bg-primary transition-[width] duration-500', barClassName)} style={{ width: `${v * 100}%` }} />
+      <motion.div
+        className={cn('h-full origin-left rounded-full bg-primary', barClassName)}
+        style={{ width: '100%' }}
+        initial={{ scaleX: reduce ? v : 0 }}
+        whileInView={{ scaleX: v }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
       {target !== undefined && (
         <div className="absolute inset-y-0 w-0.5 bg-text/60" style={{ left: `${Math.min(1, Math.max(0, target)) * 100}%` }} aria-hidden />
       )}

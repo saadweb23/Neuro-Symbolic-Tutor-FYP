@@ -40,7 +40,7 @@ export function BlockCard({ block, status, beliefs, suggested, active, compact, 
   const badge = STATUS_BADGE[status]
   const tier = TIER_STYLES[tierFor(block.average_mastery)]
   return (
-    <div className={cn('flex flex-col rounded-lg border bg-surface p-5 shadow-card', active ? 'border-primary/60 ring-1 ring-primary/30' : 'border-border', className)}>
+    <div data-spotlight="" className={cn('nt-card nt-lift flex flex-col rounded-lg border bg-surface p-5 shadow-card', active ? 'border-primary/60 ring-1 ring-primary/30' : 'border-border', className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-lg text-white" style={{ background: BLOCK_COLORS[block.index] }}>

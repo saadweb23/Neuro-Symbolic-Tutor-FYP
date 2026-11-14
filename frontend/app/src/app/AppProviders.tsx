@@ -4,6 +4,7 @@ import { PreferencesProvider } from './providers/PreferencesProvider'
 import { QueryProvider } from './providers/QueryProvider'
 import { StudentProvider } from './providers/StudentProvider'
 import { ToastProvider } from './providers/ToastProvider'
+import { MotionRoot } from '@/components/motion/MotionRoot'
 import { TooltipProvider } from '@/components/ui/Tooltip'
 
 /** Provider order matters: preferences first (theme applies even to the boot screen), then the
@@ -15,7 +16,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
         <StudentProvider>
           <ToastProvider>
             <TooltipProvider delayDuration={250}>
-              <BootGate>{children}</BootGate>
+              <MotionRoot><BootGate>{children}</BootGate></MotionRoot>
             </TooltipProvider>
           </ToastProvider>
         </StudentProvider>

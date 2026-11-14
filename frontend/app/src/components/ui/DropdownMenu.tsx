@@ -15,7 +15,7 @@ export function DropdownMenuContent({ className, children, align = 'end', ...res
       <RM.Content
         align={align}
         sideOffset={8}
-        className={cn('z-[120] min-w-56 rounded-lg border border-border bg-surface p-1.5 shadow-overlay', className)}
+        className={cn('nt-menu z-[120] min-w-56 rounded-lg border border-border bg-surface p-1.5 shadow-overlay', className)}
         {...rest}
       >
         {children}
@@ -28,7 +28,7 @@ export function DropdownMenuItem({ className, ...rest }: ComponentProps<typeof R
   return (
     <RM.Item
       className={cn(
-        'flex cursor-pointer select-none items-center gap-2.5 rounded-md px-3 py-2 text-sm outline-none',
+        'flex cursor-pointer select-none items-center gap-2.5 rounded-md px-3 py-2 text-sm outline-none transition-colors',
         'data-[highlighted]:bg-raised data-[disabled]:opacity-50',
         className,
       )}

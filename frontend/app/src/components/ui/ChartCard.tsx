@@ -1,13 +1,17 @@
 import { Table2, BarChart3 } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useInView } from 'motion/react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Card, CardBody, CardHeader } from './Card'
 
 /** A chart with a text alternative: every chart can be switched to a table of the same data
  *  (accessible to screen readers, and handy for exact values). */
 export function ChartCard({ title, description, chart, table, summary }: { title: string; description?: string; chart: ReactNode; table: ReactNode; summary?: string }) {
   const [asTable, setAsTable] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  // mount the chart only once it is on screen, so its entrance animation is actually seen
+  const visible = useInView(ref, { once: true, margin: '0px 0px -12% 0px' })
   return (
-    <Card>
+    <Card interactive>
       <CardHeader
         title={title}
         description={description}
@@ -19,8 +23,10 @@ export function ChartCard({ title, description, chart, table, summary }: { title
         }
       />
       <CardBody>
+        <div ref={ref} className={visible || asTable ? undefined : 'min-h-64'}>
         {summary && <p className="sr-only">{summary}</p>}
-        {asTable ? <div tabIndex={0} role="region" aria-label={`${title} data table`} className="max-h-72 overflow-auto">{table}</div> : chart}
+        {asTable ? <div tabIndex={0} role="region" aria-label={`${title} data table`} className="max-h-72 overflow-auto">{table}</div> : visible ? chart : null}
+        </div>
       </CardBody>
     </Card>
   )

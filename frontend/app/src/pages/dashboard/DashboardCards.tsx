@@ -4,6 +4,8 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip as ChartTooltip } fro
 import { useAnalytics, useBlocks, useConcepts, useGraph, useHistory, useMastery, useRecommendation, useSession, useSummary } from '@/api/queries/hooks'
 import { useMetaConfig, useTierFor } from '@/app/providers/MetaProvider'
 import { useStudentId } from '@/app/providers/StudentProvider'
+import { AnimatedNumber } from '@/components/motion/AnimatedNumber'
+import { Stagger, StaggerItem } from '@/components/motion/Stagger'
 import { ActivityRow } from '@/components/domain/ActivityRow'
 import { BlockCard, blockStatus } from '@/components/domain/BlockCard'
 import { TierBadge } from '@/components/domain/TierBadge'
@@ -38,13 +40,14 @@ export function KpiStrip() {
   const s = summary.data
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-      <Card className="col-span-2 flex items-center gap-4 p-4 lg:col-span-1">
+    <Stagger className="grid grid-cols-2 gap-3 lg:grid-cols-5" delay={0.15} gap={0.08}>
+      <StaggerItem className="col-span-2 lg:col-span-1">
+      <Card interactive className="flex h-full items-center gap-4 p-4">
         {mastery.isPending ? (
           <div className="nt-skeleton size-20 rounded-full" />
         ) : (
           <RadialProgress value={avg ?? 0} size={80} stroke={8} label="Overall estimated mastery">
-            <span className="text-lg font-semibold tabular-nums">{avg !== undefined ? pct(avg) : '–'}</span>
+            <span className="font-display text-lg font-semibold tabular-nums">{avg !== undefined ? <AnimatedNumber value={Math.round(avg * 100)} format={(n) => `${Math.round(n)}%`} /> : '–'}</span>
           </RadialProgress>
         )}
         <div className="text-sm">
@@ -52,16 +55,18 @@ export function KpiStrip() {
           <p className="text-xs text-muted">estimated across {concept_count} concepts</p>
         </div>
       </Card>
-      <StatCard label="Concepts mastered" icon={<Target className="size-4" />} loading={mastery.isPending} error={mastery.error} onRetry={() => void mastery.refetch()}
-        value={counts ? `${counts.mastered}/${concept_count}` : undefined} hint={counts ? `${counts.developing} developing · ${counts.weak} need work` : undefined} />
-      <StatCard label="Blocks complete" icon={<Layers className="size-4" />} loading={blocks.isPending} error={blocks.error} onRetry={() => void blocks.refetch()}
-        value={done !== undefined ? `${done}/${block_count}` : undefined} hint="meets the target and has real answers" />
-      <StatCard label="Questions answered" icon={<Gauge className="size-4" />} loading={summary.isPending} error={summary.error} onRetry={() => void summary.refetch()}
-        value={s ? s.answered_questions : undefined}
+      </StaggerItem>
+      <StaggerItem><StatCard label="Concepts mastered" icon={<Target className="size-4" />} loading={mastery.isPending} error={mastery.error} onRetry={() => void mastery.refetch()}
+        value={counts ? `${counts.mastered}/${concept_count}` : undefined} count={counts ? { to: counts.mastered, format: (n) => `${Math.round(n)}/${concept_count}` } : undefined} hint={counts ? `${counts.developing} developing · ${counts.weak} need work` : undefined} /></StaggerItem>
+      <StaggerItem><StatCard label="Blocks complete" icon={<Layers className="size-4" />} loading={blocks.isPending} error={blocks.error} onRetry={() => void blocks.refetch()}
+        value={done !== undefined ? `${done}/${block_count}` : undefined} count={done !== undefined ? { to: done, format: (n) => `${Math.round(n)}/${block_count}` } : undefined} hint="meets the target and has real answers" /></StaggerItem>
+      <StaggerItem><StatCard label="Questions answered" icon={<Gauge className="size-4" />} loading={summary.isPending} error={summary.error} onRetry={() => void summary.refetch()}
+        value={s ? s.answered_questions : undefined} count={s ? { to: s.answered_questions } : undefined}
         hint={s ? (s.accuracy === null ? 'no answers yet' : `${pct(s.accuracy)} correct · ${formatDuration(s.answering_time_seconds)} answering`) : undefined} />
-      <StatCard label="Day streak" icon={<Flame className="size-4" />} loading={summary.isPending} error={summary.error} onRetry={() => void summary.refetch()}
-        value={s ? s.current_streak_days : undefined} hint={s ? `${plural(s.active_days, 'active day')} · best ${s.longest_streak_days}` : undefined} />
-    </div>
+      </StaggerItem>
+      <StaggerItem><StatCard label="Day streak" icon={<Flame className="size-4" />} loading={summary.isPending} error={summary.error} onRetry={() => void summary.refetch()}
+        value={s ? s.current_streak_days : undefined} count={s ? { to: s.current_streak_days } : undefined} hint={s ? `${plural(s.active_days, 'active day')} · best ${s.longest_streak_days}` : undefined} /></StaggerItem>
+    </Stagger>
   )
 }
 
@@ -213,13 +218,13 @@ export function BlocksOverview() {
       </div>
       <QueryBoundary query={blocks} lines={5}>
         {(bs) => (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <Stagger inView className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {bs.map((b) => {
               const attempted = b.concepts.filter((c) => (concepts.data?.find((x) => x.concept === c)?.attempts ?? 0) > 0).length
               const active = session.data?.active === true && session.data.block_index === b.index
-              return <BlockCard key={b.index} block={b} compact active={active} suggested={rec.data?.suggested === true && rec.data.block_index === b.index} status={blockStatus(b, { attempted, active })} />
+              return <StaggerItem key={b.index} className="h-full"><BlockCard block={b} compact active={active} suggested={rec.data?.suggested === true && rec.data.block_index === b.index} status={blockStatus(b, { attempted, active })} /></StaggerItem>
             })}
-          </div>
+          </Stagger>
         )}
       </QueryBoundary>
     </section>
@@ -246,7 +251,7 @@ export function DistributionCard() {
                 <div className="size-36 shrink-0" role="img" aria-label={data.map((d) => `${d.name}: ${d.value}`).join(', ')}>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={data} dataKey="value" innerRadius={42} outerRadius={64} paddingAngle={2} stroke="none" isAnimationActive={false}>
+                      <Pie data={data} dataKey="value" innerRadius={42} outerRadius={64} paddingAngle={2} stroke="none" isAnimationActive animationDuration={900} animationEasing="ease-out">
                         {data.map((d) => <Cell key={d.key} fill={COLORS[d.key]} />)}
                       </Pie>
                       <ChartTooltip formatter={(v, n) => [`${v} concepts`, n]} />

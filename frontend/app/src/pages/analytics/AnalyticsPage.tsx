@@ -18,6 +18,7 @@ import { cn } from '@/lib/cn'
 import { formatDate } from '@/lib/format'
 import { BLOCK_COLORS, pct } from '@/lib/tiers'
 import type { Analytics } from '@/api/types'
+import { useChartMotion } from '@/hooks/useChartMotion'
 
 const RANGES = [{ label: 'All time', days: null }, { label: '30 days', days: 30 }, { label: '7 days', days: 7 }] as const
 const AXIS = { fontSize: 12, fill: 'var(--muted)' }
@@ -88,6 +89,7 @@ function AnalyticsBody({ a, summaryData, id }: { a: Analytics; summaryData: Retu
 }
 
 function Progression({ id }: { id: string }) {
+  const motion = useChartMotion()
   const traj = useTrajectory(id)
   const [axis, setAxis] = useState<'n' | 't'>('n')
   const [shown, setShown] = useState<Record<string, boolean>>({ overall: true })
@@ -129,7 +131,7 @@ function Progression({ id }: { id: string }) {
                         : <XAxis dataKey="t" type="number" scale="time" domain={['dataMin', 'dataMax']} tick={AXIS} stroke="var(--border)" tickFormatter={(v: number) => new Date(v).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} />}
                       <YAxis domain={[0, 100]} tick={AXIS} stroke="var(--border)" tickFormatter={(v: number) => `${v}%`} />
                       <Tooltip {...TIP} formatter={(v) => `${Number(v).toFixed(1)}%`} labelFormatter={(l) => (axis === 'n' ? (l === 0 ? 'Start' : `Interaction ${l}`) : new Date(Number(l)).toLocaleString())} />
-                      {series.filter((s) => shown[s.key]).map((s) => <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={s.key === 'overall' ? 2.5 : 1.8} dot={false} isAnimationActive={false} />)}
+                      {series.filter((s) => shown[s.key]).map((s) => <Line key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color} strokeWidth={s.key === 'overall' ? 2.5 : 1.8} dot={false} {...motion} />)}
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -144,6 +146,7 @@ function Progression({ id }: { id: string }) {
 }
 
 function BlockPerformance({ a }: { a: Analytics }) {
+  const motion = useChartMotion()
   const data = a.blocks.map((b) => ({ name: b.name, accuracy: b.accuracy === null ? null : b.accuracy * 100, mastery: b.current_average * 100 }))
   return (
     <ChartCard title="Block performance" description="Answer accuracy in this period next to the block's current estimated mastery."
@@ -157,8 +160,8 @@ function BlockPerformance({ a }: { a: Analytics }) {
               <YAxis domain={[0, 100]} tick={AXIS} stroke="var(--border)" tickFormatter={(v: number) => `${v}%`} />
               <Tooltip {...TIP} formatter={(v) => (v === null || v === undefined ? 'no answers' : `${Number(v).toFixed(0)}%`)} cursor={{ fill: 'var(--raised)' }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="accuracy" name="Accuracy" fill="var(--accent)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
-              <Bar dataKey="mastery" name="Current mastery" fill="var(--primary)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="accuracy" name="Accuracy" fill="var(--accent)" radius={[4, 4, 0, 0]} {...motion} />
+              <Bar dataKey="mastery" name="Current mastery" fill="var(--primary)" radius={[4, 4, 0, 0]} {...motion} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -168,6 +171,7 @@ function BlockPerformance({ a }: { a: Analytics }) {
 }
 
 function AccuracyTrend({ a }: { a: Analytics }) {
+  const motion = useChartMotion()
   const data = a.accuracy_trend.map((t) => ({ n: t.answer_number, acc: t.rolling_accuracy * 100 }))
   return (
     <ChartCard title="Accuracy trend" description={`Share of your last ${a.window.accuracy_window} answers that were correct.`}
@@ -180,7 +184,7 @@ function AccuracyTrend({ a }: { a: Analytics }) {
               <XAxis dataKey="n" tick={AXIS} stroke="var(--border)" />
               <YAxis domain={[0, 100]} tick={AXIS} stroke="var(--border)" tickFormatter={(v: number) => `${v}%`} />
               <Tooltip {...TIP} formatter={(v) => `${Number(v).toFixed(0)}%`} labelFormatter={(l) => `After answer ${l}`} />
-              <Line type="monotone" dataKey="acc" name="Accuracy" stroke="var(--accent)" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="acc" name="Accuracy" stroke="var(--accent)" strokeWidth={2.5} dot={false} {...motion} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -190,6 +194,7 @@ function AccuracyTrend({ a }: { a: Analytics }) {
 }
 
 function ActivityChart({ a }: { a: Analytics }) {
+  const motion = useChartMotion()
   const data = a.activity.map((d) => ({ date: d.date, correct: d.correct, incorrect: d.answered - d.correct }))
   return (
     <ChartCard title="Daily activity" description="Questions answered per day."
@@ -203,8 +208,8 @@ function ActivityChart({ a }: { a: Analytics }) {
               <YAxis allowDecimals={false} tick={AXIS} stroke="var(--border)" />
               <Tooltip {...TIP} cursor={{ fill: 'var(--raised)' }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="correct" name="Correct" stackId="a" fill="var(--good)" isAnimationActive={false} />
-              <Bar dataKey="incorrect" name="Incorrect" stackId="a" fill="var(--bad)" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="correct" name="Correct" stackId="a" fill="var(--good)" {...motion} />
+              <Bar dataKey="incorrect" name="Incorrect" stackId="a" fill="var(--bad)" radius={[4, 4, 0, 0]} {...motion} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -214,6 +219,7 @@ function ActivityChart({ a }: { a: Analytics }) {
 }
 
 function ContentMix({ a }: { a: Analytics }) {
+  const motion = useChartMotion()
   const labels = { practice: 'Practice questions', placement: 'Placement', video: 'Videos', deep_dive: 'Docs deep-dives' } as const
   const colors = ['var(--primary)', 'var(--accent)', 'var(--block-2)', 'var(--block-3)']
   const data = (Object.keys(labels) as (keyof typeof labels)[]).map((k, i) => ({ name: labels[k], value: a.content_mix[k], color: colors[i]! })).filter((d) => d.value > 0)
@@ -224,7 +230,7 @@ function ContentMix({ a }: { a: Analytics }) {
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <div className="size-44 shrink-0" role="img" aria-label="Donut chart of activity types">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart><Pie data={data} dataKey="value" innerRadius={52} outerRadius={80} paddingAngle={2} stroke="none" isAnimationActive={false}>{data.map((d) => <Cell key={d.name} fill={d.color} />)}</Pie><Tooltip {...TIP} /></PieChart>
+              <PieChart><Pie data={data} dataKey="value" innerRadius={52} outerRadius={80} paddingAngle={2} stroke="none" {...motion}>{data.map((d) => <Cell key={d.name} fill={d.color} />)}</Pie><Tooltip {...TIP} /></PieChart>
             </ResponsiveContainer>
           </div>
           <ul className="w-full space-y-2 text-sm">{data.map((d) => <li key={d.name} className="flex items-center gap-2"><span className="size-2.5 rounded-sm" style={{ background: d.color }} aria-hidden /><span className="flex-1">{d.name}</span><span className="font-semibold tabular-nums">{d.value}</span></li>)}</ul>

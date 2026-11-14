@@ -4,6 +4,10 @@ import { useMetaConfig } from '@/app/providers/MetaProvider'
 import { GraphPreview } from '@/components/domain/GraphPreview'
 import { BrandMark } from '@/components/brand/BrandMark'
 import { LinkButton } from '@/components/ui/Button'
+import { motion, useScroll, useTransform } from 'motion/react'
+import { AnimatedNumber } from '@/components/motion/AnimatedNumber'
+import { ScrollProgress } from '@/components/motion/ScrollProgress'
+import { Stagger, StaggerItem } from '@/components/motion/Stagger'
 import { Reveal } from '@/components/ui/Reveal'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { BLOCK_ICONS } from '@/constants/blocks'
@@ -30,6 +34,9 @@ const Section = ({ id, className = '', children }: { id?: string; className?: st
 export function LandingPage() {
   const cfg = useMetaConfig()
   const graph = useGraph()
+  const { scrollY } = useScroll()
+  const glowY = useTransform(scrollY, [0, 600], [0, 90])   // gentle parallax: backdrop drifts slower than the page
+  const orbY = useTransform(scrollY, [0, 600], [0, -70])
 
   const stats = [
     { value: cfg.concept_count, label: 'Python concepts' },
@@ -54,36 +61,42 @@ export function LandingPage() {
 
   return (
     <>
+      <ScrollProgress />
       {/* ---------------------------------------------------------------- hero */}
       <section className="relative overflow-hidden border-b border-border">
         <div
           className="pointer-events-none absolute inset-0 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_30%,transparent_75%)] opacity-60"
           aria-hidden
         />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,var(--primary-soft),transparent)]" aria-hidden />
+        <motion.div style={{ y: glowY }} className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,var(--primary-soft),transparent)]" aria-hidden />
+        <motion.div style={{ y: orbY }} className="pointer-events-none absolute -right-24 top-24 size-72 rounded-full opacity-60 blur-3xl [background:var(--grad-soft)]" aria-hidden />
         <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-16 text-center md:px-6 md:pb-24 md:pt-24">
           <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1 text-xs font-semibold text-muted shadow-card">
             <span className="size-1.5 rounded-full bg-accent" aria-hidden />
             Adaptive Python tutoring
           </p>
           <h1 className="mt-6 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl">
-            A Python tutor that explains <span className="text-primary">why you&apos;re stuck</span>, not just that you are.
+            A Python tutor that explains <span className="nt-gradient-text">why you&apos;re stuck</span>, not just that you are.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">
             NeuroTutor tracks your mastery of {cfg.concept_count} Python concepts on a prerequisite graph, chooses what to practise next, and tells you the reason behind every step.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <LinkButton to={ROUTES.start} size="lg" icon={<ArrowRight className="size-5" />}>Start learning</LinkButton>
+            <LinkButton to={ROUTES.start} size="lg" magnetic icon={<ArrowRight className="size-5" />}>Start learning</LinkButton>
             <LinkButton to={`${ROUTES.landing}#how-it-works`} variant="secondary" size="lg">How it works</LinkButton>
           </div>
-          <dl className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border shadow-card sm:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="bg-surface px-4 py-5">
-                <dd className="text-3xl font-semibold tabular-nums tracking-tight">{s.value}</dd>
-                <dt className="mt-1 text-xs font-medium text-muted">{s.label}</dt>
-              </div>
-            ))}
-          </dl>
+          <Stagger delay={0.3} className="mx-auto mt-14 max-w-3xl">
+            <StaggerItem>
+              <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border shadow-card sm:grid-cols-4">
+                {stats.map((s) => (
+                  <div key={s.label} className="bg-surface px-4 py-5">
+                    <dd className="font-display text-3xl font-bold tabular-nums tracking-tight"><AnimatedNumber value={s.value} /></dd>
+                    <dt className="mt-1 text-xs font-medium text-muted">{s.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            </StaggerItem>
+          </Stagger>
         </div>
       </section>
 

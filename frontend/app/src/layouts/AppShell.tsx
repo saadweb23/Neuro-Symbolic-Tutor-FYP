@@ -1,5 +1,9 @@
+import { motion } from 'motion/react'
 import { useState } from 'react'
-import { Link, Outlet, useNavigation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigation } from 'react-router-dom'
+import { PageTransition } from '@/components/motion/PageTransition'
+import { ScrollProgress } from '@/components/motion/ScrollProgress'
+import { useSpotlight } from '@/hooks/useSpotlight'
 import { BrandMark, Wordmark } from '@/components/brand/BrandMark'
 import { MobileNavigation } from '@/components/nav/MobileNavigation'
 import { SessionPill } from '@/components/nav/SessionPill'
@@ -48,14 +52,22 @@ export function SkipLink() {
 export function AppShell() {
   const [collapsed, toggle] = useCollapsed()
   const title = useDocumentTitle()
+  const { pathname } = useLocation()
+  useSpotlight()
 
   return (
     <div className="min-h-svh bg-bg">
       <SkipLink />
       <NavigationProgress />
+      <ScrollProgress />
       <Sidebar collapsed={collapsed} onToggle={toggle} />
-      <div className={cn('transition-[padding] duration-200', collapsed ? 'md:pl-[72px]' : 'md:pl-64')}>
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-surface/90 px-4 backdrop-blur md:px-6">
+      <div className={cn('transition-[padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]', collapsed ? 'md:pl-[72px]' : 'md:pl-64')}>
+        <motion.header
+          initial={{ y: -16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          className="nt-glass sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border px-4 md:px-6"
+        >
           <Link to={ROUTES.dashboard} className="group flex items-center gap-2.5 md:hidden" aria-label="NeuroTutor home">
             <BrandMark size={24} />
             <Wordmark className="text-base" />
@@ -66,9 +78,11 @@ export function AppShell() {
             <ThemeToggle />
             <StudentMenu />
           </div>
-        </header>
+        </motion.header>
         <main id="main" tabIndex={-1} className="mx-auto w-full max-w-[1280px] px-4 pb-28 pt-6 outline-none md:px-6 md:pb-12 md:pt-8">
-          <Outlet />
+          <PageTransition routeKey={pathname}>
+            <Outlet />
+          </PageTransition>
         </main>
       </div>
       <MobileNavigation />

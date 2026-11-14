@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
@@ -16,6 +17,7 @@ export function RadialProgress({ value, size = 96, stroke = 9, className, barCla
   const v = Math.min(1, Math.max(0, value))
   const r = (size - stroke) / 2
   const c = 2 * Math.PI * r
+  const reduce = useReducedMotion()
   return (
     <div
       role="progressbar"
@@ -28,7 +30,7 @@ export function RadialProgress({ value, size = 96, stroke = 9, className, barCla
     >
       <svg width={size} height={size} className="-rotate-90" aria-hidden>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className={trackClassName} />
-        <circle
+        <motion.circle
           cx={size / 2}
           cy={size / 2}
           r={r}
@@ -36,8 +38,11 @@ export function RadialProgress({ value, size = 96, stroke = 9, className, barCla
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
-          strokeDashoffset={c * (1 - v)}
-          className={cn('transition-[stroke-dashoffset] duration-700', barClassName)}
+          initial={{ strokeDashoffset: reduce ? c * (1 - v) : c }}
+          whileInView={{ strokeDashoffset: c * (1 - v) }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className={barClassName}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center text-center">{children}</div>

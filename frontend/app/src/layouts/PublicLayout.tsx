@@ -4,11 +4,12 @@ import { ThemeToggle } from '@/components/nav/ThemeToggle'
 import { LinkButton } from '@/components/ui/Button'
 import { ROUTES } from '@/constants/routes'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
+import { useSpotlight } from '@/hooks/useSpotlight'
 import { SkipLink } from './AppShell'
 
 export function PublicHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-bg/85 backdrop-blur">
+    <header className="nt-glass sticky top-0 z-30 border-b border-border">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 md:px-6">
         <Link to={ROUTES.root} className="group flex items-center gap-2.5" aria-label="NeuroTutor home">
           <BrandMark size={26} />
@@ -48,6 +49,7 @@ export function PublicFooter() {
 
 export function PublicLayout() {
   useDocumentTitle()
+  useSpotlight()
   return (
     <div className="flex min-h-svh flex-col bg-bg">
       <SkipLink />

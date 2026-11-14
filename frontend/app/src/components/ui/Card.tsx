@@ -1,8 +1,9 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
-export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('rounded-lg border border-border bg-surface shadow-card', className)} {...rest} />
+/** Surface. Every card gets the cursor-follow glow (see useSpotlight); `interactive` also lifts it on hover. */
+export function Card({ className, interactive, ...rest }: HTMLAttributes<HTMLDivElement> & { interactive?: boolean }) {
+  return <div data-spotlight="" className={cn('nt-card rounded-lg border border-border bg-surface shadow-card', interactive && 'nt-lift', className)} {...rest} />
 }
 
 export function CardHeader({ title, description, action, className }: {

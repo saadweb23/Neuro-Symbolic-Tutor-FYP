@@ -19,12 +19,12 @@ export function Dialog({ open, onOpenChange, title, description, children, varia
   return (
     <RD.Root open={open} onOpenChange={onOpenChange}>
       <RD.Portal>
-        <RD.Overlay className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-[1px]" />
+        <RD.Overlay className="nt-overlay fixed inset-0 z-[110] bg-black/50" />
         <RD.Content
           className={cn(
-            'fixed z-[111] flex max-h-[88svh] flex-col overflow-hidden border border-border bg-surface shadow-overlay',
+            'nt-dialog fixed z-[111] flex max-h-[88svh] flex-col overflow-hidden border border-border bg-surface shadow-overlay',
             variant === 'sheet'
-              ? 'inset-x-0 bottom-0 rounded-t-xl md:inset-auto md:left-1/2 md:top-1/2 md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl'
+              ? 'nt-dialog-sheet inset-x-0 bottom-0 rounded-t-xl md:inset-auto md:left-1/2 md:top-1/2 md:w-full md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl'
               : 'left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl',
             className,
           )}

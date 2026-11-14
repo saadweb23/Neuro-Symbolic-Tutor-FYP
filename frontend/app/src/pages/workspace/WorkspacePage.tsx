@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Keyboard } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { get, studentPath } from '@/api/client'
@@ -67,7 +68,7 @@ function Workspace({ session }: { session: SessionState }) {
   return (
     <div className="min-h-svh">
       <h1 className="sr-only">Learning session: {blockName}</h1>
-      <header className="sticky top-0 z-20 border-b border-border bg-surface/95 backdrop-blur">
+      <header className="nt-glass sticky top-0 z-20 border-b border-border">
         <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
           <Button variant="ghost" size="sm" onClick={() => setConfirmExit(true)} icon={<ArrowLeft className="size-4" />} aria-label="Leave session">
             <span className="hidden sm:inline">Exit</span>
@@ -89,7 +90,14 @@ function Workspace({ session }: { session: SessionState }) {
           <div className="mx-auto max-w-6xl px-4 pb-2" aria-hidden>
             <div className="flex gap-1">
               {Array.from({ length: block.round_cap }, (_, i) => (
-                <span key={i} className={`h-1 flex-1 rounded-full ${i < block.round_count ? 'bg-primary' : 'bg-raised'}`} />
+                <span key={i} className="h-1 flex-1 overflow-hidden rounded-full bg-raised">
+                  <motion.span
+                    className="block h-full origin-left rounded-full bg-primary"
+                    initial={false}
+                    animate={{ scaleX: i < block.round_count ? 1 : 0 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </span>
               ))}
             </div>
           </div>
@@ -106,7 +114,13 @@ function Workspace({ session }: { session: SessionState }) {
 
         {state.phase === 'active' && (
           <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <div className="min-w-0 space-y-5">
+            <motion.div
+              key={`${state.step.content_type}-${state.step.concept}-${state.step.attempt_number}`}
+              initial={{ opacity: 0, x: 28 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="min-w-0 space-y-5"
+            >
               <ExplanationCallout text={state.step.explanation} />
               <Card>
                 <CardBody className="p-5 sm:p-7">
@@ -122,7 +136,7 @@ function Workspace({ session }: { session: SessionState }) {
                   )}
                 </CardBody>
               </Card>
-            </div>
+            </motion.div>
             <div className="lg:sticky lg:top-28 lg:self-start">
               <ConceptPanel concept={state.step.concept} belief={state.result?.updated_belief ?? state.viewed?.updated_belief ?? state.step.mastery_belief} attemptNumber={state.step.attempt_number} />
             </div>
