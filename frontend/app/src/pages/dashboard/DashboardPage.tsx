@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useStatus } from '@/api/queries/hooks'
-import { useStudentId } from '@/app/providers/StudentProvider'
+import { useStudentContext, useStudentId } from '@/app/providers/StudentProvider'
 import { ErrorState } from '@/components/feedback/ErrorState'
 import { Reveal } from '@/components/ui/Reveal'
 import { Button } from '@/components/ui/Button'
@@ -12,21 +13,36 @@ import { ActivityTimelineCard, AiInsightsCard, BlockComparisonCard, ConsistencyC
 
 function Greeting() {
   const id = useStudentId()
+  const { user } = useStudentContext()
   const status = useStatus(id)
   const action = useLearningAction()
+  const name = user?.name ?? ''
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h2 className="text-2xl font-bold md:text-3xl">Welcome back, <span className="nt-gradient-text">{id}</span></h2>
-        <p className="mt-1 text-sm text-muted">
-          {status.data?.last_active_at ? `Last active ${relativeTime(status.data.last_active_at)}.` : 'Ready when you are.'}
-        </p>
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="relative overflow-hidden rounded-2xl border border-border p-6 shadow-card sm:p-8 [background:var(--grad-soft)]"
+    >
+      <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-primary/15 blur-3xl" />
+      <div className="relative flex flex-wrap items-end justify-between gap-5">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-extrabold md:text-4xl">
+            Welcome back, <span className="nt-gradient-text [overflow-wrap:anywhere]">{name}</span>!
+          </h2>
+          <p className="mt-2 max-w-xl text-sm text-muted md:text-base">
+            Your learning journey continues. Let&apos;s strengthen your concepts and achieve your next milestone.
+          </p>
+          <p className="mt-1 text-xs text-muted">
+            {status.data?.last_active_at ? `Last active ${relativeTime(status.data.last_active_at)}.` : 'Ready when you are.'}
+          </p>
+        </div>
+        <Button size="lg" magnetic onClick={action.run} loading={action.loading} disabled={action.disabled} icon={<ArrowRight className="size-5" />}>
+          {action.label}
+        </Button>
+        {action.error != null && <div className="w-full"><ErrorState compact error={action.error} /></div>}
       </div>
-      <Button size="lg" magnetic onClick={action.run} loading={action.loading} disabled={action.disabled} icon={<ArrowRight className="size-5" />}>
-        {action.label}
-      </Button>
-      {action.error != null && <div className="w-full"><ErrorState compact error={action.error} /></div>}
-    </div>
+    </motion.div>
   )
 }
 
@@ -34,7 +50,7 @@ export function DashboardPage() {
   return (
     <div className="space-y-8">
       <PageHeader title="Dashboard" />
-      <Reveal><Greeting /></Reveal>
+      <Greeting />
       <LearningOverview />
 
       <div className="grid gap-6 xl:grid-cols-2">

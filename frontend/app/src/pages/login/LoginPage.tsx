@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { ROUTES } from '@/constants/routes'
+import { FloatingBackdrop } from '@/pages/welcome/FloatingBackdrop'
+import { motion } from 'motion/react'
 
 /** Where a student with this status should land. Decided by the server's record. */
 export function destinationFor(status: StudentStatus): string {
@@ -57,12 +59,14 @@ export function LoginPage() {
   }
 
   return (
+    <FloatingBackdrop className="min-h-[calc(100svh-8rem)]">
     <div className="mx-auto flex min-h-[calc(100svh-8rem)] max-w-md items-center px-4 py-10">
-      <Card className="w-full p-6 sm:p-8">
+      <motion.div className="w-full" initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>
+      <Card className="w-full bg-surface/85 p-6 shadow-raised backdrop-blur-sm sm:p-8">
         <div className="mb-6 flex flex-col items-center text-center">
           <BrandMark size={56} />
           <h1 className="mt-4 text-2xl font-semibold">Sign in to NeuroTutor</h1>
-          <p className="mt-1 text-sm text-muted">Enter your username and password to continue.</p>
+          <p className="mt-1 text-sm text-muted">Enter your name and password to start your learning journey.</p>
         </div>
 
         <form onSubmit={(e) => void onSubmit(e)} className="space-y-4" noValidate>
@@ -70,7 +74,7 @@ export function LoginPage() {
             <label htmlFor="username" className="mb-1.5 block text-sm font-medium">Username</label>
             <Input
               id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username" autoCapitalize="none" spellCheck={false} autoFocus
+              autoComplete="username" placeholder="Your name, e.g. Saad" maxLength={60} spellCheck={false} autoFocus
               invalid={missing && !username.trim()} aria-describedby={error ? 'login-error' : undefined}
             />
           </div>
@@ -96,7 +100,7 @@ export function LoginPage() {
             Keep me signed in for 30 days
           </label>
 
-          {missing && <p className="text-sm text-bad" role="alert">Enter your username and password.</p>}
+          {missing && <p className="text-sm text-bad" role="alert">Enter your name and password.</p>}
           {error && <p id="login-error" className="rounded-md border border-bad/40 bg-bad-soft p-3 text-sm text-bad" role="alert">{error}</p>}
 
           <Button type="submit" size="lg" className="w-full" loading={busy} icon={!busy ? <LogIn className="size-5" /> : undefined}>
@@ -104,6 +108,8 @@ export function LoginPage() {
           </Button>
         </form>
       </Card>
+      </motion.div>
     </div>
+    </FloatingBackdrop>
   )
 }

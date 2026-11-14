@@ -205,3 +205,52 @@ def test_self_signup_can_be_turned_off(client, monkeypatch):
     monkeypatch.setenv("AUTH_ALLOW_SIGNUP", "0")
     r = client.post("/auth/signup", json={"name": "X", "email": "x@example.com", "password": "correct-horse-9"})
     assert r.status_code == 403
+
+
+# ---- demo sign-in: any name + the shared demo password ------------------------------------------
+def test_any_name_with_the_demo_password_signs_in_and_keeps_that_exact_name(client):
+    r = client.post("/auth/login", json={"username": "Saad", "password": "admin123"})
+    assert r.status_code == 200
+    me = client.get("/auth/me").json()
+    assert me["name"] == "Saad" and me["student_id"].startswith("u")
+    assert client.get(f"/students/{me['student_id']}/status").status_code == 200
+
+
+def test_the_same_name_is_the_same_student_across_sign_ins_and_casing(client):
+    a = client.post("/auth/login", json={"username": "Maryam Khan", "password": "admin123"}).json()
+    b = _fresh(client).post("/auth/login", json={"username": "  maryam   khan ", "password": "admin123"}).json()
+    assert a["student_id"] == b["student_id"] and a["id"] == b["id"]
+    assert b["name"] == "maryam khan"                 # shown as typed on the latest sign-in
+    other = _fresh(client).post("/auth/login", json={"username": "Someone Else", "password": "admin123"}).json()
+    assert other["student_id"] != a["student_id"]
+
+
+def test_wrong_password_never_creates_an_account(client, db):
+    r = client.post("/auth/login", json={"username": "Ghost Person", "password": "not-admin123"})
+    assert r.status_code == 401
+    assert db.execute("SELECT 1 FROM users WHERE email = 'ghost person'").fetchone() is None
+
+
+def test_demo_password_does_not_open_real_email_accounts(client):
+    signup(client, email="real@example.com", password="own-password-9")
+    assert _fresh(client).post("/auth/login", json={"username": "real@example.com", "password": "admin123"}).status_code == 401
+    assert _fresh(client).post("/auth/login", json={"username": "real@example.com", "password": "own-password-9"}).status_code == 200
+
+
+def test_demo_login_can_be_turned_off(client, monkeypatch):
+    monkeypatch.setenv("AUTH_DEMO_LOGIN", "0")
+    assert client.post("/auth/login", json={"username": "Newcomer", "password": "admin123"}).status_code == 401
+
+
+def test_names_are_validated(client):
+    for bad in ["", "   ", "x" * 61, "<script>"]:
+        assert client.post("/auth/login", json={"username": bad, "password": "admin123"}).status_code in (401, 422), bad
+
+
+def test_progress_is_kept_per_name(client, db):
+    from tests.conftest import placed_student
+    first = client.post("/auth/login", json={"username": "Returning", "password": "admin123"}).json()
+    placed_student(client, db, first["student_id"])
+    again = _fresh(client)
+    again.post("/auth/login", json={"username": "returning", "password": "admin123"})
+    assert again.get(f"/students/{first['student_id']}/status").json()["placement_completed"] is True

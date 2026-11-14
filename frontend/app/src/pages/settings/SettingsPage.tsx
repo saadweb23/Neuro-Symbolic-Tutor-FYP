@@ -104,7 +104,7 @@ function SettingsContent({ id }: { id: string }) {
             <CardHeader title="Your profile" description="Your account on this server." />
             <CardBody>
               <dl>
-                <Row label="Username" value={user?.email ?? '–'} />
+                <Row label="Username" value={user?.name ?? '–'} />
                 <Row label="Student ID" value={<span className="inline-flex items-center gap-2"><code className="rounded bg-raised px-2 py-0.5 font-mono text-[13px]">{id}</code><button onClick={() => void copy()} aria-label="Copy student ID" className="rounded p-1 text-muted hover:bg-raised hover:text-text">{copied ? <Check className="size-4 text-good" /> : <Copy className="size-4" />}</button></span>} />
                 <QueryBoundary query={status}>
                   {(s) => (

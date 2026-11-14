@@ -127,7 +127,7 @@ calls. To prove persistence, restart the service (Render → *Manual Deploy → 
   monthly compute allowance and ~0.5 GB storage per project. Each student uses well under a megabyte, and the API compacts its
   derived caches. `GET /health` never touches the database, so uptime pings do not consume Neon compute.
 * **Vercel Hobby** is for non-commercial use, with monthly bandwidth/build limits.
-* **Authentication.** Every student route requires a signed-in account (HttpOnly session cookie). The built-in `admin` / `admin123` account is created on first start: set `ADMIN_PASSWORD` (or `AUTH_SEED_ADMIN=0`) before exposing the service. Behind a proxy that terminates TLS, set `TRUST_PROXY=1` so rate limits see the real client address.
+* **Authentication.** Every student route requires a signed-in account (HttpOnly session cookie). The demo sign-in (any name + the shared password `admin123`) is on by default and is not real authentication: set `AUTH_DEMO_LOGIN=0` (and use `ADMIN_PASSWORD` / `AUTH_SEED_ADMIN=0`) before exposing the service publicly. Behind a proxy that terminates TLS, set `TRUST_PROXY=1` so rate limits see the real client address.
   Do not use real names or private information as IDs.
 * **YouTube** lessons are embedded from youtube-nocookie.com and need the visitor's network to reach YouTube.
 

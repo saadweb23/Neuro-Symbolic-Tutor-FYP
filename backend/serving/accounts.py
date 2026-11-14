@@ -111,17 +111,22 @@ def normalize_email(email: str) -> str:
     return email
 
 
-_USERNAME_RE = re.compile(r"^[a-z0-9._\-]{1,64}$")
+def demo_password():
+    """Demo sign-in: any NAME plus this shared password signs in (the account is created on first use).
+    DEMO_PASSWORD overrides the value; AUTH_DEMO_LOGIN=0 turns the feature off. Returns None when off."""
+    if os.environ.get("AUTH_DEMO_LOGIN", "1") == "0":
+        return None
+    return os.environ.get("DEMO_PASSWORD") or "admin123"
 
 
-def normalize_identifier(value: str) -> str:
-    """Sign-in identifier: an email address, or a plain username (e.g. the seeded administrator)."""
-    value = (value or "").strip().lower()
-    if "@" in value:
-        return normalize_email(value)
-    if not _USERNAME_RE.match(value):
-        raise AuthError("Enter your username.", 422)
-    return value
+def _identity(value):
+    """(account key, display name) for a sign-in identifier. An email address keeps the normal account
+    path; anything else is a person's name: the key is its lower-case form (so "Saad" and "saad" are
+    the same student) and the display name is exactly what was typed."""
+    raw = re.sub(r"\s+", " ", (value or "").strip())
+    if "@" in raw:
+        return normalize_email(raw), None
+    return clean_name(raw).lower(), clean_name(raw)
 
 
 def clean_name(name: str) -> str:
@@ -214,25 +219,42 @@ def create_user(name, email, password):
         conn.close()
 
 
-def authenticate(email, password):
+def authenticate(identifier, password):
     try:
-        email = normalize_identifier(email)
+        key, name = _identity(identifier)
     except AuthError:
         _dummy_verify(password)
         raise AuthError("Incorrect username or password.", 401)
+    shared = demo_password()
+    demo_ok = bool(shared) and name is not None and hmac.compare_digest(password.encode(), shared.encode())
     conn = persistence.init_db()
     try:
-        row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT * FROM users WHERE email = ?", (key,)).fetchone()
         if row is None:
-            _dummy_verify(password)
-            raise AuthError("Incorrect username or password.", 401)
-        if not verify_password(password, row["password_hash"]):
-            raise AuthError("Incorrect username or password.", 401)
+            if not demo_ok:
+                _dummy_verify(password)
+                raise AuthError("Incorrect username or password.", 401)
+            row = _create_named_account(conn, key, name, shared)
+        else:
+            if not (verify_password(password, row["password_hash"]) or demo_ok):
+                raise AuthError("Incorrect username or password.", 401)
+            if name is not None and name != row["display_name"]:
+                conn.execute("UPDATE users SET display_name = ? WHERE id = ?", (name, row["id"]))   # show it as typed
         conn.execute("UPDATE users SET last_login_at = ? WHERE id = ?", (_fmt(_now()), row["id"]))
         conn.commit()
-        return _user_dict(row)
+        return _user_dict(conn.execute("SELECT * FROM users WHERE id = ?", (row["id"],)).fetchone())
     finally:
         conn.close()
+
+
+def _create_named_account(conn, key, name, password):
+    user_id, student_id, now = secrets.token_hex(12), "u" + secrets.token_hex(8), _fmt(_now())
+    persistence.ensure_student(conn, student_id)
+    conn.execute(
+        "INSERT INTO users (id, email, display_name, password_hash, student_id, created_at, last_login_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING", (user_id, key, name, hash_password(password), student_id, now, now))
+    conn.commit()
+    return conn.execute("SELECT * FROM users WHERE email = ?", (key,)).fetchone()   # a concurrent first sign-in may have won
 
 
 def get_user(user_id):

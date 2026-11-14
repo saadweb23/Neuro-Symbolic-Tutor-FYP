@@ -31,7 +31,7 @@ describe('LoginPage', () => {
     )
     setup()
     await userEvent.click(await screen.findByRole('button', { name: 'Sign in' }))
-    expect(await screen.findByRole('alert')).toHaveTextContent(/enter your username and password/i)
+    expect(await screen.findByRole('alert')).toHaveTextContent(/enter your name and password/i)
     await userEvent.type(screen.getByLabelText('Username'), 'admin')
     await userEvent.type(screen.getByLabelText('Password'), 'admin123')
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))

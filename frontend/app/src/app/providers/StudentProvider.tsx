@@ -2,6 +2,19 @@ import { createContext, useCallback, useContext, useEffect, useMemo, type ReactN
 import { useQueryClient } from '@tanstack/react-query'
 import { logout, useMe, type AuthUser } from '@/api/auth'
 import { keys } from '@/api/queries/keys'
+import { STORAGE_KEYS } from '@/constants/storage'
+
+/** Cached data that is not about the student, so it survives a sign-out. */
+const KEEP = new Set(['auth', 'meta', 'graph'])
+
+/** Half-finished quiz answers and the saved learning step belong to the person who signed out. */
+function forgetDeviceState() {
+  try {
+    for (const k of Object.keys(sessionStorage)) if (k.startsWith('nt_') && k !== STORAGE_KEYS.booted) sessionStorage.removeItem(k)
+  } catch {
+    /* storage unavailable */
+  }
+}
 
 interface StudentCtx {
   /** The signed-in account (from the server session), or null when signed out. */
@@ -28,13 +41,20 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     qc.setQueryData(keys.me, u)
   }, [qc])
 
+  /** Order matters. The signed-in pages are still mounted while we sign out, so (1) stop their in-flight
+   *  requests, (2) end the server session, (3) mark the account as gone, which makes the route guards
+   *  unmount those pages and redirect to /login, and only then (4) drop the cached data. Clearing the
+   *  cache first made the mounted pages refetch, get 401, and flash "Sign in to continue". */
   const signOut = useCallback(async () => {
+    await qc.cancelQueries()
     try {
       await logout()
-    } finally {
-      qc.clear()
-      qc.setQueryData(keys.me, null)
+    } catch {
+      /* the session may already be gone (expired / signed out elsewhere); the local state is cleared either way */
     }
+    forgetDeviceState()
+    qc.setQueryData(keys.me, null)
+    window.setTimeout(() => qc.removeQueries({ predicate: (q) => !KEEP.has(String(q.queryKey[0])) }), 0)
   }, [qc])
 
   useEffect(() => {

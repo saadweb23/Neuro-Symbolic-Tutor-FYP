@@ -63,16 +63,16 @@ function Group({ title, items, collapsed }: { title?: string; items: NavItem[]; 
 
 /** Signed-in student card at the bottom of the sidebar. */
 function ProfileCard({ collapsed }: { collapsed: boolean }) {
-  const { studentId } = useStudentContext()
-  if (!studentId) return null
-  const initial = studentId.slice(0, 1).toUpperCase()
+  const { user } = useStudentContext()
+  if (!user) return null
+  const initial = user.name.slice(0, 1).toUpperCase()
   const avatar = <span aria-hidden className="flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-on-primary" style={{ background: 'var(--grad-brand)' }}>{initial}</span>
   return (
     <div className={cn('mb-2 flex items-center gap-3 rounded-lg border border-border bg-raised/50 p-2', collapsed && 'justify-center border-transparent bg-transparent p-0')}>
       {avatar}
       {!collapsed && (
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold">{studentId}</p>
+          <p className="truncate text-sm font-semibold">{user.name}</p>
           <p className="text-xs text-muted">Student</p>
         </div>
       )}
