@@ -11,9 +11,11 @@ import { Typewriter, type Phrase } from '@/components/motion/Typewriter'
 import { ROUTES } from '@/constants/routes'
 import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 import { useSpotlight } from '@/hooks/useSpotlight'
-import { BrainHologram } from './BrainHologram'
+import { cn } from '@/lib/cn'
 import { DemoDialog } from './DemoDialog'
+import { EducationHologram } from './EducationHologram'
 import { FloatingBackdrop } from './FloatingBackdrop'
+import { useWelcomeTheme } from './useWelcomeTheme'
 import { WelcomeNav } from './WelcomeNav'
 import { Waves } from './Waves'
 
@@ -22,19 +24,18 @@ const rise: Variants = {
   show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.1 + i * 0.13, ease: [0.22, 1, 0.36, 1] } }),
 }
 
-/** The hero cycles through these; the highlighted words take the purple-blue gradient. */
+/** Only the second line of the headline types and deletes; the first line is fixed. */
 const PHRASES: Phrase[] = [
-  [{ text: 'Welcome to ' }, { text: 'NeuroTutor', highlight: true }],
   [{ text: 'Learn ' }, { text: 'Smarter', highlight: true }, { text: ' with AI' }],
-  [{ text: 'Your Personal ' }, { text: 'AI Learning', highlight: true }, { text: ' Companion' }],
-  [{ text: 'Discover Your ' }, { text: 'Learning Potential', highlight: true }],
-  [{ text: 'Intelligence', highlight: true }, { text: ' Meets Personalized Learning' }],
+  [{ text: 'Master ' }, { text: 'New Concepts', highlight: true }],
+  [{ text: 'Discover Your ' }, { text: 'Potential', highlight: true }],
+  [{ text: 'Personalized Learning', highlight: true }, { text: ' Starts Here' }],
 ]
 
 const CARDS = [
-  { icon: Trophy, hue: '#8b5cf6', title: 'Discover Your Strengths', text: "Find out what you're good at with AI-powered analysis." },
-  { icon: Target, hue: '#38bdf8', title: 'Identify Knowledge Gaps', text: 'See what you need to learn next.' },
-  { icon: ChartNoAxesColumnIncreasing, hue: '#2dd4bf', title: 'Follow an Intelligent Journey', text: 'Get a personalized learning path for continuous improvement.' },
+  { icon: Trophy, hue: 'var(--w-hue-1)', title: 'Discover Your Strengths', text: "Find out what you're good at with AI-powered analysis." },
+  { icon: Target, hue: 'var(--w-hue-2)', title: 'Identify Knowledge Gaps', text: 'See what you need to learn next.' },
+  { icon: ChartNoAxesColumnIncreasing, hue: 'var(--w-hue-3)', title: 'Follow an Intelligent Journey', text: 'Get a personalized learning path for continuous improvement.' },
 ] as const
 
 /** The site's front door: introduces the platform and leads into the placement quiz. Always rendered in the
@@ -49,6 +50,7 @@ export function WelcomePage() {
   const status = useStatus(studentId)
   const [leaving, setLeaving] = useState(false)
   const [demo, setDemo] = useState(false)
+  const { theme, setTheme, switching, root } = useWelcomeTheme()
 
   // Someone who already finished placement continues learning; the quiz cannot be retaken.
   const placed = status.data?.placement_completed === true
@@ -63,15 +65,14 @@ export function WelcomePage() {
 
   return (
     <motion.div
-      className="dark nt-hero-bg min-h-svh text-text"
-      style={{ '--bg': '#060a24' } as CSSProperties}
+      className={cn('nt-welcome-root min-h-svh', root, switching && 'nt-theme-switching')}
       initial={false}
       animate={leaving ? { opacity: 0, scale: 1.04, filter: 'blur(6px)' } : { opacity: 1, scale: 1, filter: 'blur(0px)' }}
       transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
       onAnimationComplete={() => { if (leaving) navigate(target) }}
     >
       <FloatingBackdrop rich className="flex min-h-svh flex-col">
-        <WelcomeNav signedIn={!!user} />
+        <WelcomeNav signedIn={!!user} theme={theme} onTheme={setTheme} scope={root} />
 
         <main id="main" tabIndex={-1} className="outline-none">
           {/* ------------------------------------------------------------ first screen */}
@@ -80,18 +81,19 @@ export function WelcomePage() {
             <div className="relative mx-auto flex min-h-[calc(100svh-5.5rem)] w-full max-w-[1480px] flex-col px-4 sm:px-6 lg:px-12">
               <div className="grid flex-1 items-center gap-4 pb-6 pt-8 lg:grid-cols-[1.2fr_1fr] lg:gap-8">
                 <div className="min-w-0">
-                  <motion.p custom={0} variants={rise} initial="hidden" animate="show" className="inline-flex items-center gap-2.5 rounded-full border border-indigo-400/50 bg-indigo-500/10 py-1.5 pl-2 pr-3.5 text-[13px] font-medium text-slate-200 shadow-[0_0_24px_-8px_rgb(99_102_241)]">
-                    <span className="flex size-6 items-center justify-center rounded-full bg-indigo-500/30 text-indigo-200"><Sparkles className="size-3.5" aria-hidden /></span>
+                  <motion.p custom={0} variants={rise} initial="hidden" animate="show" className="nt-chip inline-flex items-center gap-2.5 rounded-full py-1.5 pl-2 pr-3.5 text-[13px] font-medium">
+                    <span className="flex size-6 items-center justify-center rounded-full bg-[color:var(--w-a)]/25 text-[color:var(--w-c)]"><Sparkles className="size-3.5" aria-hidden /></span>
                     AI-Powered <span aria-hidden>•</span> Personalized <span aria-hidden>•</span> Adaptive
                     <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgb(52_211_153)]" aria-hidden />
                   </motion.p>
 
-                  <motion.h1 custom={1} variants={rise} initial="hidden" animate="show" className="mt-6 text-balance text-[clamp(2.3rem,4.2vw,4.2rem)] font-[650] leading-[1.06] tracking-[-0.04em]">
-                    <span className="sr-only">NeuroTutor: a neuro-symbolic adaptive learning platform</span>
-                    <Typewriter phrases={PHRASES} />
+                  <motion.h1 custom={1} variants={rise} initial="hidden" animate="show" className="mt-6 text-[clamp(1.7rem,2.5vw,2.8rem)] font-[650] leading-[1.1] tracking-[-0.035em]" style={{ color: 'var(--w-text)' }}>
+                    <span className="sr-only">Neuro Symbolic Tutor: a neuro-symbolic adaptive learning platform</span>
+                    <span aria-hidden className="block">Welcome to <span className="nt-hl nt-clone">Neuro Symbolic Tutor</span></span>
+                    <Typewriter phrases={PHRASES} highlightClass="nt-hl nt-clone" className="mt-1" />
                   </motion.h1>
 
-                  <motion.p custom={2} variants={rise} initial="hidden" animate="show" className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-slate-300 md:text-xl">
+                  <motion.p custom={2} variants={rise} initial="hidden" animate="show" className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-[color:var(--w-lead)] md:text-xl">
                     Your Personal AI Learning Companion. Discover your strengths, identify knowledge gaps, and follow an intelligent learning journey designed around your abilities.
                   </motion.p>
 
@@ -104,22 +106,22 @@ export function WelcomePage() {
                         <ArrowRight className="nt-cta-arrow size-5" aria-hidden />
                       </motion.button>
                     </Magnetic>
-                    <button type="button" onClick={() => setDemo(true)} className="group flex items-center gap-3.5 rounded-full text-lg font-medium text-slate-100">
-                      <span className="flex size-14 items-center justify-center rounded-full border-2 border-slate-300/70 transition-all group-hover:scale-105 group-hover:border-cyan-300 group-hover:shadow-[0_0_26px_-4px_rgb(34_211_238)]"><Play className="ml-0.5 size-5 fill-current" aria-hidden /></span>
+                    <button type="button" onClick={() => setDemo(true)} className="group flex items-center gap-3.5 rounded-full text-lg font-medium text-[color:var(--w-text)]">
+                      <span className="flex size-14 items-center justify-center rounded-full border-2 border-[color:var(--w-btn-border)] transition-all group-hover:scale-105 group-hover:border-[color:var(--w-c)] group-hover:shadow-[0_0_26px_-4px_var(--w-c)]"><Play className="ml-0.5 size-5 fill-current" aria-hidden /></span>
                       Watch Demo
                     </button>
                   </motion.div>
 
-                  <motion.div custom={5} variants={rise} initial="hidden" animate="show" className="mt-8 flex items-center gap-4 text-sm text-slate-300">
+                  <motion.div custom={5} variants={rise} initial="hidden" animate="show" className="mt-8 flex items-center gap-4 text-sm text-[color:var(--w-lead)]">
                     <span className="flex -space-x-2" aria-hidden>
-                      {[Network, Layers, ListChecks].map((Icon, i) => <span key={i} className="flex size-9 items-center justify-center rounded-full border-2 border-[#0a1030] bg-gradient-to-br from-indigo-500/60 to-cyan-400/50 text-white"><Icon className="size-4" /></span>)}
+                      {[Network, Layers, ListChecks].map((Icon, i) => <span key={i} className="flex size-9 items-center justify-center rounded-full border-2 border-[color:var(--bg)] bg-gradient-to-br from-[color:var(--w-a)] to-[color:var(--w-c)] text-white"><Icon className="size-4" /></span>)}
                     </span>
                     <span>{cfg.concept_count} Python concepts · {cfg.block_count} learning blocks · {cfg.placement_concepts.length}-question placement quiz</span>
                   </motion.div>
                 </div>
 
                 <motion.div initial={{ opacity: 0, x: 48, scale: 0.94 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }} className="min-w-0">
-                  <BrainHologram />
+                  <EducationHologram />
                 </motion.div>
               </div>
 
@@ -128,10 +130,10 @@ export function WelcomePage() {
                   <StaggerItem key={c.title} className="h-full">
                     <button type="button" onClick={i === 0 ? go : () => (window.location.href = i === 1 ? `${ROUTES.landing}#how-it-works` : `${ROUTES.landing}#curriculum`)}
                       className="nt-neon group flex h-full w-full items-center gap-5 p-5 text-left sm:p-6" style={{ '--hue': c.hue } as CSSProperties}>
-                      <span className="nt-neon-icon flex size-[68px] shrink-0 items-center justify-center rounded-full text-white"><c.icon className="size-8" strokeWidth={1.7} aria-hidden /></span>
+                      <span className="nt-neon-icon flex size-[68px] shrink-0 items-center justify-center rounded-full"><c.icon className="size-8" strokeWidth={1.7} aria-hidden /></span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-[17px] font-semibold tracking-tight">{c.title}</span>
-                        <span className="mt-1 block text-[15px] leading-snug text-slate-300">{c.text}</span>
+                        <span className="mt-1 block text-[15px] leading-snug text-[color:var(--w-lead)]">{c.text}</span>
                       </span>
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[var(--hue)] text-[var(--hue)] transition-transform group-hover:translate-x-1" aria-hidden><ArrowRight className="size-4" /></span>
                     </button>
@@ -140,11 +142,11 @@ export function WelcomePage() {
               </Stagger>
 
               <div className="relative z-10 flex justify-center py-5">
-                <button type="button" onClick={explore} className="group flex items-center gap-4 text-sm font-medium text-slate-200">
-                  <span aria-hidden className="hidden h-px w-24 bg-gradient-to-r from-transparent to-slate-400/50 sm:block" />
-                  <span className="flex size-11 items-center justify-center rounded-full border border-slate-300/60 transition-colors group-hover:border-cyan-300"><ArrowDown className="nt-hint size-5" aria-hidden /></span>
+                <button type="button" onClick={explore} className="group flex items-center gap-4 text-sm font-medium text-[color:var(--w-lead)]">
+                  <span aria-hidden className="hidden h-px w-24 bg-gradient-to-r from-transparent to-[color:var(--w-muted)]/60 sm:block" />
+                  <span className="flex size-11 items-center justify-center rounded-full border border-[color:var(--w-btn-border)] transition-colors group-hover:border-[color:var(--w-c)]"><ArrowDown className="nt-hint size-5" aria-hidden /></span>
                   Scroll to Explore
-                  <span aria-hidden className="hidden h-px w-24 bg-gradient-to-l from-transparent to-slate-400/50 sm:block" />
+                  <span aria-hidden className="hidden h-px w-24 bg-gradient-to-l from-transparent to-[color:var(--w-muted)]/60 sm:block" />
                 </button>
               </div>
             </div>
@@ -153,8 +155,8 @@ export function WelcomePage() {
           {/* ------------------------------------------------------------ how it works */}
           <section id="explore" aria-labelledby="explore-h" className="relative mx-auto w-full max-w-[1100px] px-4 py-24 sm:px-6">
             <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.6 }} className="mb-14 text-center">
-              <h2 id="explore-h" className="text-3xl font-semibold tracking-[-0.03em] md:text-5xl">From placement quiz to a <span className="nt-gradient-text">personal learning path</span></h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">A neural tracker estimates what you know. A rule-based engine explains what to do next.</p>
+              <h2 id="explore-h" className="text-3xl font-semibold tracking-[-0.03em] md:text-5xl">From placement quiz to a <span className="nt-hl">personal learning path</span></h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[color:var(--w-lead)]">A neural tracker estimates what you know. A rule-based engine explains what to do next.</p>
             </motion.div>
             <Stagger inView gap={0.14} className="grid gap-6 md:grid-cols-4">
               {[
@@ -167,7 +169,7 @@ export function WelcomePage() {
                   <div className="nt-feature h-full p-6">
                     <span className="nt-icon-glow flex size-10 items-center justify-center rounded-xl text-lg font-bold">{s.n}</span>
                     <h3 className="mt-4 text-lg font-semibold tracking-tight">{s.t}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-300">{s.d}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-[color:var(--w-lead)]">{s.d}</p>
                   </div>
                 </StaggerItem>
               ))}
@@ -175,12 +177,12 @@ export function WelcomePage() {
             <div className="mt-12 flex justify-center">
               <button type="button" onClick={go} className="nt-cta group inline-flex h-[58px] items-center gap-3 px-8 text-lg font-semibold">{placed ? 'Open Dashboard' : 'Start Your Journey'}<ArrowRight className="nt-cta-arrow size-5" aria-hidden /></button>
             </div>
-            <p className="mt-8 text-center text-sm text-slate-400">Already have progress? <Link to={user ? ROUTES.dashboard : ROUTES.login} className="font-medium text-sky-300 underline-offset-4 hover:underline">{user ? 'Open your dashboard' : 'Sign in'}</Link></p>
+            <p className="mt-8 text-center text-sm text-[color:var(--w-muted)]">Already have progress? <Link to={user ? ROUTES.dashboard : ROUTES.login} className="font-medium text-[color:var(--w-c)] underline-offset-4 hover:underline">{user ? 'Open your dashboard' : 'Sign in'}</Link></p>
           </section>
         </main>
       </FloatingBackdrop>
 
-      <DemoDialog open={demo} onOpenChange={setDemo} onStart={go} startLabel={ctaLabel} />
+      <DemoDialog open={demo} onOpenChange={setDemo} onStart={go} startLabel={ctaLabel} scope={root} />
     </motion.div>
   )
 }

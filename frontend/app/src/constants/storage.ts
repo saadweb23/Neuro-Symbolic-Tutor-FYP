@@ -6,6 +6,7 @@ export const STORAGE_KEYS = {
   reduceMotion: 'neurotutor_reduce_motion',
   shortcuts: 'neurotutor_shortcuts',
   sidebarCollapsed: 'neurotutor_sidebar_collapsed',
+  welcomeTheme: 'neurotutor_welcome_theme',
   booted: 'nt_booted',
 } as const
 

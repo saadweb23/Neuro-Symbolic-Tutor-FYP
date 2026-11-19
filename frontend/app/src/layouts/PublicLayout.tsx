@@ -12,7 +12,7 @@ export function PublicHeader() {
   return (
     <header className="nt-glass sticky top-0 z-30 border-b border-border">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 md:px-6">
-        <Link to={ROUTES.root} className="group flex items-center gap-2.5" aria-label="NeuroTutor home">
+        <Link to={ROUTES.root} className="group flex items-center gap-2.5" aria-label="Neuro Symbolic Tutor home">
           <BrandMark size={26} />
           <Wordmark />
         </Link>
@@ -36,7 +36,7 @@ export function PublicFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-6">
         <div className="flex items-center gap-2.5">
           <BrandMark size={20} />
-          <span>NeuroTutor, a neuro-symbolic Python tutor (final-year project).</span>
+          <span>Neuro Symbolic Tutor, a neuro-symbolic Python tutor (final-year project).</span>
         </div>
         <nav aria-label="Footer" className="flex gap-5">
           <Link to={ROUTES.help} className="hover:text-text">Help</Link>

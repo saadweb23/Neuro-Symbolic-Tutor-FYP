@@ -92,9 +92,9 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
         collapsed ? 'w-[72px]' : 'w-64',
       )}
     >
-      <NavLink to={ROUTES.dashboard} className={cn('group flex h-16 items-center gap-3 px-5', collapsed && 'justify-center px-0')} aria-label="NeuroTutor home">
+      <NavLink to={ROUTES.dashboard} className={cn('group flex h-16 items-center gap-3 px-5', collapsed && 'justify-center px-0')} aria-label="Neuro Symbolic Tutor home">
         <BrandMark size={26} />
-        {!collapsed && <Wordmark />}
+        {!collapsed && <Wordmark className="text-[15px]" />}
       </NavLink>
       <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 py-4">
         <Group title="Learn" items={NAV_LEARN} collapsed={collapsed} />

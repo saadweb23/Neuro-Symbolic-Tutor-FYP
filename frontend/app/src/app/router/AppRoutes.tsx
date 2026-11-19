@@ -18,7 +18,7 @@ export const routes: RouteObject[] = [
   {
     element: <PublicLayout />,
     children: [
-      { path: ROUTES.landing, handle: { title: 'NeuroTutor' }, lazy: lazyPage(() => import('@/pages/landing/LandingPage'), 'LandingPage') },
+      { path: ROUTES.landing, handle: { title: 'Neuro Symbolic Tutor' }, lazy: lazyPage(() => import('@/pages/landing/LandingPage'), 'LandingPage') },
       { path: ROUTES.login, handle: { title: 'Sign in' }, lazy: lazyPage(() => import('@/pages/login/LoginPage'), 'LoginPage') },
     ],
   },

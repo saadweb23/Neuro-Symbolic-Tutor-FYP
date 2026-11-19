@@ -19,6 +19,10 @@ for (const scheme of ['light', 'dark'] as const) {
     await page.goto('/')
     await page.getByRole('heading', { level: 1 }).waitFor()
     await scan(page, `welcome/${scheme}`)
+    for (const theme of ['Premium Education', 'Modern Minimal']) {   // every welcome theme must pass, the light one included
+      await page.getByRole('radio', { name: theme }).click()
+      await scan(page, `welcome-${theme}/${scheme}`)
+    }
     await page.goto('/about')
     await page.getByRole('heading', { level: 1 }).waitFor()
     await scan(page, `landing/${scheme}`)

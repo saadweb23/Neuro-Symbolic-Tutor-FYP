@@ -1,4 +1,4 @@
-/* NeuroTutor brand mark animation (loading states only). Linked from index.html so the boot splash
+/* Neuro Symbolic Tutor brand mark animation (loading states only). Linked from index.html so the boot splash
  * paints before any JavaScript runs; the React <BrandMark /> uses the same classes.
  * Only transform / opacity are animated. Reduced motion (OS or the in-app override) disables it. */
 .nt-mark .nt-node { transform-box: fill-box; transform-origin: center; }

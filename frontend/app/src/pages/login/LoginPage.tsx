@@ -65,7 +65,7 @@ export function LoginPage() {
       <Card className="w-full bg-surface/85 p-6 shadow-raised backdrop-blur-sm sm:p-8">
         <div className="mb-6 flex flex-col items-center text-center">
           <BrandMark size={56} />
-          <h1 className="mt-4 text-2xl font-semibold">Sign in to NeuroTutor</h1>
+          <h1 className="mt-4 text-2xl font-semibold">Sign in to Neuro Symbolic Tutor</h1>
           <p className="mt-1 text-sm text-muted">Enter your name and password to start your learning journey.</p>
         </div>
 

@@ -9,13 +9,13 @@ export type Phrase = Segment[]
 const flat = (p: Phrase) => p.map((s) => s.text).join('')
 
 /** Renders the first `chars` characters of a phrase, keeping the highlight on the right segments. */
-function renderSlice(phrase: Phrase, chars: number) {
+function renderSlice(phrase: Phrase, chars: number, highlightClass: string) {
   let left = chars
   return phrase.map((seg, i) => {
     if (left <= 0) return null
     const text = seg.text.slice(0, left)
     left -= seg.text.length
-    return seg.highlight ? <span key={i} className="nt-gradient-text nt-clone">{text}</span> : <span key={i}>{text}</span>
+    return seg.highlight ? <span key={i} className={highlightClass}>{text}</span> : <span key={i}>{text}</span>
   })
 }
 
@@ -26,13 +26,15 @@ interface Props {
   holdMs?: number
   gapMs?: number
   className?: string
+  /** classes for the highlighted words (the gradient) */
+  highlightClass?: string
 }
 
 /** Types a phrase character by character, holds it, deletes it, then moves to the next, with a blinking
  *  caret. Layout never jumps: an invisible copy of the longest phrase reserves the space, and the typed
  *  text is overlaid on it. Reduced motion shows the first phrase, still. Purely visual: wrap it in an
  *  element that carries the real accessible text (the page's <h1> does). */
-export function Typewriter({ phrases, typeMs = 52, deleteMs = 26, holdMs = 1700, gapMs = 380, className }: Props) {
+export function Typewriter({ phrases, typeMs = 52, deleteMs = 26, holdMs = 1700, gapMs = 380, className, highlightClass = 'nt-gradient-text nt-clone' }: Props) {
   const reduce = useReducedMotion()
   const [index, setIndex] = useState(0)
   const [chars, setChars] = useState(0)
@@ -64,9 +66,9 @@ export function Typewriter({ phrases, typeMs = 52, deleteMs = 26, holdMs = 1700,
   return (
     <span className={cn('relative block', className)} aria-hidden>
       {/* reserves the height / width of the longest phrase so nothing below ever moves */}
-      <span className="invisible block">{renderSlice(longest, flat(longest).length)}</span>
+      <span className="invisible block">{renderSlice(longest, flat(longest).length, highlightClass)}</span>
       <span className="absolute inset-0 block">
-        {renderSlice(phrase, shown)}
+        {renderSlice(phrase, shown, highlightClass)}
         <span className={cn('nt-caret', typing && 'nt-caret-solid')} />
       </span>
     </span>

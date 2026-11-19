@@ -19,9 +19,9 @@ export function Waves({ className }: { className?: string }) {
     <div className={className} aria-hidden>
       <svg width="0" height="0" className="absolute" focusable="false">
         <defs>
-          <linearGradient id="nt-w1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#6366f1" /><stop offset="0.5" stopColor="#a855f7" /><stop offset="1" stopColor="#38bdf8" /></linearGradient>
-          <linearGradient id="nt-w2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#38bdf8" /><stop offset="0.5" stopColor="#6366f1" /><stop offset="1" stopColor="#c084fc" /></linearGradient>
-          <linearGradient id="nt-wfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#6d28d9" stopOpacity="0.35" /><stop offset="1" stopColor="#1e1b4b" stopOpacity="0" /></linearGradient>
+          <linearGradient id="nt-w1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style={{ stopColor: 'var(--w-wave-1)' }} /><stop offset="0.5" style={{ stopColor: 'var(--w-wave-2)' }} /><stop offset="1" style={{ stopColor: 'var(--w-wave-3)' }} /></linearGradient>
+          <linearGradient id="nt-w2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style={{ stopColor: 'var(--w-wave-3)' }} /><stop offset="0.5" style={{ stopColor: 'var(--w-wave-1)' }} /><stop offset="1" style={{ stopColor: 'var(--w-wave-2)' }} /></linearGradient>
+          <linearGradient id="nt-wfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style={{ stopColor: 'var(--w-wave-fill)', stopOpacity: 0.35 }} /><stop offset="1" style={{ stopColor: 'var(--w-wave-fill)', stopOpacity: 0 }} /></linearGradient>
         </defs>
       </svg>
       <div className="absolute inset-0 overflow-hidden">

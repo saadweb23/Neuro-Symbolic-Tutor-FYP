@@ -68,7 +68,7 @@ export function AppShell() {
           transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           className="nt-glass sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border px-4 md:px-6"
         >
-          <Link to={ROUTES.dashboard} className="group flex items-center gap-2.5 md:hidden" aria-label="NeuroTutor home">
+          <Link to={ROUTES.dashboard} className="group flex items-center gap-2.5 md:hidden" aria-label="Neuro Symbolic Tutor home">
             <BrandMark size={24} />
             <Wordmark className="text-base" />
           </Link>

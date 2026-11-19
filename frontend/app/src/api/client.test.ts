@@ -48,6 +48,6 @@ describe('api client', () => {
     const err = await failure(get('/down'))
     expect(err).toBeInstanceOf(ApiError)
     expect(err.kind).toBe('network')
-    expect(err.message).toMatch(/Cannot reach the NeuroTutor server/)
+    expect(err.message).toMatch(/Cannot reach the Neuro Symbolic Tutor server/)
   })
 })

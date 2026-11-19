@@ -13,7 +13,7 @@ describe('HelpPage', () => {
   it('has a single top-level heading and the main sections', () => {
     renderWithProviders(<HelpPage />)
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
-    for (const name of ['Getting started', 'How NeuroTutor decides', 'FAQ', 'Troubleshooting', 'About the project']) {
+    for (const name of ['Getting started', 'How Neuro Symbolic Tutor decides', 'FAQ', 'Troubleshooting', 'About the project']) {
       expect(screen.getByRole('heading', { name })).toBeInTheDocument()
     }
   })

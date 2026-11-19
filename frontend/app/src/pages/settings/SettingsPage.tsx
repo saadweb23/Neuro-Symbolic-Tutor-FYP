@@ -91,7 +91,7 @@ function SettingsContent({ id }: { id: string }) {
 
   return (
     <div>
-      <PageHeader title="Profile & settings" description="Your identity on this device, and how NeuroTutor looks and behaves." />
+      <PageHeader title="Profile & settings" description="Your identity on this device, and how Neuro Symbolic Tutor looks and behaves." />
       <Tabs value={tab} onValueChange={(v) => setParams({ tab: v }, { replace: true })}>
         <TabsList aria-label="Settings sections" className="mb-5">
           <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -164,7 +164,7 @@ function SettingsContent({ id }: { id: string }) {
           <Card className="max-w-2xl">
             <CardHeader title="Your data" />
             <CardBody className="space-y-4 text-sm">
-              <p>NeuroTutor stores your student ID and a record of every answer and lesson on the server it runs on. Your mastery estimates are recomputed from that record.</p>
+              <p>Neuro Symbolic Tutor stores your student ID and a record of every answer and lesson on the server it runs on. Your mastery estimates are recomputed from that record.</p>
               <p className="rounded-lg bg-mid-soft p-3 text-mid">Your records are tied to your account: only you, signed in, can read them through the API.</p>
               <Button variant="secondary" loading={exporting} onClick={() => void exportCsv()} icon={<Download className="size-4" />}>Export my history (CSV)</Button>
             </CardBody>

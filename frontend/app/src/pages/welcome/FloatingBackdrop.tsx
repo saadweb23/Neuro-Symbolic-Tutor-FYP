@@ -53,7 +53,7 @@ const ITEMS: Item[] = [
   { x: 74, y: 40, depth: 10, dur: 25, delay: -14, dx: 18, dy: -16, rot: 20, size: 44, shape: 'triangle', tone: 'accent' },
 ]
 
-const TONE = { primary: 'text-primary', accent: 'text-accent', violet: 'text-[#8b5cf6] dark:text-[#a78bfa]' } as const
+const TONE = { primary: 'text-[color:var(--w-a,var(--primary))]', accent: 'text-[color:var(--w-c,var(--accent))]', violet: 'text-[color:var(--w-b,var(--primary))]' } as const
 
 function Shape({ kind, size }: { kind: 'triangle' | 'hexagon' | 'ring' | 'square' | 'wave' | 'dots'; size: number }) {
   const common = { width: size, height: size, fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinejoin: 'round' as const }
@@ -88,7 +88,7 @@ function Floating({ item }: { item: Item }) {
       style={{ left: `${item.x}%`, top: `${item.y}%`, transform: `translate3d(calc(var(--px, 0) * ${item.depth}px), calc(var(--py, 0) * ${item.depth}px), 0)`, transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1)' } as CSSProperties}
     >
       <span
-        className={cn('nt-drift block opacity-[0.28] dark:opacity-[0.34]', TONE[item.tone ?? 'primary'])}
+        className={cn('nt-drift block opacity-[0.3]', TONE[item.tone ?? 'primary'])}
         style={{ '--dx': `${item.dx}px`, '--dy': `${item.dy}px`, '--rot': `${item.rot}deg`, '--dur': `${item.dur}s`, '--delay': `${item.delay}s` } as CSSProperties}
       >
         {body}
@@ -125,13 +125,18 @@ export function FloatingBackdrop({ children, className, rich = false }: { childr
   return (
     <div ref={ref} className={cn('nt-welcome relative isolate overflow-clip', className)}>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        {rich && <motion.div className="absolute inset-0" style={{ y: meshY }}><div className="nt-mesh" /></motion.div>}
-        <div className="absolute -left-32 -top-32 size-[520px] rounded-full bg-primary/20 blur-3xl nt-glow-a" />
-        <div className="absolute -bottom-40 -right-24 size-[560px] rounded-full bg-[#8b5cf6]/20 blur-3xl nt-glow-b" />
-        <div className="absolute left-1/2 top-1/3 size-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl nt-glow-a" />
-        <motion.div className="absolute inset-0" style={{ y: itemsY }}>{ITEMS.filter((it) => !(rich && it.x > 14 && it.x < 64 && it.y < 46)).map((item, i) => <Floating key={i} item={item} />)}   {/* rich: keep the headline area clear */}</motion.div>
+        {rich && (
+          <>
+            <div className="nt-wbg nt-wbg-neon" /><div className="nt-wbg nt-wbg-education" /><div className="nt-wbg nt-wbg-minimal" />
+            <motion.div className="absolute inset-0" style={{ y: meshY }}><div className="nt-mesh" /></motion.div>
+          </>
+        )}
+        <div className="absolute -left-32 -top-32 size-[520px] rounded-full bg-[color:var(--w-a,var(--primary))]/20 blur-3xl nt-glow-a" />
+        <div className="absolute -bottom-40 -right-24 size-[560px] rounded-full bg-[color:var(--w-b,#8b5cf6)]/20 blur-3xl nt-glow-b" />
+        <div className="absolute left-1/2 top-1/3 size-[420px] -translate-x-1/2 rounded-full bg-[color:var(--w-c,var(--accent))]/10 blur-3xl nt-glow-a" />
+        <motion.div className="absolute inset-0" style={{ y: itemsY }}>{ITEMS.filter((it) => !(rich && it.x < 64 && it.y < 46)).map((item, i) => <Floating key={i} item={item} />)}   {/* rich: keep the headline area clear */}</motion.div>
         {PARTICLES.map((p, i) => (
-          <span key={i} className="nt-particle absolute rounded-full bg-primary/50" style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.s, height: p.s, '--dur': `${p.dur}s`, '--delay': `${p.delay}s` } as CSSProperties} />
+          <span key={i} className="nt-particle absolute rounded-full bg-[color:var(--w-a,var(--primary))]/50" style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.s, height: p.s, '--dur': `${p.dur}s`, '--delay': `${p.delay}s` } as CSSProperties} />
         ))}
       </div>
       {children}

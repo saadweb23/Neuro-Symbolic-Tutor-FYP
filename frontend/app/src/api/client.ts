@@ -56,7 +56,7 @@ export async function request<T>(
   } catch (err) {
     if ((err as { name?: string }).name === 'AbortError') throw err
     throw new ApiError(
-      'Cannot reach the NeuroTutor server. Check that the backend is running and try again.',
+      'Cannot reach the Neuro Symbolic Tutor server. Check that the backend is running and try again.',
       0,
       'network',
     )

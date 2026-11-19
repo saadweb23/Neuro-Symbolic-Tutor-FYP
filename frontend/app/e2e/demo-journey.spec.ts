@@ -23,7 +23,7 @@ test('welcome -> sign in -> placement -> results -> personalised dashboard -> si
 
   // welcome -> Sign in
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('NeuroTutor')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Neuro Symbolic Tutor')
   await page.getByRole('banner').getByRole('link', { name: /sign in/i }).click()
   await page.waitForURL('**/login')
 

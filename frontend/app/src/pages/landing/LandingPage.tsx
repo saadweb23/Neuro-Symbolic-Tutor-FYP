@@ -79,7 +79,7 @@ export function LandingPage() {
             A Python tutor that explains <span className="nt-gradient-text">why you&apos;re stuck</span>, not just that you are.
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">
-            NeuroTutor tracks your mastery of {cfg.concept_count} Python concepts on a prerequisite graph, chooses what to practise next, and tells you the reason behind every step.
+            Neuro Symbolic Tutor tracks your mastery of {cfg.concept_count} Python concepts on a prerequisite graph, chooses what to practise next, and tells you the reason behind every step.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <LinkButton to={ROUTES.start} size="lg" magnetic icon={<ArrowRight className="size-5" />}>Start learning</LinkButton>
@@ -234,7 +234,7 @@ export function LandingPage() {
           ))}
         </div>
         <p className="mx-auto mt-8 max-w-3xl text-center text-sm text-muted">
-          In our simulated evaluation the agent matches, but does not beat, a simple linear-curriculum baseline. What NeuroTutor adds is transparent mastery tracking and an explanation for every recommendation.
+          In our simulated evaluation the agent matches, but does not beat, a simple linear-curriculum baseline. What Neuro Symbolic Tutor adds is transparent mastery tracking and an explanation for every recommendation.
         </p>
       </Section>
 

@@ -25,11 +25,11 @@ const FAQ = (cfg: ReturnType<typeof useMetaConfig>): [string, string][] => [
 export function HelpPage() {
   const cfg = useMetaConfig()
   const { studentId } = useStudentContext()
-  const toc = [['start', 'Getting started'], ['how', 'How NeuroTutor decides'], ['faq', 'FAQ'], ['glossary', 'Glossary'], ['keys', 'Keyboard shortcuts'], ['trouble', 'Troubleshooting'], ['about', 'About the project']]
+  const toc = [['start', 'Getting started'], ['how', 'How Neuro Symbolic Tutor decides'], ['faq', 'FAQ'], ['glossary', 'Glossary'], ['keys', 'Keyboard shortcuts'], ['trouble', 'Troubleshooting'], ['about', 'About the project']]
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 md:px-0">
       <h1 className={`mb-1 text-3xl font-semibold ${studentId ? 'md:sr-only' : ''}`}>Help &amp; support</h1>
-      <p className="mb-8 max-w-2xl text-muted">How NeuroTutor works, answers to common questions, and what to do if something is not working.</p>
+      <p className="mb-8 max-w-2xl text-muted">How Neuro Symbolic Tutor works, answers to common questions, and what to do if something is not working.</p>
       <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
         <nav aria-label="On this page" className="lg:sticky lg:top-24 lg:self-start">
           <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
@@ -47,7 +47,7 @@ export function HelpPage() {
             </ol>
           </Section>
 
-          <Section id="how" title="How NeuroTutor decides">
+          <Section id="how" title="How Neuro Symbolic Tutor decides">
             <p><strong>1. Tracking.</strong> A graph neural network keeps an estimate of your mastery of every concept. Each answer updates the concept you were asked about and related concepts up to two steps away on the prerequisite graph.</p>
             <p><strong>2. Choosing the concept.</strong> Inside the focus area you picked, a reinforcement-learning agent chooses which concept to work on next from your current estimates.</p>
             <p><strong>3. Choosing the lesson.</strong> Simple rules decide the format: a new concept starts with a video; then practice questions; repeated mistakes lead to the official documentation. Question difficulty is easy below {pct(cfg.difficulty_cutoffs.easy_below)} mastery, medium below {pct(cfg.difficulty_cutoffs.medium_below)}, otherwise hard.</p>
@@ -89,7 +89,7 @@ export function HelpPage() {
           </Section>
 
           <Section id="about" title="About the project">
-            <p>NeuroTutor is a final-year project exploring a neuro-symbolic tutor: a graph neural network for tracking, a reinforcement-learning agent for choosing, and transparent rules for teaching.</p>
+            <p>Neuro Symbolic Tutor is a final-year project exploring a neuro-symbolic tutor: a graph neural network for tracking, a reinforcement-learning agent for choosing, and transparent rules for teaching.</p>
             <p>In the project&apos;s simulated evaluation the agent matches, but does not beat, a simple linear-curriculum baseline. The value of the system is the explainable mastery tracking and recommendations, not a claim of better outcomes.</p>
             <div className="pt-2"><LinkButton to={ROUTES.start} variant="secondary">Back to the app</LinkButton></div>
           </Section>
