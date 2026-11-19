@@ -301,7 +301,7 @@ html.reduce-motion .nt-node-ping { animation: none; opacity: 0; }
 /* =====================================================================  welcome page: premium layer */
 
 /* hero heading caret: solid while typing, blinking while holding */
-.nt-caret { display: inline-block; width: 0.07em; height: 0.9em; margin-left: 0.06em; vertical-align: -0.08em; border-radius: 2px; background: var(--primary); animation: nt-blink 1.05s steps(1) infinite; }
+.nt-caret { display: inline-block; width: 0.06em; height: 0.92em; margin-left: 0.08em; vertical-align: -0.1em; border-radius: 2px; background: var(--text); animation: nt-blink 1.05s steps(1) infinite; }
 .nt-caret-solid { animation: none; }
 @keyframes nt-blink { 50% { opacity: 0; } }
 .nt-clone { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -331,16 +331,16 @@ html.reduce-motion .nt-node-ping { animation: none; opacity: 0; }
 .nt-cta {
   position: relative; isolation: isolate; border-radius: 13px; border: 2px solid transparent; color: #fff;
   background:
-    linear-gradient(180deg, #151b3d, #0c1130) padding-box,
-    conic-gradient(from var(--nt-angle), #6366f1, #8b5cf6, #38bdf8, #8b5cf6, #6366f1) border-box;
-  animation: nt-spin-angle 5s linear infinite;
+    linear-gradient(100deg, #2563eb 0%, #5b4bf0 52%, #8b3dff 100%) padding-box,
+    conic-gradient(from var(--nt-angle), #22d3ee, #6366f1, #c084fc, #22d3ee, #38bdf8, #22d3ee) border-box;
+  animation: nt-spin-angle 4.5s linear infinite;
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
-  box-shadow: 0 10px 30px -12px rgb(99 102 241 / 0.6);
+  box-shadow: 0 10px 34px -10px rgb(79 70 229 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.25);
 }
 .nt-cta::before {            /* glow that travels with the border */
   content: ''; position: absolute; inset: -2px; z-index: -1; border-radius: 15px; filter: blur(14px); opacity: 0.55;
-  background: conic-gradient(from var(--nt-angle), #6366f1, #8b5cf6, #38bdf8, #8b5cf6, #6366f1);
-  animation: nt-spin-angle 5s linear infinite; transition: opacity 0.3s ease;
+  background: conic-gradient(from var(--nt-angle), #22d3ee, #6366f1, #c084fc, #22d3ee, #38bdf8, #22d3ee);
+  animation: nt-spin-angle 4.5s linear infinite; transition: opacity 0.3s ease;
 }
 .nt-cta:hover { box-shadow: 0 14px 40px -10px rgb(139 92 246 / 0.75); }
 .nt-cta:hover::before { opacity: 0.85; }
@@ -381,3 +381,42 @@ html.reduce-motion .nt-node-ping { animation: none; opacity: 0; }
   .nt-neuron, .nt-signal, .nt-orbit, .nt-atom-tilt, .nt-nucleus, .nt-mesh, .nt-cta, .nt-cta::before, .nt-cta-arrow, .nt-feature::after, .nt-caret { animation: none !important; }
 }
 html.reduce-motion .nt-neuron, html.reduce-motion .nt-signal, html.reduce-motion .nt-orbit, html.reduce-motion .nt-atom-tilt, html.reduce-motion .nt-nucleus, html.reduce-motion .nt-mesh, html.reduce-motion .nt-cta, html.reduce-motion .nt-cta::before, html.reduce-motion .nt-cta-arrow, html.reduce-motion .nt-feature::after, html.reduce-motion .nt-caret { animation: none !important; }
+
+
+/* =====================================================================  welcome page v2: hologram hero */
+.nt-hero-bg { background: radial-gradient(120% 90% at 70% 10%, #0b1a4d 0%, #060a24 45%, #040716 100%); }
+
+/* floating glass nav bar */
+.nt-navbar {
+  border: 1px solid rgb(99 102 241 / 0.38); border-radius: 18px;
+  background: linear-gradient(180deg, rgb(20 28 78 / 0.55), rgb(9 14 44 / 0.62));
+  backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.04) inset, 0 12px 44px -16px rgb(59 130 246 / 0.55);
+}
+.nt-navpill { background: linear-gradient(180deg, rgb(79 70 229 / 0.45), rgb(79 70 229 / 0.22)); box-shadow: 0 0 0 1px rgb(129 140 248 / 0.45) inset, 0 6px 22px -8px rgb(99 102 241 / 0.9); }
+
+/* hero scene motion */
+@keyframes nt-float { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -14px, 0); } }
+.nt-float { animation: nt-float 7s ease-in-out infinite; }
+@keyframes nt-bob { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -9px, 0); } }
+.nt-bob { animation: nt-bob 6s ease-in-out var(--delay, 0s) infinite; }
+.nt-beam { background: linear-gradient(to top, rgb(56 189 248 / 0.38), rgb(99 102 241 / 0.12) 55%, transparent); clip-path: polygon(14% 100%, 86% 100%, 100% 0, 0 0); filter: blur(2px); animation: nt-beam 5s ease-in-out infinite; }
+@keyframes nt-beam { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.95; } }
+.nt-tag { border: 1px solid rgb(129 140 248 / 0.5); background: linear-gradient(150deg, rgb(79 70 229 / 0.38), rgb(12 20 70 / 0.72)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 14px 36px -14px rgb(56 189 248 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.05) inset; }
+@keyframes nt-ring-dash { to { stroke-dashoffset: -96; } }
+.nt-ring-dash { animation: nt-ring-dash 9s linear infinite; }
+.nt-ring-a { animation: nt-beam 6s ease-in-out infinite; }
+.nt-ring-b { transform-box: fill-box; transform-origin: center; animation: nt-glow 4.5s ease-in-out infinite; }
+
+/* waves along the bottom of the hero */
+@keyframes nt-wave { to { transform: translate3d(-50%, 0, 0); } }
+.nt-wave { animation: nt-wave var(--dur, 22s) linear infinite; will-change: transform; }
+
+/* feature cards v2: neon outlines, one hue each */
+.nt-neon { position: relative; border-radius: 18px; border: 1.5px solid var(--hue); background: linear-gradient(135deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.015)), rgb(10 16 52 / 0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 0 22px -6px var(--hue), 0 0 0 1px rgb(255 255 255 / 0.03) inset; transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease; }
+@media (hover: hover) and (pointer: fine) { .nt-neon:hover { transform: translateY(-5px); box-shadow: 0 0 36px -2px var(--hue), 0 0 0 1px rgb(255 255 255 / 0.06) inset; } }
+.nt-neon-icon { background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--hue) 70%, white), color-mix(in srgb, var(--hue) 40%, #0b1240)); box-shadow: 0 0 24px -2px var(--hue), 0 0 0 1px rgb(255 255 255 / 0.15) inset; }
+@keyframes nt-hint { 0%, 100% { transform: translateY(0); opacity: 0.8; } 50% { transform: translateY(5px); opacity: 1; } }
+.nt-hint { animation: nt-hint 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .nt-float, .nt-bob, .nt-beam, .nt-ring-dash, .nt-ring-a, .nt-ring-b, .nt-wave, .nt-hint { animation: none !important; } }
+html.reduce-motion .nt-float, html.reduce-motion .nt-bob, html.reduce-motion .nt-beam, html.reduce-motion .nt-ring-dash, html.reduce-motion .nt-ring-a, html.reduce-motion .nt-ring-b, html.reduce-motion .nt-wave, html.reduce-motion .nt-hint { animation: none !important; }

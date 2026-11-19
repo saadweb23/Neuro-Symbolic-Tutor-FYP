@@ -1,48 +1,7 @@
 import type { CSSProperties } from 'react'
 
-/** Decorative, aria-hidden illustrations for the welcome page: a small neural network whose neurons
- *  pulse and along whose links signals travel, and an atom with orbiting electrons. SVG + CSS only,
- *  transform / opacity animations, switched off by prefers-reduced-motion. */
-
-// layered network: x per layer, y per neuron
-const LAYERS: { x: number; ys: number[] }[] = [
-  { x: 24, ys: [70, 150, 230, 310] },
-  { x: 150, ys: [40, 115, 190, 265, 340] },
-  { x: 276, ys: [70, 150, 230, 310] },
-  { x: 392, ys: [130, 250] },
-]
-
-const EDGES: [number, number, number, number][] = []
-for (let l = 0; l < LAYERS.length - 1; l++) {
-  const a = LAYERS[l]!
-  const b = LAYERS[l + 1]!
-  a.ys.forEach((ya, i) => b.ys.forEach((yb, j) => { if ((i + j + l) % 2 === 0 || Math.abs(i / a.ys.length - j / b.ys.length) < 0.3) EDGES.push([a.x, ya, b.x, yb]) }))
-}
-
-export function NeuralNetwork({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 420 380" fill="none" aria-hidden focusable="false">
-      <g stroke="currentColor" strokeWidth="1">
-        {EDGES.map(([x1, y1, x2, y2], i) => <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} opacity={0.2} />)}
-      </g>
-      <g stroke="url(#nt-signal)" strokeWidth="1.8" strokeLinecap="round">
-        {EDGES.filter((_, i) => i % 4 === 0).map(([x1, y1, x2, y2], i) => (
-          <line key={i} className="nt-signal" x1={x1} y1={y1} x2={x2} y2={y2} style={{ '--d': `${(i * 0.7) % 5}s` } as CSSProperties} />
-        ))}
-      </g>
-      <defs>
-        <linearGradient id="nt-signal" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#6366f1" /><stop offset="1" stopColor="#38bdf8" />
-        </linearGradient>
-      </defs>
-      <g fill="currentColor">
-        {LAYERS.flatMap((l, li) => l.ys.map((y, i) => (
-          <circle key={`${li}-${i}`} className="nt-neuron" cx={l.x} cy={y} r={li === 3 ? 6 : 4.5} style={{ '--d': `${((li * 5 + i) * 0.45) % 3.2}s` } as CSSProperties} />
-        )))}
-      </g>
-    </svg>
-  )
-}
+/** Decorative, aria-hidden atom with orbiting electrons for the welcome page. SVG + CSS only,
+ *  transform animations, switched off by prefers-reduced-motion. */
 
 const ORBITS = [
   { rot: 0, dur: 9, delay: 0 },

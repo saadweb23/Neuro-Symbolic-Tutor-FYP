@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it, vi } from 'vitest'
 import { server } from '@/test/server'
@@ -14,9 +15,10 @@ describe('WelcomePage', () => {
   it('introduces the platform and offers the placement quiz to a visitor', async () => {
     renderWithProviders(<WelcomePage />)
     expect(await screen.findByRole('heading', { level: 1, name: /NeuroTutor: a neuro-symbolic adaptive learning platform/i })).toBeInTheDocument()
-    expect(screen.getByText(/Your personalized AI-powered learning companion/)).toBeInTheDocument()
+    expect(screen.getByText(/Discover your strengths, identify knowledge gaps/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Take Placement Quiz' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: /sign in/i }).length).toBeGreaterThan(0)
+    expect(screen.getByText(/25 Python concepts/)).toBeInTheDocument()   // real figures from the platform settings, no invented numbers
   })
 
   it('lets a student who has finished placement continue instead (the quiz cannot be retaken)', async () => {
@@ -26,5 +28,13 @@ describe('WelcomePage', () => {
     expect(await screen.findByRole('button', { name: 'Continue Learning' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Take Placement Quiz' })).toBeNull()
     expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
+  })
+
+  it('Watch Demo opens an explanation of the learning loop built from the platform settings', async () => {
+    renderWithProviders(<WelcomePage />)
+    await userEvent.click(await screen.findByRole('button', { name: 'Watch Demo' }))
+    const dialog = await screen.findByRole('dialog', { name: 'How NeuroTutor works' })
+    expect(dialog).toHaveTextContent('Take the placement quiz')
+    expect(dialog).toHaveTextContent('Watch your progress grow')
   })
 })

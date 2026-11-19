@@ -12,13 +12,14 @@ const item: Variants = {
 
 /** Children marked <StaggerItem> rise in one after another. `inView` waits for scroll; otherwise it
  *  plays on mount. Static for reduced-motion users. */
-export function Stagger({ children, className, gap = 0.07, delay = 0, inView = false }: {
-  children: ReactNode; className?: string; gap?: number; delay?: number; inView?: boolean
+export function Stagger({ children, className, gap = 0.07, delay = 0, inView = false, id }: {
+  children: ReactNode; className?: string; gap?: number; delay?: number; inView?: boolean; id?: string
 }) {
   const reduce = useReducedMotion()
-  if (reduce) return <div className={className}>{children}</div>
+  if (reduce) return <div id={id} className={className}>{children}</div>
   return (
     <motion.div
+      id={id}
       className={className}
       variants={container(gap, delay)}
       initial="hidden"

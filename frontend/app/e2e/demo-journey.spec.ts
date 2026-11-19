@@ -24,7 +24,7 @@ test('welcome -> sign in -> placement -> results -> personalised dashboard -> si
   // welcome -> Sign in
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('NeuroTutor')
-  await page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'Sign in' }).click()
+  await page.getByRole('banner').getByRole('link', { name: /sign in/i }).click()
   await page.waitForURL('**/login')
 
   // a wrong password is refused and creates nothing
