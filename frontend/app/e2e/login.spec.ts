@@ -3,7 +3,7 @@ import { API, trackErrors } from './helpers'
 
 test('the site opens on the welcome page; its call to action leads to sign-in, and app pages stay protected', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Neuro Symbolic Tutor')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('NeuroTutor')
   await page.getByRole('button', { name: 'Take Placement Quiz' }).click()
   await page.waitForURL('**/login')
   await expect(page.getByRole('heading', { name: /sign in to neurotutor/i })).toBeVisible()

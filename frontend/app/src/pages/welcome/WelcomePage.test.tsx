@@ -13,7 +13,7 @@ const status = (placed: boolean) => ({ student_id: 'sam', exists: true, placemen
 describe('WelcomePage', () => {
   it('introduces the platform and offers the placement quiz to a visitor', async () => {
     renderWithProviders(<WelcomePage />)
-    expect(await screen.findByRole('heading', { level: 1, name: 'Welcome to Neuro Symbolic Tutor' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: /NeuroTutor: a neuro-symbolic adaptive learning platform/i })).toBeInTheDocument()
     expect(screen.getByText(/Your personalized AI-powered learning companion/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Take Placement Quiz' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Sign in' })).toBeInTheDocument()

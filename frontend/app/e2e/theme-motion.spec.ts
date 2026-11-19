@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test('dark theme is applied before first paint and persists', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/about')   // the welcome page is always dark navy and has no theme switch
   await page.getByRole('button', { name: /change theme/i }).click()
   await page.getByRole('menuitem', { name: 'Dark' }).click()
   await expect(page.locator('html')).toHaveClass(/dark/)

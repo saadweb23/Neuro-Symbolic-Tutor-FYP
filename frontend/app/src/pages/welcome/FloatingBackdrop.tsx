@@ -1,6 +1,8 @@
 import { Atom, BookOpen, BrainCircuit, Calculator, Code2, GraduationCap, Lightbulb, Network, Puzzle, Rocket, Sparkles, type LucideIcon } from 'lucide-react'
+import { motion, useScroll, useTransform } from 'motion/react'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
+import { Atom as AtomIllustration, NeuralNetwork } from './AiVisuals'
 
 /** Decorative layer for the welcome page: maths symbols, formulas, code, AI / education icons and
  *  geometric shapes drifting in different directions, plus slow rising particles. Pure CSS motion
@@ -96,8 +98,15 @@ function Floating({ item }: { item: Item }) {
   )
 }
 
-export function FloatingBackdrop({ children, className }: { children: ReactNode; className?: string }) {
+/** `rich` adds the welcome page's ambient mesh light, neural network and atom, each moving at its own
+ *  scroll speed (parallax). Without it (login page) only the symbols, glows and particles are drawn. */
+export function FloatingBackdrop({ children, className, rich = false }: { children: ReactNode; className?: string; rich?: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
+  const { scrollY } = useScroll()
+  const meshY = useTransform(scrollY, [0, 900], [0, 90])
+  const netY = useTransform(scrollY, [0, 900], [0, -130])
+  const atomY = useTransform(scrollY, [0, 900], [0, 160])
+  const itemsY = useTransform(scrollY, [0, 900], [0, -50])
 
   // pointer depth: one throttled listener writes two CSS variables; no React state
   useEffect(() => {
@@ -118,12 +127,19 @@ export function FloatingBackdrop({ children, className }: { children: ReactNode;
   }, [])
 
   return (
-    <div ref={ref} className={cn('nt-welcome relative isolate overflow-hidden', className)}>
+    <div ref={ref} className={cn('nt-welcome relative isolate overflow-clip', className)}>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        {rich && <motion.div className="absolute inset-0" style={{ y: meshY }}><div className="nt-mesh" /></motion.div>}
+        {rich && (
+          <>
+            <motion.div className="absolute left-[-4%] top-[22%] hidden w-[340px] text-primary opacity-60 md:block lg:w-[420px]" style={{ y: netY }}><NeuralNetwork className="w-full" /></motion.div>
+            <motion.div className="absolute right-[-3%] top-[8%] hidden w-[260px] opacity-80 sm:block lg:right-[3%] lg:w-[340px]" style={{ y: atomY }}><AtomIllustration className="w-full" /></motion.div>
+          </>
+        )}
         <div className="absolute -left-32 -top-32 size-[520px] rounded-full bg-primary/20 blur-3xl nt-glow-a" />
         <div className="absolute -bottom-40 -right-24 size-[560px] rounded-full bg-[#8b5cf6]/20 blur-3xl nt-glow-b" />
         <div className="absolute left-1/2 top-1/3 size-[420px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl nt-glow-a" />
-        {ITEMS.map((item, i) => <Floating key={i} item={item} />)}
+        <motion.div className="absolute inset-0" style={{ y: itemsY }}>{ITEMS.map((item, i) => <Floating key={i} item={item} />)}</motion.div>
         {PARTICLES.map((p, i) => (
           <span key={i} className="nt-particle absolute rounded-full bg-primary/50" style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.s, height: p.s, '--dur': `${p.dur}s`, '--delay': `${p.delay}s` } as CSSProperties} />
         ))}

@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/inter';
-@import '@fontsource-variable/plus-jakarta-sans';
 @import '@fontsource-variable/jetbrains-mono';
 
 /* Class-based dark mode (the pre-paint script in index.html and ThemeProvider toggle `.dark`). */
@@ -106,7 +105,7 @@
   --color-block-2: var(--block-2);
   --color-block-3: var(--block-3);
   --color-block-4: var(--block-4);
-  --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius-sm: 6px;
@@ -130,10 +129,11 @@
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11', 'ss01';
   }
   #root { min-height: 100svh; }
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
-  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.2; }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.028em; line-height: 1.15; font-feature-settings: 'cv11', 'ss01'; }
   ::selection { background: var(--primary-soft); color: var(--text); }
   button, [role='button'], a, summary { -webkit-tap-highlight-color: transparent; }
 }
@@ -297,3 +297,87 @@ html.reduce-motion .nt-drift, html.reduce-motion .nt-particle, html.reduce-motio
 .nt-node-ping { transform-box: fill-box; transform-origin: center; animation: nt-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .nt-node-ping { animation: none; opacity: 0; } }
 html.reduce-motion .nt-node-ping { animation: none; opacity: 0; }
+
+/* =====================================================================  welcome page: premium layer */
+
+/* hero heading caret: solid while typing, blinking while holding */
+.nt-caret { display: inline-block; width: 0.07em; height: 0.9em; margin-left: 0.06em; vertical-align: -0.08em; border-radius: 2px; background: var(--primary); animation: nt-blink 1.05s steps(1) infinite; }
+.nt-caret-solid { animation: none; }
+@keyframes nt-blink { 50% { opacity: 0; } }
+.nt-clone { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+/* neural network + atom */
+@keyframes nt-neuron { 0%, 100% { transform: scale(1); opacity: 0.55; } 50% { transform: scale(1.7); opacity: 1; } }
+.nt-neuron { transform-box: fill-box; transform-origin: center; animation: nt-neuron 3.2s ease-in-out var(--d, 0s) infinite; }
+@keyframes nt-signal { 0% { stroke-dashoffset: 40; opacity: 0; } 15% { opacity: 1; } 70% { opacity: 1; } 100% { stroke-dashoffset: -80; opacity: 0; } }
+.nt-signal { stroke-dasharray: 10 120; animation: nt-signal 5s ease-in-out var(--d, 0s) infinite; }
+@keyframes nt-spin { to { transform: rotate(360deg); } }
+.nt-orbit { transform-box: fill-box; transform-origin: center; animation: nt-spin var(--dur, 10s) linear var(--delay, 0s) infinite; }
+.nt-atom-tilt { transform-origin: 0 0; animation: nt-spin 90s linear infinite; }
+.nt-nucleus { transform-box: fill-box; transform-origin: center; animation: nt-glow 4s ease-in-out infinite; }
+
+/* slow ambient light: one oversized layer drifts and turns; transform only */
+.nt-mesh {
+  position: absolute; inset: -25%; pointer-events: none;
+  background:
+    radial-gradient(38% 34% at 22% 22%, rgb(99 102 241 / 0.30), transparent 70%),
+    radial-gradient(34% 30% at 78% 30%, rgb(56 189 248 / 0.20), transparent 70%),
+    radial-gradient(40% 36% at 60% 82%, rgb(139 92 246 / 0.26), transparent 70%);
+  animation: nt-mesh 46s ease-in-out infinite alternate; will-change: transform;
+}
+@keyframes nt-mesh { 0% { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); } 100% { transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.08); } }
+
+/* CTA: rectangular, rotating gradient border + soft glow */
+.nt-cta {
+  position: relative; isolation: isolate; border-radius: 13px; border: 2px solid transparent; color: #fff;
+  background:
+    linear-gradient(180deg, #151b3d, #0c1130) padding-box,
+    conic-gradient(from var(--nt-angle), #6366f1, #8b5cf6, #38bdf8, #8b5cf6, #6366f1) border-box;
+  animation: nt-spin-angle 5s linear infinite;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px -12px rgb(99 102 241 / 0.6);
+}
+.nt-cta::before {            /* glow that travels with the border */
+  content: ''; position: absolute; inset: -2px; z-index: -1; border-radius: 15px; filter: blur(14px); opacity: 0.55;
+  background: conic-gradient(from var(--nt-angle), #6366f1, #8b5cf6, #38bdf8, #8b5cf6, #6366f1);
+  animation: nt-spin-angle 5s linear infinite; transition: opacity 0.3s ease;
+}
+.nt-cta:hover { box-shadow: 0 14px 40px -10px rgb(139 92 246 / 0.75); }
+.nt-cta:hover::before { opacity: 0.85; }
+.nt-cta:active { transform: scale(0.98); }
+.nt-cta-arrow { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); animation: nt-nudge 2.2s ease-in-out infinite; }
+.nt-cta:hover .nt-cta-arrow { transform: translateX(6px); animation: none; }
+@keyframes nt-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+
+/* feature cards: glass, gradient hairline border, border highlight that sweeps on hover */
+.nt-feature {
+  position: relative; border-radius: 18px; border: 1px solid transparent; overflow: hidden;
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.015)) padding-box,
+    linear-gradient(rgb(11 16 34 / 0.62), rgb(11 16 34 / 0.62)) padding-box,
+    linear-gradient(160deg, rgb(139 92 246 / 0.55), rgb(255 255 255 / 0.06) 40%, rgb(56 189 248 / 0.4)) border-box;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 18px 40px -24px rgb(0 0 0 / 0.7);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+.nt-feature::after {
+  content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+  background: conic-gradient(from var(--nt-angle), transparent 0 55%, rgb(167 139 250 / 0.95) 75%, rgb(56 189 248 / 0.9) 88%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: nt-spin-angle 4s linear infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nt-feature:hover { transform: translateY(-6px); box-shadow: 0 1px 0 rgb(255 255 255 / 0.08) inset, 0 28px 50px -20px rgb(99 102 241 / 0.45); }
+  .nt-feature:hover::after { opacity: 1; }
+}
+.nt-icon-glow { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12) inset, 0 8px 24px -4px rgb(139 92 246 / 0.7); }
+
+/* nav links: underline grows from the centre */
+.nt-navlink { position: relative; }
+.nt-navlink::after { content: ''; position: absolute; left: 50%; right: 50%; bottom: 2px; height: 2px; border-radius: 2px; background: var(--grad-brand); transition: left 0.25s ease, right 0.25s ease; }
+.nt-navlink:hover::after, .nt-navlink:focus-visible::after { left: 8px; right: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nt-neuron, .nt-signal, .nt-orbit, .nt-atom-tilt, .nt-nucleus, .nt-mesh, .nt-cta, .nt-cta::before, .nt-cta-arrow, .nt-feature::after, .nt-caret { animation: none !important; }
+}
+html.reduce-motion .nt-neuron, html.reduce-motion .nt-signal, html.reduce-motion .nt-orbit, html.reduce-motion .nt-atom-tilt, html.reduce-motion .nt-nucleus, html.reduce-motion .nt-mesh, html.reduce-motion .nt-cta, html.reduce-motion .nt-cta::before, html.reduce-motion .nt-cta-arrow, html.reduce-motion .nt-feature::after, html.reduce-motion .nt-caret { animation: none !important; }
